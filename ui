@@ -328,9 +328,9 @@ function Lib:Category(name)
 		UICorner_2.Parent = Inner
 		local script = Instance.new('LocalScript', SliderD)
 
-		local default = nil
-		local min = nil
-		local max = nil
+		local default = 20
+		local min = Val
+		local max = =Val
 		local Inner = script.Parent.Slider.Inner
 		local BG = Inner.Parent
 		local old = script.Parent.Title.Text
