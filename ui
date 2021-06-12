@@ -267,7 +267,7 @@ function Lib:Category(name)
 	UIPadding_2.PaddingLeft = UDim.new(0, 8)
 	UIPadding_2.PaddingTop = UDim.new(0, 16)
 	local cat = {}
-	function cat:Slider(name,min,def,max,callback)
+	function cat:Slider(name,mi,def,ma,callback)
 		callback = callback or function() end
 		local SliderD = Instance.new("ImageLabel")
 		local Title = Instance.new("TextLabel")
