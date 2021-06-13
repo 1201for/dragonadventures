@@ -1,5 +1,3 @@
-local Lib = {}
-
 local Wap = Instance.new("ScreenGui")
 local MainUI = Instance.new("ImageLabel")
 local CatList = Instance.new("ImageLabel")
@@ -267,7 +265,7 @@ function Lib:Category(name)
 	UIPadding_2.PaddingLeft = UDim.new(0, 8)
 	UIPadding_2.PaddingTop = UDim.new(0, 16)
 	local cat = {}
-	function cat:Slider(name,mi,def,ma,callback)
+	function cat:Slider(name,min,def,max,callback)
 		callback = callback or function() end
 		local SliderD = Instance.new("ImageLabel")
 		local Title = Instance.new("TextLabel")
@@ -329,8 +327,8 @@ function Lib:Category(name)
 		local script = Instance.new('LocalScript', SliderD)
 
 		local default = 20
-		local mi
-		local ma
+		local min = 16
+		local max = 200
 		local Inner = script.Parent.Slider.Inner
 		local BG = Inner.Parent
 		local old = script.Parent.Title.Text
@@ -339,14 +337,14 @@ function Lib:Category(name)
 		local uis = game:GetService("UserInputService")
 		local Value;
 		local down = false
-		if default ~= mi then
-			game:GetService("TweenService"):Create(Inner, TweenInfo.new(0.05), {Size = UDim2.new(default/ma, 0, 0, 28)}):Play()
+		if default ~= min then
+			game:GetService("TweenService"):Create(Inner, TweenInfo.new(0.05), {Size = UDim2.new(default/max, 0, 0, 28)}):Play()
 			Number.Text = old.. ": "..default       
 		end
 		local function Activate()
 			spawn(function()
 				down = true
-				Value = math.floor((((tonumber(ma) - tonumber(mi)) / 336) * Inner.AbsoluteSize.X) +tonumber(mi)) or 0
+				Value = math.floor((((tonumber(max) - tonumber(min)) / 336) * Inner.AbsoluteSize.X) +tonumber(min)) or 0
 				pcall(function()
 					callback(Value)
 				end)
@@ -354,7 +352,7 @@ function Lib:Category(name)
 				game:GetService("TweenService"):Create(Inner, TweenInfo.new(0.05), {Size = UDim2.new(0, math.clamp(mouse.X - Inner.AbsolutePosition.X, 0, 336), 0, 28)}):Play()
 
 				while game:GetService("RunService").RenderStepped:wait() and down do
-					Value = math.floor((((tonumber(ma) - tonumber(mi)) / 336) * Inner.AbsoluteSize.X) +tonumber(mi)) or 0
+					Value = math.floor((((tonumber(max) - tonumber(min)) / 336) * Inner.AbsoluteSize.X) +tonumber(min)) or 0
 					Number.Text = old.. ": "..Value               
 					pcall(function()
 						callback(Value)
@@ -372,7 +370,7 @@ function Lib:Category(name)
 		uis.InputEnded:connect(function(key)
 			if key.UserInputType == Enum.UserInputType.MouseButton1 and down then
 				down = false
-				Value = math.floor((((tonumber(ma) - tonumber(mi)) / 336) * Inner.AbsoluteSize.X) +tonumber(mi)) or 0
+				Value = math.floor((((tonumber(max) - tonumber(min)) / 336) * Inner.AbsoluteSize.X) +tonumber(min)) or 0
 				Number.Text = old.. ": "..Value      
 				pcall(function()
 					callback(Value)
@@ -744,7 +742,4 @@ function Lib:Reload()
 		end
 	end
 end
-game:GetService("UserInputService").MouseIconEnabled = true
-
-game:GetService("UserInputService").MouseBehavior = Enum.MouseBehavior.Default
 return Lib;
