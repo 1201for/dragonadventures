@@ -1,3 +1,5 @@
+local Lib = {}
+
 local Wap = Instance.new("ScreenGui")
 local MainUI = Instance.new("ImageLabel")
 local CatList = Instance.new("ImageLabel")
@@ -14,7 +16,7 @@ local Fix1 = Instance.new("Frame")
 local Categories = Instance.new("Frame")
 
 Wap.Name = "Wap"
-Wap.Parent = game.CoreGui
+Wap.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 Wap.ResetOnSpawn = false
 
 MainUI.Name = "MainUI"
@@ -116,7 +118,7 @@ Carno1.BackgroundTransparency = 1.000
 Carno1.Position = UDim2.new(0, 69, 0, 27)
 Carno1.Size = UDim2.new(0, 87, 0, 22)
 Carno1.Font = Enum.Font.Code
-Carno1.Text = "V.G Hub"
+Carno1.Text = ""
 Carno1.TextColor3 = Color3.fromRGB(97, 97, 97)
 Carno1.TextScaled = true
 Carno1.TextSize = 14.000
@@ -327,8 +329,8 @@ function Lib:Category(name)
 		local script = Instance.new('LocalScript', SliderD)
 
 		local default = 20
-		local min = 16
-		local max = 200
+		local min = 0
+		local max = 250
 		local Inner = script.Parent.Slider.Inner
 		local BG = Inner.Parent
 		local old = script.Parent.Title.Text
@@ -470,7 +472,6 @@ function Lib:Category(name)
 				togged = false
 				game.TweenService:Create(script.Parent.Toggle.Frame, TweenInfo.new(0.3), {Position = UDim2.new(0,0,0, 0)}):Play()
 			end
-			callback(togged)
 		end)
 		Main_3.CanvasSize = Main_3.CanvasSize + UDim2.new(0,0,0,49)
 	end
