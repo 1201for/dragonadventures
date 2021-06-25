@@ -19,7 +19,7 @@ local strokes = {
 local A = strokes.A; local W = strokes.W; local S = strokes.S; local D = strokes.D
 
 KeyStrokes.Name = "KeyStrokes"
-KeyStrokes.Parent = game.Players.LocalPlayer.PlayerGui
+KeyStrokes.Parent = game:GetService("CoreGui")
 KeyStrokes.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 Holder.Name = "Holder"
