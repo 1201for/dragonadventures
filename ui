@@ -328,9 +328,6 @@ function Lib:Category(name)
 		UICorner_2.Parent = Inner
 		local script = Instance.new('LocalScript', SliderD)
 
-		local default = 20
-		local min = 16
-		local max = 200
 		local Inner = script.Parent.Slider.Inner
 		local BG = Inner.Parent
 		local old = script.Parent.Title.Text
@@ -346,7 +343,7 @@ function Lib:Category(name)
 		local function Activate()
 			spawn(function()
 				down = true
-				Value = math.floor((((tonumber(option.max) - tonumber(option.min)) / 336) * Inner.AbsoluteSize.X) +tonumber(option.min)) or 0
+				Value = math.floor((((tonumber(max) - tonumber(min)) / 336) * Inner.AbsoluteSize.X) +tonumber(min)) or 0
 				pcall(function()
 					callback(Value)
 				end)
@@ -354,10 +351,10 @@ function Lib:Category(name)
 				game:GetService("TweenService"):Create(Inner, TweenInfo.new(0.05), {Size = UDim2.new(0, math.clamp(mouse.X - Inner.AbsolutePosition.X, 0, 336), 0, 28)}):Play()
 
 				while game:GetService("RunService").RenderStepped:wait() and down do
-					Value = math.floor((((tonumber(option.max) - tonumber(option.min)) / 336) * Inner.AbsoluteSize.X) +tonumber(option.min)) or 0
+					Value = math.floor((((tonumber(max) - tonumber(min)) / 336) * Inner.AbsoluteSize.X) +tonumber(min)) or 0
 					Number.Text = old.. ": "..Value               
 					pcall(function()
-						cat(Value)
+						callback(Value)
 					end)
 					game:GetService("TweenService"):Create(Inner, TweenInfo.new(0.05), {Size = UDim2.new(0, math.clamp(mouse.X - Inner.AbsolutePosition.X, 0, 336), 0, 28)}):Play()
 				end
@@ -372,7 +369,7 @@ function Lib:Category(name)
 		uis.InputEnded:connect(function(key)
 			if key.UserInputType == Enum.UserInputType.MouseButton1 and down then
 				down = false
-				Value = math.floor((((tonumber(option.max) - tonumber(option.min)) / 336) * Inner.AbsoluteSize.X) +tonumber(option.min)) or 0
+				Value = math.floor((((tonumber(max) - tonumber(min)) / 336) * Inner.AbsoluteSize.X) +tonumber(min)) or 0
 				Number.Text = old.. ": "..Value      
 				pcall(function()
 					callback(Value)
