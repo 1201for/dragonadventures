@@ -329,8 +329,8 @@ function Lib:Category(name)
 		local script = Instance.new('LocalScript', SliderD)
 
 		local default = 20
-		local min = nil
-		local max = nil
+		local min = 16
+		local max = 2000
 		local Inner = script.Parent.Slider.Inner
 		local BG = Inner.Parent
 		local old = script.Parent.Title.Text
