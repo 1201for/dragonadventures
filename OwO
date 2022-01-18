@@ -72,7 +72,12 @@ local function getNearestMob()
     end
     return Target
 end;
-
+for i,v in next, getconnections(game.Players.LocalPlayer.Character.DescendantAdded) do
+   v:Disable()
+end
+for i,v in next, getconnections(game.Players.LocalPlayer.Character.ChildRemoved) do
+   v:Disable()
+end
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/im-retarded-3"))()
 local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
 
@@ -125,9 +130,6 @@ while ddd do
                 )
                 Tween:Play()
                 game:GetService("VirtualUser"):ClickButton1(Vector2.new(9e9, 9e9))
-                game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Tool").SwordScript.Activate:FireServer(
-
-                )
             elseif not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Tool") then
                 game.StarterGui:SetCore(
                     "SendNotification",
@@ -138,9 +140,9 @@ while ddd do
                 )
                 wait()
             end
-
+            
             for _, v in pairs(game:GetService("Workspace").Drops:GetChildren()) do
-                if v:IsA("TouchTransmitter") then
+                if v:IsA("TouchTransmitter") and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Parent.Position).Magnitude < 50 then
                     wait()
                     firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0) --0 is touch
                     wait()
@@ -263,7 +265,7 @@ while chests do
             wait(0.5)
             for i=1,10 do wait(0.1)
             for _, v in pairs(game:GetService("Workspace").Drops:GetDescendants()) do
-                if v:IsA("TouchTransmitter") then
+                if v:IsA("TouchTransmitter") and (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Parent.Position).Magnitude < 50 then
                     wait()
                     firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0) --0 is touch
                     wait()
@@ -277,6 +279,11 @@ end
 end)
 
 
+local Toggle1 = Section1:CreateToggle("Auto Fish", nil, function(State)
+t = State
+while wait(3) and t do wait()
+game:GetService("Players").LocalPlayer.PlayerGui.Fish.Ado.catch:FireServer(workspace.FishingSpawns.Fishing)
+end end)
 local Toggle1 = Section2:CreateToggle("Ore Esp", nil, function(State)
 getgenv().esp = State
 local function esp(v)
@@ -383,7 +390,7 @@ game:GetService("RunService").Stepped:connect(
         pcall(
             function()
                 if God then
-                    game.Players.LocalPlayer.Character.Health:remove()
+                    game.Players.LocalPlayer.Character.Health.Value = nil
                 else
                     game.Players.LocalPlayer.Character.Huamnoid.Health = 0
                 end
@@ -541,7 +548,7 @@ if k:lower() == 'b' then
 Max = Max + 1
 getgenv().Fly = false
 if sex2 then
-local T = LP.Character.UpperTorso
+local T = LP.Character.Torso
 local S = {
 F = 0,
 B = 0,
