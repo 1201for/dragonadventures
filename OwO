@@ -383,45 +383,8 @@ game:GetService("Workspace").Chests.DescendantAdded:Connect(
 
 end)
 
-local Toggle1 = Section1:CreateToggle("GodMode", nil, function(State)
-God = State
-game:GetService("RunService").Stepped:connect(
-    function()
-        pcall(
-            function()
-                if God then
-                    game.Players.LocalPlayer.Character.Health.Value = nil
-                else
-                    game.Players.LocalPlayer.Character.Huamnoid.Health = 0
-                end
-            end
-        )
-    end
-)
-end)
-Toggle1:AddToolTip("Infinite Amount of Health/Nodmg effects")
 
-local Toggle1 = Section1:CreateToggle("infinite Mana", nil, function(State)
-Mana = State
-game:GetService("RunService").Stepped:connect(
-    function()
-        if Mana then
-            game:GetService("Players").LocalPlayer.Data.Mana.Value = 9e9
-        end
-    end
-)
-end)
 
-local Toggle1 = Section1:CreateToggle("infinite Stamina", nil, function(State)
-Mana1 = State
-game:GetService("RunService").Stepped:connect(
-    function()
-        if Mana1 then
-            game:GetService("Players").LocalPlayer.Data.Stamina.Value = 9e9
-        end
-    end
-)
-end)
 local Toggle1 = Section1:CreateToggle("Anti Burn", nil, function(State)
 Burned = State
 game:GetService("RunService").Stepped:connect(
