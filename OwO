@@ -113,10 +113,18 @@ game:GetService("RunService").Stepped:connect(
         )
     end
 )
+game:GetService("VirtualInputManager"):SendKeyEvent(true, 52, false, game)
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+repeat wait() until game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+if ddd then wait(3)
+game:GetService("VirtualInputManager"):SendKeyEvent(true, 52, false, game)
+end end)
 while ddd do
     wait()
     pcall(
         function()
+
+                
             if game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Tool") then
                 local Time =
                     (getNearestMob().HumanoidRootPart.CFrame.p + Vector3.new(0, 0, 3) -
