@@ -16,7 +16,7 @@ table.insert(Ores, v.DataName.Value)
 end end 
 
 Mobs = {}
-for i, v in pairs(game.Workspace:GetChildren()) do
+for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
     if
         v.ClassName == "Model" and v:FindFirstChild("NPC") and v:FindFirstChild("Head") and v.Head:FindFirstChild("HPGui") and
             not table.find(Mobs, v.Head:WaitForChild("HPGui").Frame.plrname.Text)
@@ -61,7 +61,7 @@ end;
 local function getNearestMob()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(game:GetService("Workspace"):GetChildren()) do
+    for i, v in ipairs(game:GetService("Workspace").Mobs:GetChildren()) do
         if v.ClassName == "Model" and v:FindFirstChild("NPC") and v:FindFirstChild("Head") and v.Head:FindFirstChild("HPGui") and v.Head.HPGui.Frame.plrname.Text == Mobs then
             local Mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
