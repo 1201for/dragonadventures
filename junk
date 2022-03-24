@@ -50,7 +50,6 @@ function Library:CreateWindow(Config, Parent)
 	local TBContainer = Holder.TBContainer.Holder
 
 	Screen.Name =  HttpService:GenerateGUID(false)
-	Screen.Parent = Parent
 	if syn and syn.protect_gui then
     syn.protect_gui(Screen)
     Screen.Parent = game.CoreGui
