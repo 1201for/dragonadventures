@@ -115,7 +115,7 @@ local Section2 = Tab1:CreateSection("Misc")
 local Section3 = Tab2:CreateSection("Menu")
 local Section4 = Tab2:CreateSection("Background")
 
-
+if game.PlaceId ~= 8793520828 then
 local Toggle1 = Section1:CreateToggle("Auto Start Raid", Settings.Start, function(State)
 Settings.Start = State
 spawn(
@@ -128,7 +128,7 @@ spawn(
     end
 )
 end) 
-
+end
 
 if game.PlaceId == 8793520828 then
 local Toggle1 = Section1:CreateToggle("Auto Raid", Settings.AutoRaid, function(State)
@@ -166,7 +166,7 @@ spawn(
                     for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
                         if v:IsA("Model") and v:FindFirstChildOfClass("Humanoid") then
                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                                v.HumanoidRootPart.CFrame * CFrame.new(0, -7, 0)
+                                v.HumanoidRootPart.CFrame * CFrame.new(0, 0, 0)
                             game:GetService("VirtualUser"):ClickButton1(Vector2.new(9e9, 9e9))
                         end
                     end
