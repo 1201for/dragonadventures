@@ -89,6 +89,49 @@ local Section2 = Tab1:CreateSection("Misc")
 local Section3 = Tab2:CreateSection("Menu")
 local Section4 = Tab2:CreateSection("Background")
 
+
+if game.PlaceId == 8793520828 then
+local Toggle1 = Section1:CreateToggle("Auto Raid", nil, function(State)
+tomato = State
+
+game:GetService("RunService").Stepped:connect(
+    function()
+        pcall(
+            function()
+                if tomato then
+                    game.Players.LocalPlayer.Character.Humanoid:ChangeState(11)
+                end
+            end
+        )
+    end
+)
+game:GetService("VirtualInputManager"):SendKeyEvent(true, 52, false, game)
+game.Players.LocalPlayer.CharacterAdded:Connect(
+    function()
+        repeat
+            wait()
+        until game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+        if ddd then
+            wait(3)
+            game:GetService("VirtualInputManager"):SendKeyEvent(true, 52, false, game)
+        end
+    end
+)
+
+while wait() and tomato do pcall(function()
+    wait()
+    for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
+        if v:IsA("Model") and v:FindFirstChildOfClass("Humanoid") then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                v.HumanoidRootPart.CFrame * CFrame.new(0, -7, 0)
+            game:GetService("VirtualUser"):ClickButton1(Vector2.new(9e9, 9e9))
+        end
+    end
+    end)
+end
+
+end) end
+
 local Toggle1 = Section1:CreateToggle("Auto Speed", nil, function(State)
 yes = State
 while yes do
