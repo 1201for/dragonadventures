@@ -542,10 +542,9 @@ spawn(
                             if isnetworkowner(getNearestiii().PrimaryPart) then
                                 getNearestiii().PrimaryPart.CFrame =
                                     CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
-
-                                game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
-                                game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
                             end
+                        game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
+                                game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
                             CheckMate()
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearestiii().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
@@ -565,9 +564,9 @@ spawn(
                             if isnetworkowner(getNearesti().PrimaryPart) then
                                 getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10000, math.random(0,20))
                                 getNearesti().Humanoid:ChangeState(11)
-                                game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
-                                game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
                             end
+                            game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
+                                game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
                             CheckMate()
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
