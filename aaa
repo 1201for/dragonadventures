@@ -663,7 +663,7 @@ end)
 local Dropdown1 = Section1:CreateDropdown("Quests", Que, function(String)
 	Settings.Quest = String
 end)
-
+if game.PlaceId == 2483973525 then
 
 local Toggle1 = Section1:CreateToggle("Auto Buy Food", Settings.Food, function(State)
 Settings.Food = State
@@ -777,6 +777,7 @@ spawn(
 
 end)
 
+
 local Toggle1 = Section1:CreateToggle("Infinite Breath", Settings.InfiniteBreath, function(State)
 Settings.InfiniteBreath = State
 spawn(
@@ -790,6 +791,7 @@ spawn(
     end
 )
 end)
+
 
 local Toggle1 = Section2:CreateToggle("Enable WalkSpeed/JumpPower", Settings.Go, function(State)
 Settings.Go = State
@@ -870,7 +872,7 @@ game:GetService("UserInputService").JumpRequest:connect(
     end
 )
 end)
-
+end
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/Karrot-Esp"))()
 
 
@@ -881,7 +883,9 @@ local Toggle1 = Section1:CreateToggle("Enable Esp", Settings.Esp, function(State
     Settings.Esp = State
     ESP:Toggle(Settings.Esp)
     
-end)local Toggle1 = Section1:CreateToggle("Flute/EarRing Esp", Settings.FluteEsp, function(State)
+end)
+if game.PlaceId == 2483973525 then
+local Toggle1 = Section1:CreateToggle("Flute/EarRing Esp", Settings.FluteEsp, function(State)
     Settings.FluteEsp = State
 local function esp(v)
     local T = Drawing.new("Text")
@@ -928,7 +932,7 @@ game:GetService("Workspace").map.Stuff.DescendantAdded:Connect(
     end
 )
 end)
-
+end
 local Toggle1 = Section1:CreateToggle("PLayer Esp", Settings.PlayerEsp, function(State)
     Settings.PlayerEsp = State
     ESP.Players = Settings.PlayerEsp
