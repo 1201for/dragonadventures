@@ -86,7 +86,7 @@ spawn(
 )
 
 -- Instances:
-
+if not game.CoreGui:FindFirstChild("Chad Stats") then
 local ChadStats = Instance.new("ScreenGui")
 local Breathing = Instance.new("TextLabel")
 local Hunger = Instance.new("TextLabel")
@@ -235,6 +235,7 @@ game:GetService("RunService").Stepped:connect(
         end
     end
 )
+end
 
 if game.PlaceId == 2483973525 then
 Areas = {}
@@ -458,6 +459,33 @@ spawn(
 end)
 
 
+
+local Toggle1 = Section1:CreateToggle("Auto Attack", Settings.FullBright, function(State)
+Settings.FullBright = State
+        if Settings.FullBright then
+            game:GetService("Lighting").FogEnd = 9e9
+            game:GetService("Lighting").Ambient = Color3.new(1, 1, 1)
+            game:GetService("Lighting").ColorShift_Bottom = Color3.new(1, 1, 1)
+            game:GetService("Lighting").ColorShift_Top = Color3.new(1, 1, 1)
+        else
+            game:GetService("Lighting").Ambient = Color3.new(0, 0, 0)
+            game:GetService("Lighting").ColorShift_Bottom = Color3.new(0, 0, 0)
+            game:GetService("Lighting").ColorShift_Top = Color3.new(0, 0, 0)
+        end
+game.Lighting.Changed:connect(
+    function()
+        if Settings.FullBright then
+            game:GetService("Lighting").FogEnd = 9e9
+            game:GetService("Lighting").Ambient = Color3.new(1, 1, 1)
+            game:GetService("Lighting").ColorShift_Bottom = Color3.new(1, 1, 1)
+            game:GetService("Lighting").ColorShift_Top = Color3.new(1, 1, 1)
+        else
+            game:GetService("Lighting").Ambient = Color3.new(0, 0, 0)
+            game:GetService("Lighting").ColorShift_Bottom = Color3.new(0, 0, 0)
+            game:GetService("Lighting").ColorShift_Top = Color3.new(0, 0, 0)
+        end
+    end)
+end)
 local Toggle1 = Section1:CreateToggle("Stats", Settings.Visible, function(State)
 Settings.Visible = State
 end)
