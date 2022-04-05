@@ -718,7 +718,20 @@ spawn(
 
 end)
 
-
+local Toggle1 = Section1:CreateToggle("Hard Reset/LifeSaver", Settings.Reset, function(State)
+Settings.Reset = State
+game:GetService("RunService").Stepped:connect(
+    function()
+        if game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Health <= 10 and Settings.Reset then
+            pcall(
+                function()
+                    game.Players.LocalPlayer.Character:WaitForChild("Head"):Destroy()
+                end
+            )
+        end
+    end
+)
+end)
 
 
 local Toggle1 = Section1:CreateToggle("Auto Buy Food", Settings.Food, function(State)
