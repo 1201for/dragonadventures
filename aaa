@@ -768,7 +768,7 @@ end)
 end)
 
 
-local Toggle1 = Section1:CreateToggle("Auto Tp To Flute/EarRing", Settings.AutoTeleport, function(State)
+local Toggle1 = Section1:CreateToggle("Auto Tp To EarRing", Settings.AutoTeleport, function(State)
 Settings.AutoTeleport = State
 
 spawn(
@@ -954,7 +954,7 @@ local Toggle1 = Section1:CreateToggle("Enable Esp", Settings.Esp, function(State
     
 end)
 if game.PlaceId == 2483973525 then
-local Toggle1 = Section1:CreateToggle("Flute/EarRing Esp", Settings.FluteEsp, function(State)
+local Toggle1 = Section1:CreateToggle("EarRing Esp", Settings.FluteEsp, function(State)
     Settings.FluteEsp = State
 local function esp(v)
     local T = Drawing.new("Text")
@@ -975,7 +975,7 @@ local function esp(v)
                     if Settings.FluteEsp and Screen then
                         T.Position = Vector2.new(Vector.X, Vector.Y)
                         T.Visible = true
-                        T.Text = "Flute/Earring"
+                        T.Text = "Earring"
                     else
                         T.Visible = false
                     end
@@ -988,15 +988,15 @@ local function esp(v)
     end
     update()
 end
-for i,v in pairs(game:GetService("Workspace").map.Stuff:GetDescendants()) do
-    if v:FindFirstChildOfClass("ClickDetector") then
+for i,v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
+    if v:IsA("Model") and  v:FindFirstChildOfClass("Part") and v.Name == "Barrel" and  v[v:FindFirstChildOfClass("Part").Name]:FindFirstChildOfClass("ClickDetector")  then
         esp(v)
     end
 end
-game:GetService("Workspace").map.Stuff.DescendantAdded:Connect(
+game:GetService("Workspace").map.Stuff.ChildAdded:Connect(
     function(v)
-        if v:FindFirstChildOfClass("ClickDetector")then
-            esp(v)
+         if v:IsA("Model") and  v:FindFirstChildOfClass("Part") and v.Name == "Barrel" and  v[v:FindFirstChildOfClass("Part").Name]:FindFirstChildOfClass("ClickDetector")  then
+        esp(v)
         end
     end
 )
