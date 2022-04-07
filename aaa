@@ -259,11 +259,11 @@ Mobs = {"Demons", "Demon Slayers"}
 
 
 local function Esp(v)
-    if v:WaitForChild("Humanoid", 5) then
-        v:WaitForChild("Humanoid", 5).HealthDisplayDistance = 100
-        v:WaitForChild("Humanoid", 5).HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOn
-        v:WaitForChild("Humanoid", 5).NameDisplayDistance = 100
-        v:WaitForChild("Humanoid", 5).NameOcclusion = Enum.NameOcclusion.NoOcclusion
+    if v:WaitForChild("Humanoid") then
+        v:WaitForChild("Humanoid").HealthDisplayDistance = 100
+        v:WaitForChild("Humanoid").HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOn
+        v:WaitForChild("Humanoid").NameDisplayDistance = 100
+        v:WaitForChild("Humanoid").NameOcclusion = Enum.NameOcclusion.NoOcclusion
     end
 end
 for _, v in next, game:GetService("Players"):GetPlayers() do
