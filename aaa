@@ -836,7 +836,7 @@ game:GetService("RunService").Stepped:connect(
     end
 )
 repeat
-    wait()
+    wait(Settings.MoneySpeed)
     if Settings.Money then
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
         game:GetService("ReplicatedStorage").Areas["Yokai Village"].CFrame
@@ -844,7 +844,7 @@ repeat
 until game:GetService("Workspace").chatnpcs.Quest.Box:FindFirstChild("Main") or Settings.Money == false
 spawn(
     function()
-        while wait() and Settings.Money do
+        while wait(Settings.MoneySpeed) and Settings.Money do
             pcall(
                 function()
                     if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") then
@@ -878,6 +878,13 @@ spawn(
     end
 )
 
+end)
+
+if Settings.MoneySpeed == nil then
+Settings.MoneySpeed = 0
+end 
+local Slider1 = Section1:CreateSlider("Money Farm Speed",0,7,Settings.MoneySpeed,false, function(Value)
+	Settings.MoneySpeed = Value
 end)
 
 
