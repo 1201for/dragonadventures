@@ -412,6 +412,9 @@ local function CheckMate()
     if not game:GetService("Players").LocalPlayer.states:FindFirstChild("exeing") then
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "B", false, game)
     end
+     if not game:GetService("Players").LocalPlayer.states:FindFirstChild("selfstun") then
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "R", false, game)
+    end
 end
 if not game:GetService("Workspace"):FindFirstChild("First") then
 local Part = Instance.new("Part",Workspace)
@@ -560,14 +563,14 @@ spawn(
         while wait() and Settings.AutoFarmSafely do wait()
             pcall(
                 function()
-                    if Settings.Options == "Matter" then 
+                    if Settings.Options == "Matter" then wait(0.2)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
                             if isnetworkowner(getNearestiii().PrimaryPart) then 
                                 getNearestiii().PrimaryPart.CFrame =
                                     CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
                             end
-                        game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
-                                game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
+                            game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
+                            game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
                             CheckMate()
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearestiii().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
@@ -582,22 +585,20 @@ spawn(
                         end
                     end
 
-                    if Settings.Options == "Away" then 
+                    if Settings.Options == "Away" then wait(0.2)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
+                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
                             if isnetworkowner(getNearesti().PrimaryPart) then 
                                 getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10003, Number)
-                                
-                            end
-                            game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300)) wait()
+                                game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300)) 
                                 game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
-                            CheckMate() 
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
-
-                            if getNearesti().Humanoid.Health < 5 then
+                                if getNearesti().Humanoid.Health < 10 then
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                    getNearesti().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                             end
+                            end
+                            CheckMate()
                             if getNearesti().Humanoid.Health == 0 then
                                 getNearesti():Destroy()
                             end 
@@ -726,6 +727,18 @@ game:GetService("RunService").Stepped:connect(
         end
     end
 )
+end)
+
+
+
+local Toggle1 = Section1:CreateToggle("Auto Crimson Red Nichirin Blade", Settings.Crimson, function(State)
+Settings.Crimson = State
+spawn(function()
+while Settings.Crimson do
+    wait(2)
+    game:GetService("ReplicatedStorage").events.remote:FireServer("Crimson Red Nichirin Blade")
+end
+end)
 end)
 
 
