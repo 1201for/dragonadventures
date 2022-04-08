@@ -483,7 +483,7 @@ local function Use()
             v:IsA("Tool") and v:FindFirstChild("Move") and not v:FindFirstChild("Cash") and
                 not game:GetService("Players").LocalPlayer.cds:FindFirstChild(v.Name)
          then
-            if game:GetService("Players").LocalPlayer.NoSaveValue.Air.Value >= 100 then
+            if game:GetService("Players").LocalPlayer.NoSaveValue.Air.Value <= 100 then
                 game:GetService("ReplicatedStorage").events.remote:FireServer(v.Name)
             end
         end
@@ -953,12 +953,12 @@ spawn(
                         end
                     end
                     for i, v in pairs(game:GetService("Workspace").chatnpcs.Quest:GetChildren()) do
-                        if v:IsA("Model") and v:FindFirstChild("Amazon Box") then
+                        if v:IsA("Model") and v:FindFirstChild("Amazon Box") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest") then
                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
                                 v.PrimaryPart.CFrame * CFrame.new(0, -26, 0)
                             fireclickdetector(v.hitbox:FindFirstChildOfClass("ClickDetector"))
                         elseif
-                            game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest") and v:IsA("Model") and
+                            game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest") and v:IsA("Model") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") and
                                 v:FindFirstChild("Main")
                          then
                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
