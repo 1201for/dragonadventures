@@ -259,30 +259,24 @@ Mobs = {"Demons", "Demon Slayers"}
 
 
 local function Esp(v)
-    if v:WaitForChild("Humanoid") then
+     if v:WaitForChild("Humanoid") then
         v:WaitForChild("Humanoid").HealthDisplayDistance = 100
         v:WaitForChild("Humanoid").HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOn
-        v:WaitForChild("Humanoid").NameDisplayDistance = 100
-        v:WaitForChild("Humanoid").NameOcclusion = Enum.NameOcclusion.NoOcclusion
     end
 end
-for _, v in next, game:GetService("Players"):GetPlayers() do
-    if v.Character ~= nil then
-        Esp(v.Character)
-    end
-    v.CharacterAdded:Connect(
-        function(v)
-            Esp(v)
+spawn(
+    function()
+        while wait(5) do
+            pcall(
+                function()
+                    for _, v in next, game:GetService("Players"):GetPlayers() do
+                        if v.Character ~= nil then
+                            Esp(v.Character)
+                        end
+                    end
+                end
+            )
         end
-    )
-end
-game:GetService("Players").PlayerAdded:Connect(
-    function(v)
-        v.CharacterAdded:Connect(
-            function(v)
-                Esp(v)
-            end
-        )
     end
 )
 
@@ -359,8 +353,7 @@ local function getNearestiii()
                 v:FindFirstChild("Demon") and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 100
          then
             local Mag =
-                (Vector3.new(-673, -288, -647) - v.PrimaryPart.Position -
-                GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude
+                (Vector3.new(-673, -288, -647) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -380,6 +373,38 @@ local function getNearestiii()
     end
     return Target
 end
+
+local function getNearestCustom()
+    local TargetDistance = math.huge
+    local Target
+    for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
+        if
+            Settings.Mobs == "Demons" and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
+                v:FindFirstChild("Demon") and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 100
+         then
+            local Mag =
+                (Vector3.new(Settings.Position1,Settings.Position2,Settings.Position3) - v.PrimaryPart.Position).Magnitude
+            if Mag < TargetDistance then
+                TargetDistance = Mag
+                Target = v
+            end
+        elseif
+            Settings.Mobs == "Demon Slayers" and not v:FindFirstChild("Demon") and v:IsA("Model") and
+                v:FindFirstChild("HumanoidRootPart") and
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 100
+         then
+            local Mag =
+                (Vector3.new(Settings.Position1,Settings.Position2,Settings.Position3) - v.PrimaryPart.Position).Magnitude
+            if Mag < TargetDistance then
+                TargetDistance = Mag
+                Target = v
+            end
+        end
+    end
+    return Target
+end
+
 
 local function getNearesti()
     local TargetDistance = math.huge
@@ -412,6 +437,7 @@ local function getNearesti()
     return Target
 end
 local Number = math.random(1,500)
+
 
 
 pcall(
@@ -450,6 +476,8 @@ Part.Size = Vector3.new(9e9,1,9e9)
 Part.Transparency = 1
 Part.CFrame = CFrame.new(10000, 10000, 0)
 end 
+
+
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
 local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
 
@@ -578,6 +606,12 @@ spawn(
                                 CFrame.new(0, -5000, 0)
                         end
                     end
+                    if getNearesti() == nil then
+                        if Settings.Options == "Custom" then
+                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                CFrame.new(0, -5000, 0)
+                        end
+                    end
                 end
             )
         end
@@ -586,12 +620,14 @@ spawn(
 
 spawn(
     function()
-        while wait() and Settings.AutoFarmSafely do wait()
+        while wait() and Settings.AutoFarmSafely do
+            wait()
             pcall(
                 function()
-                    if Settings.Options == "Matter" then wait(0.2)
+                    if Settings.Options == "Matter" then
+                        wait(0.2)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-                            if isnetworkowner(getNearestiii().PrimaryPart) then 
+                            if isnetworkowner(getNearestiii().PrimaryPart) then
                                 getNearestiii().PrimaryPart.CFrame =
                                     CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
                             end
@@ -605,29 +641,53 @@ spawn(
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestiii().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                             end
-                             if getNearestiii().Humanoid.Health == 0 then
+                            if getNearestiii().Humanoid.Health == 0 then
                                 getNearestiii():Destroy()
-                            end 
+                            end
                         end
                     end
 
-                    if Settings.Options == "Away" then wait(0.2)
+                    if Settings.Options == "Away" then
+                        wait(0.2)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
-                            if isnetworkowner(getNearesti().PrimaryPart) then 
+                            if isnetworkowner(getNearesti().PrimaryPart) then
                                 getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10003, Number)
-                                game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300)) 
+                                game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
                                 game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
                                 if getNearesti().Humanoid.Health < 10 then
-                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
-                            end
+                                    game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                        getNearesti().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+                                end
                             end
                             CheckMate()
                             if getNearesti().Humanoid.Health == 0 then
                                 getNearesti():Destroy()
-                            end 
+                            end
+                        end
+                    end
+
+                    if Settings.Options == "Custom" then wait(0.2)
+                        if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
+                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, -8, 0) * CFrame.Angles(90, 0, 0)
+
+                            if isnetworkowner(getNearestCustom().PrimaryPart) then 
+                                getNearestCustom().PrimaryPart.Position =
+                                    Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3)
+                                game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
+                                game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
+                                if getNearestCustom().Humanoid.Health < 10 then
+                                    game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                        getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, 0, 0) *
+                                        CFrame.Angles(0, 0, 0)
+                                end
+                            end
+                            CheckMate()
+                            if getNearestCustom().Humanoid.Health == 0 then
+                                getNearestCustom():Destroy()
+                            end
                         end
                     end
                 end
@@ -636,18 +696,24 @@ spawn(
     end
 )
 
+
 end)
-local Dropdown1 = Section1:CreateDropdown("Options", {"Away","Matter"}, function(String)
+local Dropdown1 = Section1:CreateDropdown("Options", {"Away","Matter","Custom"}, function(String)
 	Settings.Options = String
 end)
 
+
+local Button1 = Section1:CreateButton("Save Custom Position", function()
+
+Settings.Position1 = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position.X
+Settings.Position2 = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position.Y
+Settings.Position3 = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position.Z
+end)
 end
 
 local Dropdown1 = Section1:CreateDropdown("Mobs", Mobs, function(String)
 	Settings.Mobs = String
 end)
-
-
 
 local Toggle1 = Section1:CreateToggle("Auto Accept Quest", Settings.AutoQuest, function(State)
 Settings.AutoQuest = State
@@ -836,7 +902,7 @@ game:GetService("RunService").Stepped:connect(
     end
 )
 repeat
-    wait(Settings.MoneySpeed)
+    wait()
     if Settings.Money then
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
         game:GetService("ReplicatedStorage").Areas["Yokai Village"].CFrame
@@ -844,7 +910,7 @@ repeat
 until game:GetService("Workspace").chatnpcs.Quest.Box:FindFirstChild("Main") or Settings.Money == false
 spawn(
     function()
-        while wait(Settings.MoneySpeed) and Settings.Money do
+        while wait() and Settings.Money do
             pcall(
                 function()
                     if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") then
@@ -878,13 +944,6 @@ spawn(
     end
 )
 
-end)
-
-if Settings.MoneySpeed == nil then
-Settings.MoneySpeed = 0
-end 
-local Slider1 = Section1:CreateSlider("Money Farm Speed",0,7,Settings.MoneySpeed,false, function(Value)
-	Settings.MoneySpeed = Value
 end)
 
 
