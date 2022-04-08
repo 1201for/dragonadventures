@@ -258,27 +258,6 @@ end
 Mobs = {"Demons", "Demon Slayers"}
 
 
-local function Esp(v)
-     if v:WaitForChild("Humanoid") then
-        v:WaitForChild("Humanoid").HealthDisplayDistance = 100
-        v:WaitForChild("Humanoid").HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOn
-    end
-end
-spawn(
-    function()
-        while wait(5) do
-            pcall(
-                function()
-                    for _, v in next, game:GetService("Players"):GetPlayers() do
-                        if v.Character ~= nil then
-                            Esp(v.Character)
-                        end
-                    end
-                end
-            )
-        end
-    end
-)
 
 
 local String = game:GetService("Workspace").npc["you are one rude person"]
@@ -454,9 +433,38 @@ pcall(
         end
     end
 )
+
+
+local function Esp(v)
+     if v:WaitForChild("Humanoid") then
+        v:WaitForChild("Humanoid").HealthDisplayDistance = 100
+        v:WaitForChild("Humanoid").HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOn
+    end
+end
+spawn(
+    function()
+        while wait(5) do
+            pcall(
+                function()
+                    for _, v in next, game:GetService("Players"):GetPlayers() do
+                        if v.Character ~= nil then
+                            Esp(v.Character)
+                        end
+                    end
+                    for i,v in pairs(String.Mobs.Mobs:GetChildren()) do
+                        if v:IsA("Model") and v:FindFirstChild("Humanoid") then
+                            Esp(v)
+                        end
+                    end 
+                end
+            )
+        end
+    end
+)
+
 local function CheckMate() 
     if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Katana") then
-        wait(0.5)
+        wait()
         game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(
             game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Katana")
         )
