@@ -16,6 +16,8 @@ game.CoreGui.RobloxPromptGui.promptOverlay.DescendantAdded:Connect(
     end
 )
 
+repeat wait() until not game.Players.LocalPlayer.Character:FindFirstChild("ForceField")
+
 local Name = "DemonSlayerBurningAshes.txt"
 
 Des = {}
