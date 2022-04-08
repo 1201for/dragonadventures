@@ -456,7 +456,7 @@ pcall(
 )
 local function CheckMate() 
     if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Katana") then
-        wait(1)
+        wait(0.5)
         game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(
             game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Katana")
         )
@@ -468,6 +468,21 @@ local function CheckMate()
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "R", false, game)
     end
 end
+
+local function Use()
+    for i, v in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
+        if
+            v:IsA("Tool") and v:FindFirstChild("Move") and not v:FindFirstChild("Cash") and
+                not game:GetService("Players").LocalPlayer.cds:FindFirstChild(v.Name)
+         then
+            if game:GetService("Players").LocalPlayer.NoSaveValue.Air.Value >= 100 then
+                game:GetService("ReplicatedStorage").events.remote:FireServer(v.Name)
+            end
+        end
+    end
+end
+
+
 if not game:GetService("Workspace"):FindFirstChild("First") then
 local Part = Instance.new("Part",Workspace)
 Part.Name = "First"
@@ -496,6 +511,7 @@ spawn(
     function()
         while Settings.Attack do
             wait()
+            Use()
             game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
         end
     end
@@ -561,6 +577,7 @@ spawn(
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
                                 CheckMate()
+                                Use()
                             if getNearestMob().Humanoid.Health < 3 then
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) *
@@ -634,6 +651,7 @@ spawn(
                             game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
                             game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
                             CheckMate()
+                            Use()
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearestiii().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
 
@@ -662,6 +680,7 @@ spawn(
                                 end
                             end
                             CheckMate()
+                            Use()
                             if getNearesti().Humanoid.Health == 0 then
                                 getNearesti():Destroy()
                             end
@@ -685,6 +704,7 @@ spawn(
                                 end
                             end
                             CheckMate()
+                            Use()
                             if getNearestCustom().Humanoid.Health == 0 then
                                 getNearestCustom():Destroy()
                             end
