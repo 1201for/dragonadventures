@@ -681,7 +681,7 @@ spawn(
             pcall(
                 function()
                     if Settings.Options == "Matter" then
-                        wait(0)
+                        wait(Settings.Delay)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
                             if isnetworkowner(getNearestiii().PrimaryPart) then
                                 getNearestiii().PrimaryPart.CFrame =
@@ -705,11 +705,11 @@ spawn(
                     end
 
                     if Settings.Options == "Away" then
-                        wait(0)
+                        wait(Settings.Delay)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
-                            if isnetworkowner(getNearesti().PrimaryPart) then wait(0)
+                            if isnetworkowner(getNearesti().PrimaryPart) then wait(Settings.Delay)
                                 getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10003, Number)
                                 game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
                                 game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
@@ -726,7 +726,7 @@ spawn(
                         end
                     end
 
-                    if Settings.Options == "Custom" then wait(0)
+                    if Settings.Options == "Custom" then wait(Settings.Delay)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, -8, 0) * CFrame.Angles(90, 0, 0)
@@ -757,6 +757,11 @@ spawn(
 
 
 end)
+
+local Slider1 = Section1:CreateSlider("AutoFarm Delay",0,7,Settings.Delay,false, function(Value)
+	Settings.Delay = Value
+end)
+
 local Dropdown1 = Section1:CreateDropdown("Options", {"Away","Matter","Custom"}, function(String)
 	Settings.Options = String
 end)
