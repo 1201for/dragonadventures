@@ -537,6 +537,7 @@ end)
 
 local Toggle1 = Section1:CreateToggle("Auto Gourd", Settings.Gourds, function(State)
 Settings.Gourds = State
+spawn(function()
 while Settings.Gourds do
     wait()
     pcall(
@@ -552,6 +553,7 @@ while Settings.Gourds do
         end
     )
 end
+end)
 end)
 
 
