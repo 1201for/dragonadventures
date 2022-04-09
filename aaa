@@ -503,6 +503,12 @@ Part.CFrame = CFrame.new(10000, 10000, 0)
 end 
 
 
+local Gourd = {"Small Gourd", "Medium Gourd", "Big Gourd"}
+
+
+
+
+
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
 local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
 
@@ -529,7 +535,29 @@ spawn(
 
 end)
 
+local Toggle1 = Section1:CreateToggle("Auto Gourd", Settings.Gourds, function(State)
+Settings.Gourds = State
+while Settings.Gourds do
+    wait()
+    pcall(
+        function()
+            if game:GetService("Players").LocalPlayer.NoSaveValue.Air.Value == 100 then
+                if not game.Players.LocalPlayer.Character:FindFirstChild(Settings.Gourd) then
+                game.Players.LocalPlayer.Character.Humanoid:EquipTool(
+                    game.Players.LocalPlayer.Backpack:FindFirstChild(Settings.Gourd)
+                )
+                end
+                game:GetService("ReplicatedStorage").events.remote:FireServer(Settings.Gourd)
+            end
+        end
+    )
+end
+end)
 
+
+local Dropdown1 = Section1:CreateDropdown("Gourds", Gourd, function(String)
+	Settings.Gourd = String
+end)
 
 local Toggle1 = Section1:CreateToggle("Full Bright", Settings.FullBright, function(State)
 Settings.FullBright = State
