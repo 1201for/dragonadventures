@@ -474,9 +474,11 @@ local function CheckMate()
     if not game:GetService("Players").LocalPlayer.states:FindFirstChild("exeing") then
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "B", false, game)
     end
-     if not game:GetService("Players").LocalPlayer.states:FindFirstChild("selfstun") then
+    if not game:GetService("Players").LocalPlayer.states:FindFirstChild("selfstun") then
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "R", false, game)
     end
+    game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
+    game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
 end
 
 local function Use()
@@ -612,13 +614,12 @@ spawn(
                             break
                         end
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-                            game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
-                            game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
+                            if getNearestMob().Humanoid.Health > 10 then
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
-                                CheckMate()
-                                Use()
-                            if getNearestMob().Humanoid.Health < 3 then
+                                end 
+
+                            if getNearestMob().Humanoid.Health < 10 then
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) *
                                     CFrame.Angles(0, 0, 0)
@@ -628,6 +629,20 @@ spawn(
                     if getNearestMob().Humanoid.Health == 0 then
                         getNearestMob():remove()
                     end
+                end
+            )
+        end
+    end
+)
+
+spawn(
+    function()
+        while wait() and Settings.AutoFarmMobs do
+            wait(0.2)
+            pcall(
+                function()
+                    CheckMate()
+                    Use()
                 end
             )
         end
@@ -687,13 +702,10 @@ spawn(
                                 getNearestiii().PrimaryPart.CFrame =
                                     CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
                             end
-                            game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
-                            game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
-                            CheckMate()
-                            Use()
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                getNearestiii().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
-
+                            if getNearestiii().Humanoid.Health > 10 then
+                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                    getNearestiii().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
+                            end
                             if getNearestiii().Humanoid.Health < 10 then
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestiii().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
@@ -707,43 +719,42 @@ spawn(
                     if Settings.Options == "Away" then
                         wait(Settings.Delay)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
-                            if isnetworkowner(getNearesti().PrimaryPart) then wait(Settings.Delay)
+                            if getNearesti().Humanoid.Health > 10 then
+                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                    getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
+                            end
+                            if isnetworkowner(getNearesti().PrimaryPart) then
+                                wait(Settings.Delay)
                                 getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10003, Number)
-                                game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
-                                game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
                                 if getNearesti().Humanoid.Health < 10 then
                                     game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                         getNearesti().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                                 end
                             end
-                            CheckMate()
-                            Use()
                             if getNearesti().Humanoid.Health == 0 then
                                 getNearesti():Destroy()
                             end
                         end
                     end
 
-                    if Settings.Options == "Custom" then wait(Settings.Delay)
+                    if Settings.Options == "Custom" then
+                        wait(Settings.Delay)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, -8, 0) * CFrame.Angles(90, 0, 0)
+                            if getNearestCustom().Humanoid.Health > 10 then
+                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                    getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, -8, 0) *
+                                    CFrame.Angles(90, 0, 0)
+                            end
 
-                            if isnetworkowner(getNearestCustom().PrimaryPart) then 
+                            if isnetworkowner(getNearestCustom().PrimaryPart) then
                                 getNearestCustom().PrimaryPart.Position =
                                     Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3)
-                                game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
-                                game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
                                 if getNearestCustom().Humanoid.Health < 10 then
                                     game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                         getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, 0, 0) *
                                         CFrame.Angles(0, 0, 0)
                                 end
                             end
-                            CheckMate()
-                            Use()
                             if getNearestCustom().Humanoid.Health == 0 then
                                 getNearestCustom():Destroy()
                             end
@@ -755,6 +766,19 @@ spawn(
     end
 )
 
+spawn(
+    function()
+        while wait() and Settings.AutoFarmSafely do
+            wait(0.2)
+            pcall(
+                function()
+                    CheckMate()
+                    Use()
+                end
+            )
+        end
+    end
+)
 
 end)
 
