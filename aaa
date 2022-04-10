@@ -237,25 +237,7 @@ game:GetService("RunService").Stepped:connect(
 end
 
 
-Areas = {}
-for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
-    if v:IsA("BasePart") then
-        table.insert(Areas, v.Name)
-    end
-end
 
-Breathings1 = {}
-for i, v in pairs(game:GetService("Workspace").chatnpcs.breath:GetChildren()) do
-    if v:IsA("Model") then
-        table.insert(Breathings1, v.Name)
-    end
-end
-NPCS = {}
-for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
-    if v:IsA("Model") then
-        table.insert(NPCS, v.Name)
-    end
-end
 
 Mobs = {"Demon Slayer", "Strong Demon Slayer","Demon","Strong Demon","Fast Demon","Mukago"}
 
@@ -268,9 +250,9 @@ local Strong = game:GetService("Workspace").npc["you are one rude person"]
 
 for i, v in pairs(Strong:GetChildren()) do
     if not v:FindFirstChildOfClass("Folder") then
-        v.Name = "I hate you Nigger"
+        v.Name = ""
         v:Destroy()
-    elseif v.Name ~= "I hate you Nigger" then
+    elseif v.Name ~= "" then
         v.Name = "Mobs"
         v:FindFirstChildOfClass("Folder").Name = "Mobs"
     end
@@ -283,6 +265,28 @@ local function GetAwayAssHats()
             local Mag =
                 (game.Players.LocalPlayer.Character.HumanoidRootPart.Position -
                 v.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude
+            if Mag < TargetDistance then
+                TargetDistance = Mag
+                Target = v
+            end
+        end
+    end
+    return Target
+end
+
+
+
+local function getNearestMobFinalSeclection()
+    local TargetDistance = math.huge
+    local Target
+    for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
+        if
+            v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 
+         then
+            local Mag =
+                (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
+
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -373,22 +377,44 @@ end
 
 local Number = math.random(1,500)
 
-
-
-pcall(
-    function()
-        Que = {}
-        for i, v in pairs(game:GetService("Workspace").chatnpcs:GetDescendants()) do
-            if
-                v:IsA("StringValue") and v.Name == "Quest" and v.Value ~= "Find Box" and
-                    v.Value ~= "Slaughter 5 players" and
-                    not table.find(Que, v.Value)
-             then
-                table.insert(Que, v.Value)
-            end
+    Areas = {}
+    for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
+        if v:IsA("BasePart") then
+            table.insert(Areas, v.Name)
         end
     end
-)
+if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
+    Que = {}
+    for i, v in pairs(game:GetService("Workspace").chatnpcs:GetDescendants()) do
+        if
+            v:IsA("StringValue") and v.Name == "Quest" and v.Value ~= "Find Box" and v.Value ~= "Slaughter 5 players" and
+                not table.find(Que, v.Value)
+         then
+            table.insert(Que, v.Value)
+        end
+    end
+    Areas = {}
+    for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
+        if v:IsA("BasePart") then
+            table.insert(Areas, v.Name)
+        end
+    end
+
+    Breathings1 = {}
+    for i, v in pairs(game:GetService("Workspace").chatnpcs.breath:GetChildren()) do
+        if v:IsA("Model") then
+            table.insert(Breathings1, v.Name)
+        end
+    end
+    NPCS = {}
+    for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
+        if v:IsA("Model") then
+            table.insert(NPCS, v.Name)
+        end
+    end
+end
+
+
 
 
 local function Esp(v)
@@ -477,6 +503,85 @@ local Section3 = Tab2:CreateSection("Menu")
 local Section4 = Tab2:CreateSection("Background")
 
 
+if not game.Workspace:FindFirstChild("chatnpcs") then
+local Toggle1 = Section1:CreateToggle("Auto Final Selection", Settings.AutoFinalSelection, function(State)
+Settings.AutoFinalSelection = State
+
+game:GetService("RunService").Stepped:connect(
+    function()
+        if Settings.AutoFinalSelection then
+            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+        end
+    end
+)
+Settings.AutoFinalSelection = State
+
+game:GetService("RunService").Stepped:connect(
+    function()
+        if Settings.AutoFinalSelection then
+            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+        end
+    end
+)
+spawn(
+    function()
+        while wait() and Settings.AutoFinalSelection do
+            pcall(
+                function()
+                    repeat
+                        wait()
+                        if Settings.AutoFinalSelection == false then
+                            break
+                        end
+                        if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
+                            if getNearestMobFinalSeclection().Humanoid.Health > 10 then
+                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                    getNearestMobFinalSeclection().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) *
+                                    CFrame.Angles(90, 0, 0)
+                            end
+
+                            if getNearestMobFinalSeclection().Humanoid.Health < 10 then
+                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                    getNearestMobFinalSeclection().HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) *
+                                    CFrame.Angles(0, 0, 0)
+                            end
+                        end
+                    until Settings.AutoFinalSelection == false or getNearestMobFinalSeclection().Humanoid.Health == 0
+                    if getNearestMobFinalSeclection().Humanoid.Health == 0 then
+                        getNearestMobFinalSeclection():remove()
+                    end
+                end
+            )
+        end
+    end
+)
+
+
+spawn(
+    function()
+        while wait() and Settings.AutoFinalSelection do
+            wait(0.2)
+            pcall(
+                function()
+                    CheckMate()
+                    Use()
+                    if isnetworkowner then
+                    for i,v in pairs(String.Mobs.Mobs:GetChildren()) do 
+                    if v:IsA("Model") and v:FindFirstChildOfClass("Humanoid") and isnetworkowner(v.HumanoidRootPart) then
+                    v.HumanoidRootPart.Anchored = true
+                    elseif not isnetworkowner(v.HumanoidRootPart) then
+                    v.HumanoidRootPart.Anchored = false 
+                    end end end 
+                end
+            )
+        end
+    end
+)
+
+end)
+end
+
+
 local Toggle1 = Section1:CreateToggle("Auto Attack", Settings.Attack, function(State)
 Settings.Attack = State
 spawn(
@@ -509,7 +614,7 @@ while Settings.Gourds do
         end
     )
 end
-end)
+end) 
 end)
 
 
@@ -543,9 +648,12 @@ game.Lighting.Changed:connect(
         end
     end)
 end)
+
+if game.PlaceId == 2483973525 and game.PlaceId ~=  4638327541 then
 local Toggle1 = Section1:CreateToggle("Stats", Settings.Visible, function(State)
 Settings.Visible = State
 end)
+
 
 local Toggle1 = Section1:CreateToggle("AutoFarm Mobs", Settings.AutoFarmMobs, function(State)
 Settings.AutoFarmMobs = State
@@ -649,6 +757,7 @@ spawn(
         while wait() and Settings.AutoFarmSafely do
             pcall(
                 function()
+                    
                     if Settings.Options == "Matter" then
                         wait(Settings.Delay)
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
@@ -756,7 +865,7 @@ end
 local Dropdown1 = Section1:CreateDropdown("Mobs", Mobs, function(String)
 	Settings.Mobs = String
 end)
-
+if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
 local Toggle1 = Section1:CreateToggle("Auto Accept Quest", Settings.AutoQuest, function(State)
 Settings.AutoQuest = State
 game:GetService("RunService").Stepped:connect(
@@ -821,7 +930,7 @@ end)
 local Dropdown1 = Section1:CreateDropdown("Quests", Que, function(String)
 	Settings.Quest = String
 end)
-
+end 
  
 local Toggle1 = Section1:CreateToggle("Auto Eat", Settings.Eat, function(State)
 Settings.Eat = State
@@ -931,7 +1040,7 @@ spawn(
     end
 )
 end)
-
+if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
 
 local Toggle1 = Section1:CreateToggle("Money Farm | Fast", Settings.Money, function(State)
 Settings.Money = State
@@ -949,7 +1058,7 @@ repeat
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
         game:GetService("ReplicatedStorage").Areas["Yokai Village"].CFrame
         end
-until game:GetService("Workspace").chatnpcs.Quest.Box:FindFirstChild("Main") or Settings.Money == false
+until game:GetService("Workspace"):WaitForChild("chatnpcs").Quest.Box:FindFirstChild("Main") or Settings.Money == false
 spawn(
     function()
         while wait(Settings.MoneyDelay) and Settings.Money do
@@ -987,7 +1096,7 @@ spawn(
 )
 
 end)
-
+end
 
 local Slider1 = Section1:CreateSlider("Money Farm Delay",0,7,Settings.MoneyDelay,false, function(Value)
 	Settings.MoneyDelay = Value
@@ -1059,7 +1168,7 @@ local Dropdown1 = Section2:CreateDropdown("Areas", Areas, function(String)
 	Areas = String
 end)
 
-
+if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
 local Button1 = Section2:CreateButton("Teleport To Breathing Teacher", function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").chatnpcs.breath[Breathings1].HumanoidRootPart.CFrame
 end)
@@ -1075,6 +1184,7 @@ end)
 local Dropdown1 = Section2:CreateDropdown("NPCS", NPCS, function(String)
 	NPCS = String
 end)
+end
 
 
 
@@ -1100,7 +1210,7 @@ local Toggle1 = Section1:CreateToggle("Enable Esp", Settings.Esp, function(State
     ESP:Toggle(Settings.Esp)
     
 end)
-
+if game:GetService("Workspace").map:FindFirstChild("Stuff") then
 local Toggle1 = Section1:CreateToggle("EarRing Esp", Settings.FluteEsp, function(State)
     Settings.FluteEsp = State
 local function esp(v)
@@ -1148,7 +1258,7 @@ game:GetService("Workspace").map.Stuff.ChildAdded:Connect(
     end
 )
 end)
-
+end 
 local Toggle1 = Section1:CreateToggle("PLayer Esp", Settings.PlayerEsp, function(State)
     Settings.PlayerEsp = State
     ESP.Players = Settings.PlayerEsp
@@ -1165,6 +1275,8 @@ local Toggle1 = Section1:CreateToggle("Boxes Esp", Settings.Boxes, function(Stat
     Settings.Boxes = State
     ESP.Boxes = Settings.Boxes
 end)
+
+end 
 
 local Toggle1 = Section2:CreateToggle("Invisicam", Settings.Sorry, function(State)
 Settings.Sorry = State
