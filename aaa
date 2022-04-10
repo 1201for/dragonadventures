@@ -236,7 +236,7 @@ game:GetService("RunService").Stepped:connect(
 )
 end
 
-if game.PlaceId == 2483973525 then
+
 Areas = {}
 for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
     if v:IsA("BasePart") then
@@ -256,8 +256,8 @@ for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
         table.insert(NPCS, v.Name)
     end
 end
-end 
-Mobs = {"Demons", "Demon Slayers"}
+
+Mobs = {"Demon Slayer", "Strong Demon Slayer","Demon","Strong Demon","Fast Demon","Mukago"}
 
 
 
@@ -291,26 +291,15 @@ local function GetAwayAssHats()
     end
     return Target
 end
+
 local function getNearestMob()
     local TargetDistance = math.huge
     local Target
     for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
         if
-            Settings.Mobs == "Demons" and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
+            v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
-                v:FindFirstChild("Demon") and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
-         then
-            local Mag =
-                (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
-
-            if Mag < TargetDistance then
-                TargetDistance = Mag
-                Target = v
-            end
-        elseif
-            Settings.Mobs == "Demon Slayers" and not v:FindFirstChild("Demon") and v:IsA("Model") and
-                v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
          then
             local Mag =
                 (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
@@ -329,23 +318,11 @@ local function getNearestiii()
     local Target
     for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
         if
-            Settings.Mobs == "Demons" and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
+            v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
-                v:FindFirstChild("Demon") and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
          then
-            local Mag =
-                (Vector3.new(-673, -288, -647) - v.PrimaryPart.Position).Magnitude
-            if Mag < TargetDistance then
-                TargetDistance = Mag
-                Target = v
-            end
-        elseif
-            Settings.Mobs == "Demon Slayers" and not v:FindFirstChild("Demon") and v:IsA("Model") and
-                v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
-         then
-            local Mag =
-                (Vector3.new(-673, -288, -648) - v.PrimaryPart.Position).Magnitude
+            local Mag = (Vector3.new(-673, -288, -648) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -360,23 +337,12 @@ local function getNearestCustom()
     local Target
     for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
         if
-            Settings.Mobs == "Demons" and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
+            v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
-                v:FindFirstChild("Demon") and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
          then
             local Mag =
-                (Vector3.new(Settings.Position1,Settings.Position2,Settings.Position3) - v.PrimaryPart.Position).Magnitude
-            if Mag < TargetDistance then
-                TargetDistance = Mag
-                Target = v
-            end
-        elseif
-            Settings.Mobs == "Demon Slayers" and not v:FindFirstChild("Demon") and v:IsA("Model") and
-                v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
-         then
-            local Mag =
-                (Vector3.new(Settings.Position1,Settings.Position2,Settings.Position3) - v.PrimaryPart.Position).Magnitude
+                (Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -385,30 +351,17 @@ local function getNearestCustom()
     end
     return Target
 end
-
 
 local function getNearesti()
     local TargetDistance = math.huge
     local Target
     for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
         if
-            Settings.Mobs == "Demons" and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
+            v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
-                v:FindFirstChild("Demon") and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
          then
-            local Mag =
-                (Vector3.new(10000, 10000, 0) - v.PrimaryPart.Position).Magnitude
-            if Mag < TargetDistance then
-                TargetDistance = Mag
-                Target = v
-            end
-        elseif
-            Settings.Mobs == "Demon Slayers" and not v:FindFirstChild("Demon") and v:IsA("Model") and
-                v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 25
-         then 
-            local Mag =
-                (Vector3.new(10000, 10000, 0) - v.PrimaryPart.Position).Magnitude
+            local Mag = (Vector3.new(10000, 10000, 0) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -417,6 +370,7 @@ local function getNearesti()
     end
     return Target
 end
+
 local Number = math.random(1,500)
 
 
@@ -867,7 +821,7 @@ end)
 local Dropdown1 = Section1:CreateDropdown("Quests", Que, function(String)
 	Settings.Quest = String
 end)
-if game.PlaceId == 2483973525 then
+
  
 local Toggle1 = Section1:CreateToggle("Auto Eat", Settings.Eat, function(State)
 Settings.Eat = State
@@ -1091,7 +1045,7 @@ spawn(
     end
 )
 end)
-if game.PlaceId == 2483973525 then
+
 local Button1 = Section2:CreateButton("Teleport To Area", function()
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Areas[Areas].CFrame
 end)
@@ -1116,7 +1070,7 @@ end)
 local Dropdown1 = Section2:CreateDropdown("NPCS", NPCS, function(String)
 	NPCS = String
 end)
-end
+
 
 
 local Toggle1 = Section2:CreateToggle("Infinite Jump", Settings.InfiniteJump, function(State)
@@ -1129,7 +1083,7 @@ game:GetService("UserInputService").JumpRequest:connect(
     end
 )
 end)
-end
+
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/Karrot-Esp"))()
 
 
@@ -1141,7 +1095,7 @@ local Toggle1 = Section1:CreateToggle("Enable Esp", Settings.Esp, function(State
     ESP:Toggle(Settings.Esp)
     
 end)
-if game.PlaceId == 2483973525 then
+
 local Toggle1 = Section1:CreateToggle("EarRing Esp", Settings.FluteEsp, function(State)
     Settings.FluteEsp = State
 local function esp(v)
@@ -1189,7 +1143,7 @@ game:GetService("Workspace").map.Stuff.ChildAdded:Connect(
     end
 )
 end)
-end
+
 local Toggle1 = Section1:CreateToggle("PLayer Esp", Settings.PlayerEsp, function(State)
     Settings.PlayerEsp = State
     ESP.Players = Settings.PlayerEsp
