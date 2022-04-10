@@ -952,7 +952,7 @@ repeat
 until game:GetService("Workspace").chatnpcs.Quest.Box:FindFirstChild("Main") or Settings.Money == false
 spawn(
     function()
-        while wait() and Settings.Money do
+        while wait(Settings.MoneyDelay) and Settings.Money do
             pcall(
                 function()
                     if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") then
@@ -986,6 +986,11 @@ spawn(
     end
 )
 
+end)
+
+
+local Slider1 = Section1:CreateSlider("Money Farm Delay",0,7,Settings.MoneyDelay,false, function(Value)
+	Settings.MoneyDelay = Value
 end)
 
 
