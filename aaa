@@ -1291,7 +1291,7 @@ while wait(2) and Settings.Anchored do
             for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
                 if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) and (game.Players.LocalPlayer.Character.HumanoidRootPart - v.PrimaryPart.Position).Magnitude <= 25 then
                     v.HumanoidRootPart.Anchored = true
-                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) and v.HumanoidRootPart.Anchored == true then
+                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) and (game.Players.LocalPlayer.Character.HumanoidRootPart - v.PrimaryPart.Position).Magnitude <= 25 then
                     v.HumanoidRootPart.Anchored = false
                 end
             end
@@ -1310,7 +1310,7 @@ while wait(2) and Settings.Jump do
             for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
                 if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) and  (game.Players.LocalPlayer.Character.HumanoidRootPart - v.PrimaryPart.Position).Magnitude <= 25 then
                     v.Humanoid.Jump = true
-                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) and v.Humanoid.Jump == true then
+                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) and (game.Players.LocalPlayer.Character.HumanoidRootPart - v.PrimaryPart.Position).Magnitude <= 25 then
                     v.Humanoid.Jump = false
                 end
             end
@@ -1329,7 +1329,7 @@ while wait(2) and Settings.Stun do
             for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
                 if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) and (game.Players.LocalPlayer.Character.HumanoidRootPart - v.PrimaryPart.Position).Magnitude <= 25 then
                     v.Humanoid.PlatformStand = true
-                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) and v.Humanoid.PlatformStand == true then
+                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) and (game.Players.LocalPlayer.Character.HumanoidRootPart - v.PrimaryPart.Position).Magnitude <= 25  then
                     v.Humanoid.PlatformStand = false
                 end
             end
