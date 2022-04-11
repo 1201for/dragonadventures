@@ -104,7 +104,6 @@ game.CoreGui.RobloxPromptGui.promptOverlay.DescendantAdded:Connect(
                     )
                 end
             end
-
             -- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
             Teleport()
         end
@@ -342,7 +341,6 @@ Mobs = {"Demon Slayer", "Strong Demon Slayer","Demon","Strong Demon","Fast Demon
 local String = game:GetService("Workspace").npc["you are one rude person"]
 
 local Strong = game:GetService("Workspace").npc["you are one rude person"]
-
 for i, v in pairs(Strong:GetChildren()) do
     if not v:FindFirstChildOfClass("Folder") then
         v.Name = ""
@@ -906,7 +904,9 @@ Settings.AutoFarmSafely = State
 game:GetService("RunService").Stepped:connect(
     function()
         if Settings.AutoFarmSafely then
+            if String.Mobs.Mobs:FindFirstChildOfClass("Model") then
             game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+            end 
         end
     end
 )
@@ -1288,6 +1288,67 @@ end
 local Slider1 = Section1:CreateSlider("Money Farm Delay",0,7,Settings.MoneyDelay,false, function(Value)
 	Settings.MoneyDelay = Value
 end)
+
+if isnetworkowner then
+local Toggle1 = Section1:CreateToggle("Anchored Mob Aura", Settings.Anchored, function(State)
+Settings.Anchored = State
+spawn(function()
+while wait() and Settings.Anchored do
+    pcall(
+        function()
+            for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
+                if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) then
+                    v.HumanoidRootPart.Anchored = true
+                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) then
+                    v.HumanoidRootPart.Anchored = false
+                end
+            end
+        end
+    )
+end
+end)
+end)
+
+local Toggle1 = Section1:CreateToggle("Jump Mob Aura", Settings.Jump, function(State)
+Settings.Jump = State
+spawn(function()
+while wait() and Settings.Jump do
+    pcall(
+        function()
+            for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
+                if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) then
+                    v.Humanoid.Jump = true
+                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) then
+                    v.Humanoid.Jump = false
+                end
+            end
+        end
+    )
+end
+end)
+end)
+
+local Toggle1 = Section1:CreateToggle("Stun Mob Aura", Settings.Stun, function(State)
+Settings.Stun = State
+spawn(function()
+while wait() and Settings.Stun do
+    pcall(
+        function()
+            for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
+                if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) then
+                    v.Humanoid.PlatformStand = true
+                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) then
+                    v.Humanoid.PlatformStand = false
+                end
+            end
+        end
+    )
+end
+end)
+end)
+end 
+
+
 
 
 local Toggle1 = Section1:CreateToggle("Infinite Breath", Settings.InfiniteBreath, function(State)
