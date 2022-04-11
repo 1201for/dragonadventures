@@ -538,6 +538,7 @@ spawn(
 )
 
 local function CheckMate() 
+    if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
     if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Katana") then
         wait()
         game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(
@@ -552,6 +553,7 @@ local function CheckMate()
     end
     game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
     game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
+    end 
 end
 
 local function Use()
@@ -905,8 +907,8 @@ game:GetService("RunService").Stepped:connect(
     function()
         if Settings.AutoFarmSafely then
             if String.Mobs.Mobs:FindFirstChildOfClass("Model") then
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
-            end 
+                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+            end
         end
     end
 )
@@ -944,70 +946,60 @@ spawn(
         while wait() and Settings.AutoFarmSafely do
             pcall(
                 function()
-                    
                     if Settings.Options == "Matter" then
                         wait(Settings.Delay)
-                        if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-                            if isnetworkowner(getNearestiii().PrimaryPart) then
-                                getNearestiii().PrimaryPart.CFrame =
-                                    CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
-                            end
-                            if getNearestiii().Humanoid.Health > 10 then
-                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                    getNearestiii().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
-                            end
-                            if getNearestiii().Humanoid.Health < 10 then
-                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                    getNearestiii().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
-                            end
-                            if getNearestiii().Humanoid.Health == 0 then
-                                getNearestiii():Destroy()
-                            end
+                        if isnetworkowner(getNearestiii().PrimaryPart) then
+                            getNearestiii().PrimaryPart.CFrame =
+                                CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
+                        end
+                        if getNearestiii().Humanoid.Health > 10 then
+                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                getNearestiii().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
+                        end
+                        if getNearestiii().Humanoid.Health < 10 then
+                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                getNearestiii().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+                        end
+                        if getNearestiii().Humanoid.Health == 0 then
+                            getNearestiii():Destroy()
                         end
                     end
 
                     if Settings.Options == "Away" then
                         wait(Settings.Delay)
-                        if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-                            if getNearesti().Humanoid.Health > 10 then
+                        if getNearesti().Humanoid.Health > 10 then
+                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
+                        end
+                        if isnetworkowner(getNearesti().PrimaryPart) then
+                            wait(Settings.Delay)
+                            getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10003, Number)
+                            if getNearesti().Humanoid.Health < 10 then
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                    getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
+                                    getNearesti().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                             end
-                            if isnetworkowner(getNearesti().PrimaryPart) then
-                                wait(Settings.Delay)
-                                getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10003, Number)
-                                if getNearesti().Humanoid.Health < 10 then
-                                    game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                        getNearesti().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
-                                end
-                            end
-                            if getNearesti().Humanoid.Health == 0 then
-                                getNearesti():Destroy()
-                            end
+                        end
+                        if getNearesti().Humanoid.Health == 0 then
+                            getNearesti():Destroy()
                         end
                     end
 
                     if Settings.Options == "Custom" then
                         wait(Settings.Delay)
-                        if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-                            if getNearestCustom().Humanoid.Health > 10 then
+                        if getNearestCustom().Humanoid.Health > 10 then
+                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, -8, 0) * CFrame.Angles(90, 0, 0)
+                        end
+                        if isnetworkowner(getNearestCustom().PrimaryPart) then
+                            getNearestCustom().PrimaryPart.Position =
+                                Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3)
+                            if getNearestCustom().Humanoid.Health < 10 then
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                    getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, -8, 0) *
-                                    CFrame.Angles(90, 0, 0)
+                                    getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                             end
-
-                            if isnetworkowner(getNearestCustom().PrimaryPart) then
-                                getNearestCustom().PrimaryPart.Position =
-                                    Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3)
-                                if getNearestCustom().Humanoid.Health < 10 then
-                                    game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                        getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, 0, 0) *
-                                        CFrame.Angles(0, 0, 0)
-                                end
-                            end
-                            if getNearestCustom().Humanoid.Health == 0 then
-                                getNearestCustom():Destroy()
-                            end
+                        end
+                        if getNearestCustom().Humanoid.Health == 0 then
+                            getNearestCustom():Destroy()
                         end
                     end
                 end
@@ -1293,13 +1285,13 @@ if isnetworkowner then
 local Toggle1 = Section1:CreateToggle("Anchored Mob Aura", Settings.Anchored, function(State)
 Settings.Anchored = State
 spawn(function()
-while wait() and Settings.Anchored do
+while wait(2) and Settings.Anchored do
     pcall(
         function()
             for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
-                if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) then
+                if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) and (game.Players.LocalPlayer.Character.HumanoidRootPart - v.PrimaryPart.Position).Magnitude <= 25 then
                     v.HumanoidRootPart.Anchored = true
-                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) then
+                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) and v.HumanoidRootPart.Anchored == true then
                     v.HumanoidRootPart.Anchored = false
                 end
             end
@@ -1312,13 +1304,13 @@ end)
 local Toggle1 = Section1:CreateToggle("Jump Mob Aura", Settings.Jump, function(State)
 Settings.Jump = State
 spawn(function()
-while wait() and Settings.Jump do
+while wait(2) and Settings.Jump do
     pcall(
         function()
             for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
-                if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) then
+                if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) and  (game.Players.LocalPlayer.Character.HumanoidRootPart - v.PrimaryPart.Position).Magnitude <= 25 then
                     v.Humanoid.Jump = true
-                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) then
+                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) and v.Humanoid.Jump == true then
                     v.Humanoid.Jump = false
                 end
             end
@@ -1331,13 +1323,13 @@ end)
 local Toggle1 = Section1:CreateToggle("Stun Mob Aura", Settings.Stun, function(State)
 Settings.Stun = State
 spawn(function()
-while wait() and Settings.Stun do
+while wait(2) and Settings.Stun do
     pcall(
         function()
             for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
-                if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) then
+                if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart) and (game.Players.LocalPlayer.Character.HumanoidRootPart - v.PrimaryPart.Position).Magnitude <= 25 then
                     v.Humanoid.PlatformStand = true
-                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) then
+                elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart) and v.Humanoid.PlatformStand == true then
                     v.Humanoid.PlatformStand = false
                 end
             end
