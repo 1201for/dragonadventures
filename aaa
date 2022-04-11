@@ -1906,7 +1906,14 @@ end)
 Slider4:SetValue(0.5)
 
 
-spawn(function()
-while wait() do
-Save()
-end end)
+spawn(
+    function()
+        while wait(30) do
+            pcall(
+                function()
+                    Save()
+                end
+            )
+        end
+    end
+)
