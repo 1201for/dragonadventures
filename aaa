@@ -1140,11 +1140,10 @@ spawn(
         while Settings.AutoTeleport do
             wait(2)
             for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-                if v:IsA("Model") then
+                if v:IsA("Model") and v.Name == "Barrel" then
                     for i, v in pairs(v:GetChildren()) do
                         if v:IsA("BasePart") and v:FindFirstChildOfClass("ClickDetector") then
                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
-                            fireclickdetector(v:FindFirstChildOfClass("ClickDetector"))
                         end
                     end
                 end
@@ -1153,6 +1152,26 @@ spawn(
     end
 )
 end)
+local Toggle1 = Section1:CreateToggle("Auto Tp To Flute", Settings.AutoTeleport2, function(State)
+Settings.AutoTeleport2 = State
+spawn(
+    function()
+        while Settings.AutoTeleport2 do
+            wait(2)
+            for i, v in pairs(game:GetService("Workspace")["tournments orr"]:GetChildren()) do
+                if v:IsA("Model") then
+                    for i, v in pairs(v:GetChildren()) do
+                        if v:IsA("BasePart") and v.Name == "Barrel" then
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+                        end
+                    end
+                end
+            end
+        end
+    end
+)
+end)
+
 if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
 
 local Toggle1 = Section1:CreateToggle("Money Farm | Fast", Settings.Money, function(State)
@@ -1402,7 +1421,7 @@ local function esp(v)
             game:GetService('RunService').Stepped:Connect(
             function() pcall(function()
                 if v  then
-                    local Vector, Screen = workspace.CurrentCamera:WorldToViewportPoint(v.Position)
+                    local Vector, Screen = workspace.CurrentCamera:WorldToViewportPoint(v:FindFirstChildWhichIsA("BasePart").Position)
                     if Settings.FluteEsp and Screen then
                         T.Position = Vector2.new(Vector.X, Vector.Y)
                         T.Visible = true
@@ -1420,14 +1439,65 @@ local function esp(v)
     update()
 end
 for i,v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-    if v:IsA("Model") and  v:FindFirstChildOfClass("Part") and v.Name == "Barrel" and  v[v:FindFirstChildOfClass("Part").Name]:FindFirstChildOfClass("ClickDetector")  then
+    if v:IsA("Model") and  v:FindFirstChildOfClass("Part") and v.Name == "Barrel" then
         esp(v)
     end
 end
 game:GetService("Workspace").map.Stuff.ChildAdded:Connect(
     function(v)
-         if v:IsA("Model") and  v:FindFirstChildOfClass("Part") and v.Name == "Barrel" and  v[v:FindFirstChildOfClass("Part").Name]:FindFirstChildOfClass("ClickDetector")  then
+         if v:IsA("Model") and  v:FindFirstChildOfClass("Part") and v.Name == "Barrel"  then
         esp(v)
+        end
+    end
+)
+end)
+local Toggle1 = Section1:CreateToggle("Flute Esp", Settings.FluteEsps, function(State)
+Settings.FluteEsps = State
+local function esp(v)
+    local T = Drawing.new("Text")
+    T.Visible = false
+    T.Center = true
+    T.Outline = true
+    T.Font = 2
+    T.Text = "item"
+    T.Size = 14
+    T.Color = Color3.fromRGB(203, 214, 73)
+    local function update()
+        local Re
+        Re =
+            game:GetService("RunService").Stepped:Connect(
+            function()
+                pcall(
+                    function()
+                        if v then
+                            local Vector, Screen = workspace.CurrentCamera:WorldToViewportPoint(v.Position)
+                            if Settings.FluteEsps and Screen then
+                                T.Position = Vector2.new(Vector.X, Vector.Y)
+                                T.Visible = true
+                                T.Text = "Earring"
+                            else
+                                T.Visible = false
+                            end
+                        elseif v == nil then
+                            T:Remove()
+                            Re:disconnect()
+                        end
+                    end
+                )
+            end
+        )
+    end
+    update()
+end
+for i, v in pairs(game:GetService("Workspace")["tournments orr"].Model:GetChildren()) do
+    if v.Name == "Barrel" then
+        esp(v)
+    end
+end
+game:GetService("Workspace")["tournments orr"].Model.ChildAdded:Connect(
+    function(v)
+        if v.Name == "Barrel" then
+            esp(v)
         end
     end
 )
