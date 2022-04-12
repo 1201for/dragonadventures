@@ -65,26 +65,18 @@ OldNameCall =
         if getnamecallmethod() == "Destroy" and self == game.Players.LocalPlayer then 
             return nil
         end 
-
         return OldNameCall(self, unpack(Args))
     end
 )
-pcall(
-    function()
-        Que = {}
-        for i, v in pairs(game:GetService("Workspace").chatnpcs:GetDescendants()) do
-            if v:IsA("StringValue") and v.Name == "Quest" and v.Value ~= "Find Box" and v.Value ~= "Slaughter 5 players" then
-                table.insert(Que, v.Value)
-            end
-        end
-    end
-)
+
 spawn(
     function()
         game:GetService("RunService").Stepped:connect(
             function()
+                pcall(function() wait()
                 workspace.FallenPartsDestroyHeight = 0 / 0
                 sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
+                end)
             end
         )
     end
@@ -177,9 +169,9 @@ Time.TextSize = 16
 
 
 local script = Instance.new("LocalScript", Breathing)
-game:GetService("RunService").Stepped:connect(
-    function()
-        if Settings.Visible then
+spawn(function()
+while wait() do
+        if Settings.Visible then wait()
             Breathing.Text =
                 "Breath " ..
                 math.floor(game:GetService("Players").LocalPlayer:WaitForChild("NoSaveValue"):WaitForChild("Air").Value) ..
@@ -188,12 +180,13 @@ game:GetService("RunService").Stepped:connect(
         else
             Breathing.Visible = false
         end
+        end
     end
 )
 local script = Instance.new("LocalScript", Hunger)
-game:GetService("RunService").Stepped:connect(
-    function()
-        if Settings.Visible then
+spawn(function()
+while wait() do
+        if Settings.Visible then wait()
             Hunger.Text =
                 "Hunger " ..
                 math.floor(
@@ -204,12 +197,13 @@ game:GetService("RunService").Stepped:connect(
         else
             Hunger.Visible = false
         end
+        end
     end
 )
 local script = Instance.new("LocalScript", Health)
-game:GetService("RunService").Stepped:connect(
-    function()
-        if Settings.Visible then
+spawn(function()
+while wait() do
+        if Settings.Visible then wait()
             Health.Text =
                 "Health " ..
                 math.floor(game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid").Health) .. "%"
@@ -217,26 +211,28 @@ game:GetService("RunService").Stepped:connect(
         else
             Health.Visible = false
         end
+        end
     end
 )
 
 local script = Instance.new("LocalScript", Rep)
-game:GetService("RunService").Stepped:connect(
-    function()
-        if Settings.Visible then
+spawn(function()
+while wait() do
+        if Settings.Visible then wait()
             Rep.Text = "Rep " .. game:GetService("Players").LocalPlayer:WaitForChild("Data"):WaitForChild("Rep").Value
             Rep.Visible = true
         else
             Rep.Visible = false
         end
+        end
     end
 )
 
 local script = Instance.new("LocalScript", Time)
-game:GetService("RunService").Stepped:connect(
-    function()
+spawn(function()
+while wait() do
         if Settings.Visible then
-            if game:GetService("Lighting").ClockTime >= 13 then
+            if game:GetService("Lighting").ClockTime >= 13 then wait()
             Time.Text =  math.floor(game:GetService("Lighting").ClockTime - 12) .. "PM"
             else
             Time.Text =  math.floor(game:GetService("Lighting").ClockTime) .. "AM"
@@ -244,6 +240,7 @@ game:GetService("RunService").Stepped:connect(
             Time.Visible = true
         else
             Time.Visible = false
+        end
         end
     end
 )
@@ -269,6 +266,16 @@ for i, v in pairs(Strong:GetChildren()) do
         v:FindFirstChildOfClass("Folder").Name = "Mobs"
     end
 end
+if game:GetService("Workspace"):FindFirstChild("chatnpcs")  then
+    for i, v in pairs(game:GetService("Workspace").chatnpcs.Quest:GetChildren()) do
+        if v:IsA("Model") then
+            pcall(function()
+            v.Parent = game:GetService("Workspace").chatnpcs
+            end)
+        end
+    end
+end
+
 local function GetAwayAssHats()
     local TargetDistance = math.huge
     local Target
@@ -389,20 +396,20 @@ end
 
 local Number = math.random(1,500)
 
-    Areas = {}
-    for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
-        if v:IsA("BasePart") then
-            table.insert(Areas, v.Name)
-        end
+Areas = {}
+for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
+    if v:IsA("BasePart") then
+        table.insert(Areas, v.Name)
     end
+end
 if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
     Que = {}
-    for i, v in pairs(game:GetService("Workspace").chatnpcs:GetDescendants()) do
-        if
-            v:IsA("StringValue") and v.Name == "Quest" and v.Value ~= "Find Box" and v.Value ~= "Slaughter 5 players" and
-                not table.find(Que, v.Value)
+    for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
+        if v:FindFirstChild("Chat") and v.Chat:FindFirstChild("Start") and v.Chat.Start:FindFirstChild("b") and 
+            v.Chat.Start.b:FindFirstChild("Quest")  and
+                not table.find(Que, v.Chat.Start.b.Quest.Value)
          then
-            table.insert(Que, v.Value)
+            table.insert(Que, v.Chat.Start.b.Quest.Value)
         end
     end
     Areas = {}
@@ -470,6 +477,7 @@ local function CheckMate()
     if not game:GetService("Players").LocalPlayer.states:FindFirstChild("selfstun") then
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "R", false, game)
     end
+    wait()
     game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
     game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
     end 
@@ -480,12 +488,17 @@ local function Use()
         if
             v:IsA("Tool") and v:FindFirstChild("Move") and not v:FindFirstChild("Cash") and
                 not game:GetService("Players").LocalPlayer.cds:FindFirstChild(v.Name)
-         then
+         then wait()
             if game:GetService("Players").LocalPlayer.NoSaveValue.Air.Value <= 100 then
                 game:GetService("ReplicatedStorage").events.remote:FireServer(v.Name)
             end
         end
     end
+end
+
+
+local function Start(v)
+print("Hi")
 end
 
 
@@ -495,6 +508,7 @@ Part.Name = "First"
 Part.Anchored = true
 Part.Size = Vector3.new(9e9,1,9e9)
 Part.Transparency = 1
+Part.Massless = true
 Part.CFrame = CFrame.new(10000, 10000, 0)
 end 
 
@@ -669,7 +683,7 @@ OldIndex =
     "__index",
     function(self, v, ...)
         if self == Mouse and (v == "Hit" or v == "Target") then
-            if ClosestPlayerToCurser() and Settings.PlayerSilentAim then
+            if ClosestPlayerToCurser() and Settings.PlayerSilentAim then wait()
                 return ((v == "Hit" and ((ClosestPlayerToCurser().Character.Head.CFrame) or (ClosestPlayerToCurser().Character.Head.CFrame + (ClosestPlayerToCurser().Character.Head.Velocity)))) or
                     (v == "Target" and ClosestPlayerToCurser().Character.Head))
             end
@@ -715,7 +729,7 @@ OldIndex =
     "__index",
     function(self, v, ...)
         if self == Mouse and (v == "Hit" or v == "Target") then
-            if ClosestMobToCurser() and Settings.MobSilentAim then
+            if ClosestMobToCurser() and Settings.MobSilentAim then wait()
                 return ((v == "Hit" and ((ClosestMobToCurser().Head.CFrame) or (ClosestMobToCurser().Head.CFrame + (ClosestMobToCurser().Head.Velocity)))) or
                     (v == "Target" and ClosestMobToCurser().Head))
             end
@@ -740,7 +754,7 @@ end)
 
 local Toggle1 = Section1:CreateToggle("Full Bright", Settings.FullBright, function(State)
 Settings.FullBright = State
-        if Settings.FullBright then
+        if Settings.FullBright then wait()
             game:GetService("Lighting").FogEnd = 9e9
             game:GetService("Lighting").Ambient = Color3.new(1, 1, 1)
             game:GetService("Lighting").ColorShift_Bottom = Color3.new(1, 1, 1)
@@ -752,7 +766,7 @@ Settings.FullBright = State
         end
 game.Lighting.Changed:connect(
     function()
-        if Settings.FullBright then
+        if Settings.FullBright then wait()
             game:GetService("Lighting").FogEnd = 9e9
             game:GetService("Lighting").Ambient = Color3.new(1, 1, 1)
             game:GetService("Lighting").ColorShift_Bottom = Color3.new(1, 1, 1)
@@ -792,18 +806,18 @@ spawn(
                             break
                         end
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-                            if getNearestMob().Humanoid.Health > 10 then
+                            if getNearestMob().Humanoid.Health > 10 then wait()
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
                                 end 
 
-                            if getNearestMob().Humanoid.Health < 10 then
+                            if getNearestMob().Humanoid.Health < 10 then wait()
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) *
                                     CFrame.Angles(0, 0, 0)
                             end
                         end
-                    until Settings.AutoFarmMobs == false or getNearestMob().Humanoid.Health == 0
+                    until Settings.AutoFarmMobs == false or getNearestMob().Humanoid.Health == 0 wait()
                     if getNearestMob().Humanoid.Health == 0 then
                         getNearestMob():remove()
                     end
@@ -835,31 +849,34 @@ Settings.AutoFarmSafely = State
 game:GetService("RunService").Stepped:connect(
     function()
         if Settings.AutoFarmSafely then
-            if String.Mobs.Mobs:FindFirstChildOfClass("Model") then
-                game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
-            end
+            pcall(
+                function()
+                    game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+                end
+            )
         end
     end
 )
+
 spawn(
     function()
         while wait(5) and Settings.AutoFarmSafely do
             pcall(
                 function()
                     if getNearestiii() == nil then
-                        if Settings.Options == "Matter" then
+                        if Settings.Options == "Matter" then wait()
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
                         end
                     end
                     if getNearesti() == nil then
-                        if Settings.Options == "Away" then
+                        if Settings.Options == "Away" then wait()
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 CFrame.new(0, -5000, 0)
                         end
                     end
                     if getNearesti() == nil then
-                        if Settings.Options == "Custom" then
+                        if Settings.Options == "Custom" then wait()
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 CFrame.new(0, -5000, 0)
                         end
@@ -872,7 +889,7 @@ spawn(
 
 spawn(
     function()
-        while wait() and Settings.AutoFarmSafely do
+        while wait() and Settings.AutoFarmSafely do wait()
             pcall(
                 function()
                     if Settings.Options == "Matter" then
@@ -973,6 +990,8 @@ end
 local Dropdown1 = Section1:CreateDropdown("Mobs", Mobs, function(String)
 	Settings.Mobs = String
 end)
+
+
 if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
 local Toggle1 = Section1:CreateToggle("Auto Accept Quest", Settings.AutoQuest, function(State)
 Settings.AutoQuest = State
@@ -986,52 +1005,38 @@ game:GetService("RunService").Stepped:connect(
 spawn(
     function()
         while Settings.AutoQuest do
-            pcall(
-                function()
-                    wait()
-                    repeat
-                        wait()
-                        if
-                            not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") and
-                                not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest")
-                         then
-                            for i, v in pairs(game:GetService("Workspace").chatnpcs:GetDescendants()) do
-                                if
-                                    v:IsA("StringValue") and v.Name == "Quest" and v.Value ~= "Find Box" and
-                                        v.Value ~= "Slaughter 5 players" and
-                                        v.Value == Settings.Quest
-                                 then
-                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                                        v.Parent.Parent.Parent.Parent.HumanoidRootPart.CFrame * CFrame.new(0, -26, 0)
-                                    if v.Parent.Parent.Parent.Parent:FindFirstChild("JumpHitbox") then
-                                        fireclickdetector(v.Parent.Parent.Parent.Parent.JumpHitbox.ClickDetector)
-                                    end
-                                    if v.Parent.Parent.Parent.Parent:FindFirstChild("Part") then
-                                        fireclickdetector(v.Parent.Parent.Parent.Parent.Part.ClickDetector)
-                                    end
-                                end
-                            end
-                        end
-                        if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") then
-                            game:GetService("VirtualUser"):ClickButton1(Vector2.new())
-                            for i, v in pairs(
-                                game:GetService("Players").LocalPlayer.PlayerGui.dialogGUI.f.sf:GetChildren()
-                            ) do
-                                if v:IsA("UIGridLayout") then
-                                    v.CellSize = UDim2.new(500, 500, -500, -500)
-                                end
-                                if v.Name == "button" then
-                                    v:remove()
-                                end
-                            end
-                        end
-                    until Settings.AutoQuest == false or
-                        game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest")
+            wait()
+            if
+                not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") and
+                    not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest")
+             then
+                for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
+            if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Chat") and v.Chat:FindFirstChild("Start") and v.Chat.Start:FindFirstChild("b") and 
+            v.Chat.Start.b:FindFirstChild("Quest")  and
+                            v:WaitForChild("Chat"):WaitForChild("Start"):WaitForChild("b"):WaitForChild("Quest").Value == Settings.Quest
+                     then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame *CFrame.new(0,-26,0)
+                        fireclickdetector(v:WaitForChild("JumpHitbox").ClickDetector)
+                    end
                 end
-            )
+            end 
+            if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") then
+                game:GetService("VirtualUser"):ClickButton1(Vector2.new(900, 900))
+                for i, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.dialogGUI.f.sf:GetChildren()) do
+                    if v:IsA("UIGridLayout") then
+                        v.CellSize = UDim2.new(500, 500, -500, -500)
+                    end
+                    wait(0.1)
+                    if v.Name == "button" then
+                        v:remove()
+                    end
+                end
+            end
         end
     end
 )
+
+
 end)
 
 
@@ -1166,7 +1171,7 @@ repeat
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
         game:GetService("ReplicatedStorage").Areas["Yokai Village"].CFrame
         end
-until game:GetService("Workspace"):WaitForChild("chatnpcs").Quest.Box:FindFirstChild("Main") or Settings.Money == false
+until game:GetService("Workspace"):WaitForChild("chatnpcs").Box:FindFirstChild("Main") or Settings.Money == false
 spawn(
     function()
         while wait(Settings.MoneyDelay) and Settings.Money do
@@ -1183,7 +1188,7 @@ spawn(
                             end
                         end
                     end
-                    for i, v in pairs(game:GetService("Workspace").chatnpcs.Quest:GetChildren()) do
+                    for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
                         if v:IsA("Model") and v:FindFirstChild("Amazon Box") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest") then
                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
                                 v.PrimaryPart.CFrame * CFrame.new(0, -26, 0)
