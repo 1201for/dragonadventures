@@ -90,6 +90,13 @@ spawn(
     end
 )
 
+local function LoadMap()
+for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
+        if v:IsA("BasePart") then wait(1.5)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+        end
+    end
+end 
 -- Instances:
 if not game.CoreGui:FindFirstChild("Chad Stats") then
 local ChadStats = Instance.new("ScreenGui")
@@ -717,6 +724,18 @@ OldIndex =
         return OldIndex(self, v)
     end
 )
+end)
+
+local Toggle1 = Section1:CreateToggle("Auto Load Map", Settings.LoadMap, function(State)
+Settings.LoadMap = State
+spawn(
+    function()
+        if Settings.LoadMap then
+        LoadMap()
+        end
+    end
+)
+
 end)
 
 local Toggle1 = Section1:CreateToggle("Full Bright", Settings.FullBright, function(State)
