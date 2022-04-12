@@ -21,7 +21,9 @@ Title = "Loading Settings";
 Text = "This will take three seconds";
 })
 repeat wait() until not game.Players.LocalPlayer.Character:FindFirstChild("ForceField") and game:GetService("Workspace").npc["you are one rude person"]:FindFirstChildOfClass("Folder") wait(3)
-
+if game:GetService("Workspace").npc:FindFirstChild("npcs") then
+game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+end
 local Name = "DemonSlayerBurningAshes.txt"
 
 Des = {}
@@ -46,15 +48,6 @@ Settings = game:service "HttpService":JSONDecode(readfile("V.G Hub//" .. Name))
 local function Save()
     writefile("V.G Hub//" .. Name, game:service "HttpService":JSONEncode(Settings))
 end
-
-
-local function LoadMap()
-    for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
-        if v:IsA("BasePart") then wait(1)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
-        end
-    end
-end 
 
 local OldNameCall = nil
 OldNameCall =
@@ -679,20 +672,6 @@ OldIndex =
     end
 )
 end)
-
-
-local Toggle1 = Section1:CreateToggle("Auto Fully LoadMap", Settings.FullMap, function(State)
-Settings.FullMap = State
-spawn(function()
-if Settings.FullMap then
-    LoadMap()
-else
-    print("ok")
-end
-end)
-end)
-
-
 local Toggle1 = Section1:CreateToggle("Mob Silent Aim", Settings.MobSilentAim, function(State)
 
 Settings.MobSilentAim = State
