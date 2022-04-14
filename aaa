@@ -1015,7 +1015,11 @@ spawn(
                             v:WaitForChild("Chat"):WaitForChild("Start"):WaitForChild("b"):WaitForChild("Quest").Value == Settings.Quest
                      then
                         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame *CFrame.new(0,-26,0)
-                        fireclickdetector(v:FindFirstChildOfClass("Part").ClickDetector)
+                        if v:FindFirstChild("JumpHitbox") then
+                        fireclickdetector(v.JumpHitbox.ClickDetector)
+                        elseif v:FindFirstChild("Part") then
+                        fireclickdetector(v.Part.ClickDetector)
+                        end 
                     end
                 end
             end 
