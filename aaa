@@ -322,7 +322,7 @@ local function getNearestMob()
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
-                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude <= math.huge
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 200 
          then
             local Mag =
                 (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
@@ -343,7 +343,7 @@ local function getNearestiii()
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
-                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude <= math.huge
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 200
          then
             local Mag = (Vector3.new(-673, -288, -648) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
@@ -362,7 +362,7 @@ local function getNearestCustom()
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
-                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude <= math.huge
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 200
          then
             local Mag =
                 (Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3) - v.PrimaryPart.Position).Magnitude
@@ -382,7 +382,7 @@ local function getNearesti()
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
-                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude <= math.huge
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 200
          then
             local Mag = (Vector3.new(10000, 10000, 0) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
@@ -913,12 +913,16 @@ spawn(
 
                     if Settings.Options == "Away" then
                         wait(Settings.Delay)
-                        if getNearesti().Humanoid.Health > 10 then
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
-                        end
+                        if not isnetworkowner(getNearesti().PrimaryPart) then
+                        game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, -15, 0) * CFrame.Angles(90, 0, 0)
+                            end 
                         if isnetworkowner(getNearesti().PrimaryPart) then
                             wait(Settings.Delay)
+                            if getNearesti().Humanoid.Health > 10 then
+                        game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
+                        end
                             getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10003, Number)
                             if getNearesti().Humanoid.Health < 10 then
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
@@ -1066,7 +1070,23 @@ game:GetService("RunService").Stepped:connect(
 )
 end)
 
-
+local Toggle1 = Section1:CreateToggle("Transparent Blade", Settings.Transparents, function(State)
+Settings.Transparents = State
+game:GetService("RunService").Stepped:connect(
+    function()
+        if game.Players.LocalPlayer.Character:FindFirstChild("Weapon") and Settings.Transparents then
+            for i, v in pairs(game.Players.LocalPlayer.Character.Weapon:GetChildren()) do
+                if v:IsA("BasePart") then
+                    v.Transparency = Settings.Transparency 
+                end
+            end
+        end
+    end
+)
+end)
+local Slider1 = Section1:CreateSlider("Blade Transparency",0,1,Settings.Transparency,false, function(Value)
+	Settings.Transparency = Value
+end)
 local Toggle1 = Section1:CreateToggle("Auto Eat", Settings.Eat, function(State)
 Settings.Eat = State
 spawn(
