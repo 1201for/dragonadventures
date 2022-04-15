@@ -603,29 +603,6 @@ end
 
 
 local Button1 = Section2:CreateButton("Press For Hentai", function()
-local blur = Instance.new("BlurEffect")
-blur.Parent = game.Lighting
-blur.Size = 0
-local ScreenGui = Instance.new("ScreenGui")
-if syn and syn.protect_gui then
-    syn.protect_gui(ScreenGui)
-    ScreenGui.Parent = game.CoreGui
-elseif gethui then
-    ScreenGui.Parent = gethui()
-else
-    ScreenGui.Parent = game.CoreGui
-end
-local ImageLabel = Instance.new("ImageLabel")
-ScreenGui.Parent = game.CoreGui
-ImageLabel.Parent = ScreenGui
-ImageLabel.BackgroundColor3 = Color3.new(1, 1, 1)
-ImageLabel.BackgroundTransparency = 1
-ImageLabel.Position = UDim2.new(0.5, -(303 / 2), 0.5, -(263 / 2))
-ImageLabel.Rotation = 0
-ImageLabel.Size = UDim2.new(0, 303,0, 263)
-ImageLabel.Image = "rbxassetid://10270066"
-ImageLabel.ImageTransparency = 1
-ImageLabel.ImageTransparency = ImageLabel.ImageTransparency + 0.1
 game:GetService("RunService").Stepped:connect(function()
 game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
 game.StarterGui:SetCore(
@@ -1125,6 +1102,51 @@ end)
 local Slider1 = Section1:CreateSlider("Blade Transparency",0,1,Settings.Transparency,false, function(Value)
 	Settings.Transparency = Value
 end)
+
+local Toggle1 = Section1:CreateToggle("RainBow Skin", Settings.RainBowMan, function(State)
+Settings.RainBowMan = State
+if Settings.RainBowMan then
+game.StarterGui:SetCore("SendNotification", {
+Title = "This is CS";
+Text = "But Still Looks Cool";
+})
+end 
+game:GetService("RunService").Stepped:connect(
+    function()
+        if 
+        Settings.RainBowMan then
+            for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                if v:IsA("BasePart") then
+                    pcall(function()
+                    v.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
+                    end)
+                end
+            end
+        end
+    end
+)
+end)
+
+local Toggle1 = Section1:CreateToggle("Transparent Person", Settings.TransparentsMan, function(State)
+Settings.TransparentsMan = State
+game:GetService("RunService").Stepped:connect(
+    function()
+        if Settings.TransparentsMan then
+            for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
+                    pcall(function()
+                    v.Transparency = Settings.Transparency1
+                    end)
+                end
+            end
+        end
+    end
+)
+end)
+local Slider1 = Section1:CreateSlider("Person Transparency",0,1,Settings.Transparency1,false, function(Value)
+	Settings.Transparency1 = Value
+end)
+
 local Toggle1 = Section1:CreateToggle("Auto Eat", Settings.Eat, function(State)
 Settings.Eat = State
 spawn(
