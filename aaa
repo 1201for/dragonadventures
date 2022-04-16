@@ -24,6 +24,14 @@ repeat wait() until not game.Players.LocalPlayer.Character:FindFirstChild("Force
 if game:GetService("Workspace").npc:FindFirstChild("npcs") then wait(3)
 game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
 end
+repeat wait() until game.Players.LocalPlayer
+game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("Chat")
+
+game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatChannelParentFrame.Visible = true
+game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatBarParentFrame.Position =
+    game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatChannelParentFrame.Position +
+    UDim2.new(UDim.new(), game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatChannelParentFrame.Size.Y)
+
 local Name = "DemonSlayerBurningAshes.txt"
 
 Des = {}
