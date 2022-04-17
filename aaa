@@ -289,7 +289,10 @@ local function GetAwayAssHats()
     local Target
     for i, v in ipairs(game.Players:GetPlayers()) do
         if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-            Target = v
+            if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > TargetDistance then
+                TargetDistance = Mag
+                Target = v
+            end
             end
         end
     return Target
@@ -384,7 +387,7 @@ local function getNearesti()
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
-                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 200
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude >= 200 
          then
             local Mag = (Vector3.new(10000, 10000, 0) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
