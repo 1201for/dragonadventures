@@ -289,7 +289,7 @@ local function GetAwayAssHats()
     local Target
     for i, v in ipairs(game.Players:GetPlayers()) do
         if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-            if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > TargetDistance then
+            if (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Character.PrimaryPart.Position).Magnitude > TargetDistance then
                 TargetDistance = Mag
                 Target = v
             end
