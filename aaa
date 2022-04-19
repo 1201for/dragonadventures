@@ -625,7 +625,10 @@ Settings.HideName = State
 game:GetService("RunService").Stepped:connect(
     function()
         if Settings.HideName then
+            pcall(function()
             game:GetService("ReplicatedStorage").DashWithNoDelay:InvokeServer("Dash")
+            game:GetService("Workspace").EFFECT:Destroy()
+            end)
         end
     end
 )
