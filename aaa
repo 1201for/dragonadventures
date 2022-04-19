@@ -620,6 +620,16 @@ game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-871, 76
 end) 
 
 end)
+local Toggle1 = Section1:CreateToggle("Semi HideName", Settings.HideName, function(State)
+Settings.HideName = State
+game:GetService("RunService").Stepped:connect(
+    function()
+        if Settings.HideName then
+            game:GetService("ReplicatedStorage").DashWithNoDelay:InvokeServer("Dash")
+        end
+    end
+)
+end)
 
 local Toggle1 = Section1:CreateToggle("Auto Attack", Settings.Attack, function(State)
 Settings.Attack = State
