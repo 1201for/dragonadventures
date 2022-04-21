@@ -1627,111 +1627,56 @@ local Toggle1 = Section1:CreateToggle("Enable Esp", Settings.Esp, function(State
     
 end)
 if game:GetService("Workspace").map:FindFirstChild("Stuff") then
-local Toggle1 = Section1:CreateToggle("EarRing Esp", Settings.FluteEsp, function(State)
-    Settings.FluteEsp = State
-Settings.FluteEsp = State
-local function esp(v)
-    local T = Drawing.new("Text")
-    T.Visible = false
-    T.Center = true
-    T.Outline = true
-    T.Font = 2
-    T.Text = "item"
-    T.Size = 14
-    T.Color = Color3.fromRGB(203, 214, 73)
-    local function update()
-        local Re
-        Re =
-            game:GetService("RunService").Stepped:Connect(
-            function()
-                if
-                    v and v.PrimaryPart and
-                        not game:GetService("Workspace").GameState:FindFirstChild("Night")
-                 then
-                    local Vector, Screen =
-                        workspace.CurrentCamera:WorldToViewportPoint(v.PrimaryPart.Position)
-                    if Settings.FluteEsp and Screen then
-                        T.Position = Vector2.new(Vector.X, Vector.Y)
-                        T.Visible = true
-                        T.Text = "Earring"
-                    elseif v == nil or v.PrimaryPart.CFrameValue.Changed then
-                        T:Destroy()
-                        Re:disconnect()
-                    else
-                        T.Visible = false
-                    end
-                end
-            end
-        )
-    end
-    update()
-end
-
-for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-    if v:IsA("Model") and v.Name == "Barrel"  and v.PrimaryPart then
-        esp(v)
-    end
-end
-game:GetService("Workspace").map.Stuff.ChildAdded:Connect(
-    function(v)
-        if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart then
-            esp(v)
+local Toggle1 = Section1:CreateToggle("EarRing Esp", Settings.EarRing, function(State)
+Settings.EarRing = State
+ESP.EarRing = Settings.EarRing
+ESP:AddObjectListener(game:GetService("Workspace").map.Stuff, {
+    Color = Color3.new(0,0,255),
+    Type = "Model",
+    PrimaryPart = function(v)
+        local H = v.PrimaryPart
+        while not H do
+            wait()
+            H = v.PrimaryPart
         end
-    end
-)
+        return H
+    end,
+    Validator = function(v)
+    if v.Name == "Barrel" then
+        return not game.Players:GetPlayerFromCharacter(v) and v
+    end 
+    end,
+    CustomName = function(v)
+        return "EarRing"
+    end,
+    IsEnabled = "EarRing",
+})
 
 end)
 local Toggle1 = Section1:CreateToggle("Flute Esp", Settings.FluteEsps, function(State)
 Settings.FluteEsps = State
-local function esp(v)
-    local T = Drawing.new("Text")
-    T.Visible = false
-    T.Center = true
-    T.Outline = true
-    T.Font = 2
-    T.Text = "item"
-    T.Size = 14
-    T.Color = Color3.fromRGB(203, 214, 73)
-    local function update()
-        local Re
-        Re =
-            game:GetService("RunService").Stepped:Connect(
-            function()
-                if
-                    v and v.PrimaryPart and
-                        game:GetService("Workspace").GameState:FindFirstChild("Night")
-                 then
-                    local Vector, Screen =
-                        workspace.CurrentCamera:WorldToViewportPoint(v.PrimaryPart.Position)
-                    if Settings.FluteEsp and Screen then
-                        T.Position = Vector2.new(Vector.X, Vector.Y)
-                        T.Visible = true
-                        T.Text = "Flute"
-                    elseif v == nil then
-                        T:Destroy()
-                        Re:disconnect()
-                    else
-                        T.Visible = false
-                    end
-                end
-            end
-        )
-    end
-    update()
-end
-for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-    if v:IsA("Model") and v.Name == "Barrel"  and v.PrimaryPart then
-        esp(v)
-    end
-end
-game:GetService("Workspace").map.Stuff.ChildAdded:Connect(
-    function(v)
-        if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart then
-            esp(v)
+ESP.Flute = Settings.FluteEsps
+ESP:AddObjectListener(game:GetService("Workspace").map.Stuff, {
+    Color = Color3.new(255,0,0),
+    Type = "Model",
+    PrimaryPart = function(v)
+        local H = v.PrimaryPart
+        while not H do
+            wait()
+            H = v.PrimaryPart
         end
-    end
-)
-
+        return H
+    end,
+    Validator = function(v)
+    if v.Name == "Barrel" then
+        return not game.Players:GetPlayerFromCharacter(v) and v
+    end 
+    end,
+    CustomName = function(v)
+        return "Flute"
+    end,
+    IsEnabled = "Flute",
+})
 
 end)
 end 
