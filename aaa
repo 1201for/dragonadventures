@@ -634,16 +634,6 @@ game:GetService("RunService").Stepped:connect(
 )
 end)
 
-local Toggle1 = Section1:CreateToggle("Fake Inf Yen", Settings.InfMoney, function(State)
-    Settings.InfMoney = State
-spawn(
-    function()
-        while Settings.InfMoney do wait()
-game:GetService("Players").LocalPlayer.Data.Cash.Value = 999999999999999999
-        end
-    end 
-)
-end)
 local Toggle1 = Section1:CreateToggle("Auto Attack", Settings.Attack, function(State)
 Settings.Attack = State
 spawn(
@@ -1262,19 +1252,13 @@ end)
 
 local Toggle1 = Section1:CreateToggle("Auto Tp To EarRing", Settings.AutoTeleport, function(State)
 Settings.AutoTeleport = State
-
 spawn(
     function()
         while Settings.AutoTeleport do
             wait(2)
             for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-                if v:IsA("Model") then
-                    for i, v in pairs(v:GetChildren()) do
-                        if v:IsA("BasePart") and v:FindFirstChildOfClass("ClickDetector") then
-                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
-                            fireclickdetector(v:FindFirstChildOfClass("ClickDetector"))
-                        end
-                    end
+                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
                 end
             end
         end
@@ -1287,15 +1271,11 @@ local Toggle1 = Section1:CreateToggle("Auto Tp To Flute", Settings.AutoTeleport2
 Settings.AutoTeleport2 = State
 spawn(
     function()
-        while Settings.AutoTeleport2 do
+        while Settings.AutoTeleport do
             wait(2)
-            for i, v in pairs(game:GetService("Workspace")["tournments orr"]:GetChildren()) do
-                if v:IsA("Model") then
-                    for i, v in pairs(v:GetChildren()) do
-                        if v:IsA("BasePart") and v.Name == "Barrel" then
-                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
-                        end
-                    end
+            for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
+                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart  then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
                 end
             end
         end
@@ -1649,6 +1629,7 @@ end)
 if game:GetService("Workspace").map:FindFirstChild("Stuff") then
 local Toggle1 = Section1:CreateToggle("EarRing Esp", Settings.FluteEsp, function(State)
     Settings.FluteEsp = State
+Settings.FluteEsp = State
 local function esp(v)
     local T = Drawing.new("Text")
     T.Visible = false
@@ -1661,38 +1642,44 @@ local function esp(v)
     local function update()
         local Re
         Re =
-            game:GetService('RunService').Stepped:Connect(
-            function() pcall(function()
-                if v  then
-                    local Vector, Screen = workspace.CurrentCamera:WorldToViewportPoint(v.Position)
+            game:GetService("RunService").Stepped:Connect(
+            function()
+                if
+                    v and v.PrimaryPart and
+                        not game:GetService("Workspace").GameState:FindFirstChild("Night")
+                 then
+                    local Vector, Screen =
+                        workspace.CurrentCamera:WorldToViewportPoint(v.PrimaryPart.Position)
                     if Settings.FluteEsp and Screen then
                         T.Position = Vector2.new(Vector.X, Vector.Y)
                         T.Visible = true
                         T.Text = "Earring"
+                    elseif v == nil or v.PrimaryPart.CFrameValue.Changed then
+                        T:Destroy()
+                        Re:disconnect()
                     else
                         T.Visible = false
                     end
-                elseif v == nil then
-                    T:Remove()
-                    Re:disconnect()
-                end end)
+                end
             end
         )
     end
     update()
 end
-for i,v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-    if v:IsA("Model") and  v:FindFirstChildOfClass("Part") and v.Name == "Barrel" then
+
+for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
+    if v:IsA("Model") and v.Name == "Barrel"  and v.PrimaryPart then
         esp(v)
     end
 end
 game:GetService("Workspace").map.Stuff.ChildAdded:Connect(
     function(v)
-         if v:IsA("Model") and  v:FindFirstChildOfClass("Part") and v.Name == "Barrel"  then
-        esp(v)
+        if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart then
+            esp(v)
         end
     end
 )
+
 end)
 local Toggle1 = Section1:CreateToggle("Flute Esp", Settings.FluteEsps, function(State)
 Settings.FluteEsps = State
@@ -1710,40 +1697,42 @@ local function esp(v)
         Re =
             game:GetService("RunService").Stepped:Connect(
             function()
-                pcall(
-                    function()
-                        if v then
-                            local Vector, Screen = workspace.CurrentCamera:WorldToViewportPoint(v.Position)
-                            if Settings.FluteEsps and Screen then
-                                T.Position = Vector2.new(Vector.X, Vector.Y)
-                                T.Visible = true
-                                T.Text = "Earring"
-                            else
-                                T.Visible = false
-                            end
-                        elseif v == nil then
-                            T:Remove()
-                            Re:disconnect()
-                        end
+                if
+                    v and v.PrimaryPart and
+                        game:GetService("Workspace").GameState:FindFirstChild("Night")
+                 then
+                    local Vector, Screen =
+                        workspace.CurrentCamera:WorldToViewportPoint(v.PrimaryPart.Position)
+                    if Settings.FluteEsp and Screen then
+                        T.Position = Vector2.new(Vector.X, Vector.Y)
+                        T.Visible = true
+                        T.Text = "Flute"
+                    elseif v == nil then
+                        T:Destroy()
+                        Re:disconnect()
+                    else
+                        T.Visible = false
                     end
-                )
+                end
             end
         )
     end
     update()
 end
-for i, v in pairs(game:GetService("Workspace")["tournments orr"].Model:GetChildren()) do
-    if v.Name == "Barrel" then
+for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
+    if v:IsA("Model") and v.Name == "Barrel"  and v.PrimaryPart then
         esp(v)
     end
 end
-game:GetService("Workspace")["tournments orr"].Model.ChildAdded:Connect(
+game:GetService("Workspace").map.Stuff.ChildAdded:Connect(
     function(v)
-        if v.Name == "Barrel" then
+        if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart then
             esp(v)
         end
     end
 )
+
+
 end)
 end 
 local Toggle1 = Section1:CreateToggle("PLayer Esp", Settings.PlayerEsp, function(State)
