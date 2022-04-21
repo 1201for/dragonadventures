@@ -634,6 +634,16 @@ game:GetService("RunService").Stepped:connect(
 )
 end)
 
+local Toggle1 = Section1:CreateToggle("Fake Inf Yen", Settings.InfMoney, function(State)
+    Settings.InfMoney = State
+spawn(
+    function()
+        while Settings.InfMoney do wait()
+game:GetService("Players").LocalPlayer.Data.Cash.Value = 999999999999999999
+        end
+    end 
+)
+end)
 local Toggle1 = Section1:CreateToggle("Auto Attack", Settings.Attack, function(State)
 Settings.Attack = State
 spawn(
