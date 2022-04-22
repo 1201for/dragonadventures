@@ -360,7 +360,7 @@ end
 local function getNearestiii()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
+    for i, v in ipairs(game:GetService("Workspace").Effects:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model")  and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 
@@ -1277,7 +1277,7 @@ spawn(
         while Settings.AutoTeleport do
             wait(2)
             for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart then
+                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart and not game:GetService("Workspace").GameState:FindFirstChild("Night") then
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
                 end
             end
@@ -1294,7 +1294,7 @@ spawn(
         while Settings.AutoTeleport do
             wait(2)
             for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart  then
+                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart and game:GetService("Workspace").GameState:FindFirstChild("Night") then
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
                 end
             end
@@ -1662,7 +1662,7 @@ ESP:AddObjectListener(game:GetService("Workspace").map.Stuff, {
         return H
     end,
     Validator = function(v)
-    if v.Name == "Barrel" then
+    if v.Name == "Barrel" and not game:GetService("Workspace").GameState:FindFirstChild("Night") then
         return not game.Players:GetPlayerFromCharacter(v) and v
     end 
     end,
@@ -1688,7 +1688,7 @@ ESP:AddObjectListener(game:GetService("Workspace").map.Stuff, {
         return H
     end,
     Validator = function(v)
-    if v.Name == "Barrel" then
+    if v.Name == "Barrel" and game:GetService("Workspace").GameState:FindFirstChild("Night") then
         return not game.Players:GetPlayerFromCharacter(v) and v
     end 
     end,
