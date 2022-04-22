@@ -558,6 +558,7 @@ spawn(
                         end
                         if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
                             if getNearestMobFinalSeclection().Humanoid.Health > 10 then
+                                
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestMobFinalSeclection().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) *
                                     CFrame.Angles(90, 0, 0)
@@ -943,15 +944,15 @@ spawn(
 
                     if Settings.Options == "Away" then
                         wait(Settings.Delay)
-                        if getNearesti().Humanoid.Health > 10 then
+                        if getNearesti().Humanoid.Health > 10  then
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                getNearesti().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
+                                CFrame.new(getNearesti().PrimaryPart.Position - Vector3.new(0, 8, 0)) * CFrame.Angles(90, 0, 0)
                         end
+                        
                         if isnetworkowner(getNearesti().PrimaryPart) then
                             wait(Settings.Delay)
-
                             getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10003, Number)
-                            if getNearesti().Humanoid.Health < 10 then
+                            if getNearesti().Humanoid.Health < 10 and (Vector3.new(10000, 10003, Number) - getNearesti().PrimaryPart.Position).Magnitude <= 50 then
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearesti().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                             end
@@ -960,7 +961,6 @@ spawn(
                             getNearesti():Destroy()
                         end
                     end
-
                     if Settings.Options == "Custom" then
                         wait(Settings.Delay)
                         if getNearestCustom().Humanoid.Health > 10 then
