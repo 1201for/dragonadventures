@@ -27,7 +27,7 @@ local System = Instance.new("BindableFunction")
 
 
 function System.OnInvoke(v)
-    if v == "Yes" then
+    if v == "No" then
         game:ShutDown()
     end
 end
