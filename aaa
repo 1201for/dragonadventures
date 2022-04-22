@@ -16,9 +16,29 @@ game.CoreGui.RobloxPromptGui.promptOverlay.DescendantAdded:Connect(
     end
 )
 
+
+
 game.StarterGui:SetCore("SendNotification", {
 Title = "Loading Settings";
 Text = "This will take three seconds";
+})
+local System = Instance.new("BindableFunction")
+
+
+
+function System.OnInvoke(v)
+    if v == "Yes" then
+        game:ShutDown()
+    end
+end
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+	Title = "Warning",
+	Text = "Warning this game contains immense amounts of mental stress, anxiety, idiotic behaviors, bugs, retards, etc are you sure you want to continue?",
+	Duration = 5,
+	Callback = bindable,
+	Button1 = "Yes",
+	Button2 = "No"
 })
 repeat wait() until not game.Players.LocalPlayer.Character:FindFirstChild("ForceField") and game:GetService("Workspace").npc["you are one rude person"]:FindFirstChildOfClass("Folder") wait(3)
 if game:GetService("Workspace").npc:FindFirstChild("npcs") then wait(3)
@@ -32,7 +52,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatBarParentFrame.P
     game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatChannelParentFrame.Position +
     UDim2.new(UDim.new(), game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatChannelParentFrame.Size.Y)
 
-local Name = "DemonSlayerBurningAshes.txt"
+local Name = "DemonSlayerBurningAshes.json"
 
 Des = {}
 if makefolder then
