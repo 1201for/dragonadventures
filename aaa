@@ -491,7 +491,7 @@ local function CheckMate()
     if not game:GetService("Players").LocalPlayer.states:FindFirstChild("exeing") then
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "B", false, game)
     end
-    if not game:GetService("Players").LocalPlayer.states:FindFirstChild("selfstun") and game:GetService("Players").LocalPlayer.CharStats.Race.Value == "Human" then
+    if not game:GetService("Players").LocalPlayer.states:FindFirstChild("selfstun") then
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "R", false, game)
     end
     wait()
