@@ -360,7 +360,7 @@ end
 local function getNearestiii()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(game:GetService("Workspace").Effects:GetChildren()) do
+    for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model")  and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 
@@ -787,6 +787,23 @@ OldIndex =
 )
 end)
 
+local Toggle1 = Section1:CreateToggle("Auto Steal MoneyBags", Settings.Type, function(State)
+Settings.Type = State
+game:GetService("RunService").Stepped:connect(
+    function()
+        pcall(
+            function()
+                for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
+                    if v.Name == "MoneyBag" and v:IsA("BasePart") and Settings.Type then
+                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v, 0)
+                    end
+                end
+            end
+        )
+    end
+)
+end)
+
 local Toggle1 = Section1:CreateToggle("Auto Load Map", Settings.LoadMap, function(State)
 Settings.LoadMap = State
 spawn(
@@ -945,17 +962,18 @@ spawn(
                 function()
                     if Settings.Options == "Matter" then
                         wait(Settings.Delay)
+                        
                         if isnetworkowner(getNearestiii().PrimaryPart) then
                             getNearestiii().PrimaryPart.CFrame =
                                 CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
                         end
                         if getNearestiii().Humanoid.Health > 10 then
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                getNearestiii().PrimaryPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
+                                CFrame.new(getNearestiii().PrimaryPart.Position - Vector3.new(0, 9, 0)) * CFrame.Angles(90, 0, 0)
                         end
-                        if getNearestiii().Humanoid.Health < 10 then
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                getNearestiii().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+                        if getNearestiii().Humanoid.Health < 10 and (Vector3.new(-673, -288, -648) - getNearestiii().PrimaryPart.Position).Magnitude <= 50  then
+                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                    getNearestiii().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                         end
                         if getNearestiii().Humanoid.Health == 0 then
                             getNearestiii():Destroy()
@@ -992,7 +1010,7 @@ spawn(
                                 Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3)
                             if getNearestCustom().Humanoid.Health < 10 then
                                 game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
-                                    getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+                                   CFrame.new( getNearesti().PrimaryPart.Position - Vector3.new(0, -1, 0)) * CFrame.Angles(0, 0, 0)
                             end
                         end
                         if getNearestCustom().Humanoid.Health == 0 then
