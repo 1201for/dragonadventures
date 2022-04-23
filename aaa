@@ -971,7 +971,7 @@ spawn(
                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 CFrame.new(getNearestiii().PrimaryPart.Position - Vector3.new(0, 9, 0)) * CFrame.Angles(90, 0, 0)
                         end
-                        if getNearestiii().Humanoid.Health < 10 and (Vector3.new(-673, -288, -648) - getNearestiii().PrimaryPart.Position).Magnitude <= 50  then
+                        if getNearestiii().Humanoid.Health < 10 and (Vector3.new(math.random(-673, -450), -288, math.random(-648, -450)) - getNearestiii().PrimaryPart.Position).Magnitude <= 100  then
                              game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestiii().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                         end
