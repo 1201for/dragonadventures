@@ -343,7 +343,7 @@ local function getNearestMob()
     for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
          then
             local Mag =
                 (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
@@ -363,7 +363,7 @@ local function getNearestiii()
     for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model")  and v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
          then
             local Mag = (Vector3.new(-673, -288, -648) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance  and TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude then
@@ -381,7 +381,8 @@ local function getNearestCustom()
     for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model")  and v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 then
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
+                then
             local Mag =
                 (Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance and TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude then
@@ -399,7 +400,7 @@ local function getNearesti()
     for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
          then
             local Mag = (Vector3.new(10000, 10000, 0) - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance and TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude then
