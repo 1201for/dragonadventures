@@ -627,21 +627,6 @@ end)
 end
 
 
-local Button1 = Section2:CreateButton("Press For Hentai", function()
-game:GetService("RunService").Stepped:connect(function()
-game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
-game.StarterGui:SetCore(
-    "SendNotification",
-    {
-        Title = "You have been boxed",
-        Text = "Free Hentai??? really nigga"
-    }
-)
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-871, 769, -1584)
-
-end) 
-
-end)
 local Toggle1 = Section1:CreateToggle("Semi HideName", Settings.HideName, function(State)
 Settings.HideName = State
 game:GetService("RunService").Stepped:connect(
@@ -1719,6 +1704,19 @@ ESP:AddObjectListener(game:GetService("Workspace").map.Stuff, {
 
 end)
 end 
+
+local Button1 = Section2:CreateButton("Press For Hentai", function()
+
+game.StarterGui:SetCore(
+    "SendNotification",
+    {
+        Title = "BAHAHAHAHA",
+        Text = "DuMbAsS rEtArD"
+    }
+)
+
+
+end)
 local Toggle1 = Section1:CreateToggle("PLayer Esp", Settings.PlayerEsp, function(State)
     Settings.PlayerEsp = State
     ESP.Players = Settings.PlayerEsp
