@@ -40,6 +40,20 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 	Button1 = "Yes",
 	Button2 = "No"
 })
+local A = Instance.new("Folder")
+A.Name = "npc"
+A.Parent = Workspace
+
+for i, v in pairs(game.Workspace:GetChildren()) do
+    if v:IsA("Folder") and v:FindFirstChild("you are one rude person") then
+        for i, v in pairs(v:GetChildren()) do
+            if v:IsA("Folder") then
+                v.Parent = game:GetService("Workspace").npc
+            end
+        end
+    end
+end
+
 repeat wait() until not game.Players.LocalPlayer.Character:FindFirstChild("ForceField") and game:GetService("Workspace").npc["you are one rude person"]:FindFirstChildOfClass("Folder") wait(3)
 if game:GetService("Workspace").npc:FindFirstChild("npcs") then wait(3)
 game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
