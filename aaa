@@ -54,10 +54,7 @@ for i, v in pairs(game.Workspace:GetChildren()) do
     end
 end
 
-repeat wait() until not game.Players.LocalPlayer.Character:FindFirstChild("ForceField") and game:GetService("Workspace").npc["you are one rude person"]:FindFirstChildOfClass("Folder") wait(3)
-if game:GetService("Workspace").npc:FindFirstChild("npcs") then wait(3)
-game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
-end
+
 repeat wait() until game.Players.LocalPlayer
 game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("Chat")
 
