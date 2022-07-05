@@ -293,18 +293,10 @@ Mobs = {"Demon Slayer", "Strong Demon Slayer","Demon","Strong Demon","Fast Demon
 
 
 
-local String = game:GetService("Workspace").npc["you are one rude person"]
+local String = game:GetService("Workspace").npc.npcs
 
-local Strong = game:GetService("Workspace").npc["you are one rude person"]
-for i, v in pairs(Strong:GetChildren()) do
-    if not v:FindFirstChildOfClass("Folder") then
-        v.Name = ""
-        v:Destroy()
-    elseif v.Name ~= "" then
-        v.Name = "Mobs"
-        v:FindFirstChildOfClass("Folder").Name = "Mobs"
-    end
-end
+local Strong = game:GetService("Workspace").npc.npcs
+
 if game:GetService("Workspace"):FindFirstChild("chatnpcs")  then
     for i, v in pairs(game:GetService("Workspace").chatnpcs.Quest:GetChildren()) do
         if v:IsA("Model") then
@@ -331,7 +323,7 @@ end
 local function getNearestMobFinalSeclection()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
+    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 
@@ -351,7 +343,7 @@ end
 local function getNearestMob()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
+    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
@@ -371,7 +363,7 @@ end
 local function getNearestiii()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
+    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model")  and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
@@ -389,7 +381,7 @@ end
 local function getNearestCustom()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
+    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model")  and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
@@ -408,7 +400,7 @@ end
 local function getNearesti()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(String.Mobs.Mobs:GetChildren()) do
+    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
                 v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
@@ -481,7 +473,7 @@ spawn(
                             Esp(v.Character)
                         end
                     end
-                    for i,v in pairs(String.Mobs.Mobs:GetChildren()) do
+                    for i,v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
                         if v:IsA("Model") and v:FindFirstChild("Humanoid") then
                             Esp(v)
                         end
@@ -622,7 +614,7 @@ spawn(
                     CheckMate()
                     Use()
                     if isnetworkowner then
-                    for i,v in pairs(String.Mobs.Mobs:GetChildren()) do 
+                    for i,v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do 
                     if v:IsA("Model") and v:FindFirstChildOfClass("Humanoid") and isnetworkowner(v.HumanoidRootPart) then
                     v.HumanoidRootPart.Anchored = true
                     elseif not isnetworkowner(v.HumanoidRootPart) then
@@ -745,7 +737,7 @@ local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 function ClosestMobToCurser()
     local MaxDistance, Closest = math.huge
-    for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
+    for i, v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
         if v:IsA("Model")  then
             local H = v:FindFirstChild("Head")
             if H then
@@ -1386,7 +1378,7 @@ spawn(function()
 while wait(2) and Settings.Anchored do
     pcall(
         function()
-            for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
+            for i, v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
                 if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart)  then
                     v.HumanoidRootPart.Anchored = true
                 elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart)  then
@@ -1405,7 +1397,7 @@ spawn(function()
 while wait(2) and Settings.Jump do
     pcall(
         function()
-            for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
+            for i, v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
                 if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart)  then
                     v.Humanoid.Jump = true
                 elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart)  then
@@ -1424,7 +1416,7 @@ spawn(function()
 while wait(2) and Settings.Stun do
     pcall(
         function()
-            for i, v in pairs(String.Mobs.Mobs:GetChildren()) do
+            for i, v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
                 if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart)  then
                     v.Humanoid.PlatformStand = true
                 elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart)   then
