@@ -1,30 +1,46 @@
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
+local StarterGui = game:GetService("StarterGui")
+local Workspace = game:GetService("Workspace")
+local VirtualUser = game:GetService("VirtualUser")
+local HttpService = game:GetService("HttpService")
+local CoreGui = game:GetService("CoreGui")
+local TeleportService = game:GetService("TeleportService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local wait = task.wait 
+local spawn = task.spawn
 local Config = {
     WindowName = "V.G Hub",
 	Color = Color3.fromRGB(255,128,64),
 	Keybind = Enum.KeyCode.RightControl
 }
-repeat wait() until game:IsLoaded() wait() 
-game:GetService("Players").LocalPlayer.Idled:connect(function()
-game:GetService("VirtualUser"):ClickButton2(Vector2.new())
-end)
-game.CoreGui.RobloxPromptGui.promptOverlay.DescendantAdded:Connect(
+
+repeat
+    wait()
+until game:IsLoaded()
+wait()
+for i,v in pairs(getconnections(Player.Idled)) do
+    v:Disable()
+end 
+CoreGui.RobloxPromptGui.promptOverlay.DescendantAdded:Connect(
     function()
-        if game.CoreGui.RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt") then
+        if CoreGui.RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt") then
             wait(25)
-            game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+            TeleportService:Teleport(game.PlaceId, Player)
         end
     end
 )
 
-
-
-game.StarterGui:SetCore("SendNotification", {
-Title = "Loading Settings";
-Text = "This will take three seconds";
-})
+game.StarterGui:SetCore(
+    "SendNotification",
+    {
+        Title = "Loading Settings",
+        Text = "This will take three seconds"
+    }
+)
 local System = Instance.new("BindableFunction")
-
-
 
 function System.OnInvoke(v)
     if v == "No" then
@@ -32,36 +48,36 @@ function System.OnInvoke(v)
     end
 end
 
-game:GetService("StarterGui"):SetCore("SendNotification", {
-	Title = "Warning",
-	Text = "Warning this game contains immense amounts of mental stress, anxiety, idiotic behaviors, bugs, retards, etc are you sure you want to continue?",
-	Duration = 5,
-	Callback = bindable,
-	Button1 = "Yes",
-	Button2 = "No"
-})
-local A = Instance.new("Folder")
-A.Name = "npc"
-A.Parent = Workspace
+StarterGui:SetCore(
+    "SendNotification",
+    {
+        Title = "Warning",
+        Text = "Warning this game contains immense amounts of mental stress, anxiety, idiotic behaviors, bugs, retards, etc are you sure you want to continue?",
+        Duration = 5,
+        Callback = bindable,
+        Button1 = "Yes",
+        Button2 = "No"
+    }
+)
 
-for i, v in pairs(game.Workspace:GetChildren()) do
-    if v:IsA("Folder") and v:FindFirstChild("you are one rude person") then
-        for i, v in pairs(v:GetChildren()) do
-            if v:IsA("Folder") then
-                v.Parent = game:GetService("Workspace").npc
-            end
-        end
-    end
+repeat
+    wait()
+until not Player.Character:FindFirstChild("ForceField") and
+    Workspace.npc["you are one rude person"]:FindFirstChildOfClass("Folder")
+wait(3)
+if not Workspace.npc:FindFirstChild("npcs") then
+    wait(3)
+    TeleportService:Teleport(game.PlaceId, Player)
 end
+repeat
+    wait()
+until Player
+Player.PlayerGui:WaitForChild("Chat")
 
-
-repeat wait() until game.Players.LocalPlayer
-game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("Chat")
-
-game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatChannelParentFrame.Visible = true
-game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatBarParentFrame.Position =
-    game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatChannelParentFrame.Position +
-    UDim2.new(UDim.new(), game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatChannelParentFrame.Size.Y)
+Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Visible = true
+Player.PlayerGui.Chat.Frame.ChatBarParentFrame.Position =
+    Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Position +
+    UDim2.new(UDim.new(), Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Size.Y)
 
 local Name = "DemonSlayerBurningAshes.json"
 
@@ -79,13 +95,13 @@ if
         end
     )
  then
-    writefile("V.G Hub//" .. Name, game:service "HttpService":JSONEncode(Des))
+    writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Des))
 end
 
-Settings = game:service "HttpService":JSONDecode(readfile("V.G Hub//" .. Name))
+Settings = HttpService:JSONDecode(readfile("V.G Hub//" .. Name))
 
 local function Save()
-    writefile("V.G Hub//" .. Name, game:service "HttpService":JSONEncode(Settings))
+    writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Settings))
 end
 
 local OldNameCall = nil
@@ -101,217 +117,218 @@ OldNameCall =
         if getnamecallmethod() == "BreakJoints" then
             return true
         end
-        if getnamecallmethod() == "Destroy" and self == game.Players.LocalPlayer then 
+        if getnamecallmethod() == "Destroy" and self == Player then
             return nil
-        end 
+        end
         return OldNameCall(self, unpack(Args))
     end
 )
 
-spawn(
+RunService.Stepped:connect(
     function()
-        game:GetService("RunService").Stepped:connect(
-            function()
-                pcall(function() wait()
-                workspace.FallenPartsDestroyHeight = 0 / 0
-                sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
-                end)
-            end
-        )
+        Workspace.FallenPartsDestroyHeight = 0 / 0
+        sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 1000)
     end
 )
+
 
 local function LoadMap()
-for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
-        if v:IsA("BasePart") then wait(1.5)
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
+    for i, v in pairs(ReplicatedStorage.Areas:GetChildren()) do
+        if v:IsA("BasePart") then
+            wait(1.5)
+            Player.Character.HumanoidRootPart.CFrame = v.CFrame
         end
     end
-end 
+end
 -- Instances:
-if not game.CoreGui:FindFirstChild("Chad Stats") then
-local ChadStats = Instance.new("ScreenGui")
-local Breathing = Instance.new("TextLabel")
-local Hunger = Instance.new("TextLabel")
-local Health = Instance.new("TextLabel")
-local Rep = Instance.new("TextLabel")
-local Time = Instance.new("TextLabel")
+if not CoreGui:FindFirstChild("Chad Stats") then
+    local ChadStats = Instance.new("ScreenGui")
+    local Breathing = Instance.new("TextLabel")
+    local Hunger = Instance.new("TextLabel")
+    local Health = Instance.new("TextLabel")
+    local Rep = Instance.new("TextLabel")
+    local Time = Instance.new("TextLabel")
 
---Properties:
+    --Properties:
 
-ChadStats.Name = "Chad Stats"
-ChadStats.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ChadStats.Name = "Chad Stats"
+    ChadStats.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-if syn and syn.protect_gui then
-    syn.protect_gui(ChadStats)
-    ChadStats.Parent = game.CoreGui
-elseif gethui then
-    ChadStats.Parent = gethui()
-else
-    ChadStats.Parent = game.CoreGui
+    if syn and syn.protect_gui then
+        syn.protect_gui(ChadStats)
+        ChadStats.Parent = CoreGui
+    elseif gethui then
+        ChadStats.Parent = gethui()
+    else
+        ChadStats.Parent = CoreGui
+    end
+
+    Breathing.Name = "Breathing"
+    Breathing.Parent = ChadStats
+    Breathing.Active = true
+    Breathing.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
+    Breathing.BackgroundTransparency = 0
+    Breathing.Position = UDim2.new(0.823636413, 0, 0, 0)
+    Breathing.Size = UDim2.new(0, 200, 0, 50)
+    Breathing.Font = Enum.Font.SourceSans
+    Breathing.TextColor3 = Color3.fromRGB(255, 0.0)
+    Breathing.TextSize = 16
+
+    Hunger.Name = "Hunger"
+    Hunger.Parent = ChadStats
+    Hunger.Active = true
+    Hunger.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
+    Hunger.BackgroundTransparency = 0
+    Hunger.Position = UDim2.new(0.823636413, 0, 0.199999988, 0)
+    Hunger.Size = UDim2.new(0, 200, 0, 50)
+    Hunger.Font = Enum.Font.SourceSans
+    Hunger.TextColor3 = Color3.fromRGB(255, 0.0)
+    Hunger.TextSize = 16
+
+    Health.Name = "Health"
+    Health.Parent = ChadStats
+    Health.Active = true
+    Health.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
+    Health.BackgroundTransparency = 0
+    Health.Position = UDim2.new(0.823030353, 0, 0.130061358, 0)
+    Health.Size = UDim2.new(0, 200, 0, 50)
+    Health.Font = Enum.Font.SourceSans
+    Health.TextColor3 = Color3.fromRGB(255, 0.0)
+    Health.TextSize = 16
+
+    Rep.Name = "Rep"
+    Rep.Parent = ChadStats
+    Rep.Active = true
+    Rep.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
+    Rep.BackgroundTransparency = 0
+    Rep.Position = UDim2.new(0.823286057, 0, 0.0613496974, 0)
+    Rep.Size = UDim2.new(0, 200, 0, 50)
+    Rep.Font = Enum.Font.SourceSans
+    Rep.TextColor3 = Color3.fromRGB(255, 0.0)
+    Rep.TextSize = 16
+
+    Time.Name = "Time"
+    Time.Parent = ChadStats
+    Time.Active = true
+    Time.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
+    Time.BackgroundTransparency = 0
+    Time.Position = UDim2.new(0.82328605, 0, 0.259079749, 0)
+    Time.Size = UDim2.new(0, 200, 0, 50)
+    Time.Font = Enum.Font.SourceSans
+    Time.TextColor3 = Color3.fromRGB(255, 0.0)
+    Time.TextSize = 16
+
+    local script = Instance.new("LocalScript", Breathing)
+    spawn(
+        function()
+            while wait() do
+                if Settings.Visible then
+                    wait()
+                    Breathing.Text =
+                        "Breath " .. math.floor(Player:WaitForChild("NoSaveValue"):WaitForChild("Air").Value) .. "%"
+                    Breathing.Visible = true
+                else
+                    Breathing.Visible = false
+                end
+            end
+        end
+    )
+    local script = Instance.new("LocalScript", Hunger)
+    spawn(
+        function()
+            while wait() do
+                if Settings.Visible then
+                    wait()
+                    Hunger.Text =
+                        "Hunger " .. math.floor(Player:WaitForChild("CharStats"):WaitForChild("Hunger").Value) .. "%"
+                    Hunger.Visible = true
+                else
+                    Hunger.Visible = false
+                end
+            end
+        end
+    )
+    local script = Instance.new("LocalScript", Health)
+    spawn(
+        function()
+            while wait() do
+                if Settings.Visible then
+                    wait()
+                    Health.Text = "Health " .. math.floor(Player.Character:WaitForChild("Humanoid").Health) .. "%"
+                    Health.Visible = true
+                else
+                    Health.Visible = false
+                end
+            end
+        end
+    )
+
+    local script = Instance.new("LocalScript", Rep)
+    spawn(
+        function()
+            while wait() do
+                if Settings.Visible then
+                    wait()
+                    Rep.Text = "Rep " .. Player:WaitForChild("Data"):WaitForChild("Rep").Value
+                    Rep.Visible = true
+                else
+                    Rep.Visible = false
+                end
+            end
+        end
+    )
+
+    local script = Instance.new("LocalScript", Time)
+    spawn(
+        function()
+            while wait() do
+                if Settings.Visible then
+                    if Lighting.ClockTime >= 13 then
+                        wait()
+                        Time.Text = math.floor(Lighting.ClockTime - 12) .. "PM"
+                    else
+                        Time.Text = math.floor(Lighting.ClockTime) .. "AM"
+                    end
+                    Time.Visible = true
+                else
+                    Time.Visible = false
+                end
+            end
+        end
+    )
 end
 
-Breathing.Name = "Breathing"
-Breathing.Parent = ChadStats
-Breathing.Active = true
-Breathing.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-Breathing.BackgroundTransparency = 0
-Breathing.Position = UDim2.new(0.823636413, 0, 0, 0)
-Breathing.Size = UDim2.new(0, 200, 0, 50)
-Breathing.Font = Enum.Font.SourceSans
-Breathing.TextColor3 = Color3.fromRGB(255, 0.0)
-Breathing.TextSize = 16
+Mobs = {"Demon Slayer", "Strong Demon Slayer", "Demon", "Strong Demon", "Fast Demon", "Mukago"}
 
-Hunger.Name = "Hunger"
-Hunger.Parent = ChadStats
-Hunger.Active = true
-Hunger.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-Hunger.BackgroundTransparency = 0
-Hunger.Position = UDim2.new(0.823636413, 0, 0.199999988, 0)
-Hunger.Size = UDim2.new(0, 200, 0, 50)
-Hunger.Font = Enum.Font.SourceSans
-Hunger.TextColor3 = Color3.fromRGB(255, 0.0)
-Hunger.TextSize = 16
+local String = Workspace.npc.npcs
 
-Health.Name = "Health"
-Health.Parent = ChadStats
-Health.Active = true
-Health.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-Health.BackgroundTransparency = 0
-Health.Position = UDim2.new(0.823030353, 0, 0.130061358, 0)
-Health.Size = UDim2.new(0, 200, 0, 50)
-Health.Font = Enum.Font.SourceSans
-Health.TextColor3 = Color3.fromRGB(255, 0.0)
-Health.TextSize = 16
-
-Rep.Name = "Rep"
-Rep.Parent = ChadStats
-Rep.Active = true
-Rep.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-Rep.BackgroundTransparency = 0
-Rep.Position = UDim2.new(0.823286057, 0, 0.0613496974, 0)
-Rep.Size = UDim2.new(0, 200, 0, 50)
-Rep.Font = Enum.Font.SourceSans
-Rep.TextColor3 = Color3.fromRGB(255, 0.0)
-Rep.TextSize = 16
-
-Time.Name = "Time"
-Time.Parent = ChadStats
-Time.Active = true
-Time.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-Time.BackgroundTransparency = 0
-Time.Position = UDim2.new(0.82328605, 0, 0.259079749, 0)
-Time.Size = UDim2.new(0, 200, 0, 50)
-Time.Font = Enum.Font.SourceSans
-Time.TextColor3 = Color3.fromRGB(255, 0.0)
-Time.TextSize = 16
-
-
-local script = Instance.new("LocalScript", Breathing)
-spawn(function()
-while wait() do
-        if Settings.Visible then wait()
-            Breathing.Text =
-                "Breath " ..
-                math.floor(game:GetService("Players").LocalPlayer:WaitForChild("NoSaveValue"):WaitForChild("Air").Value) ..
-                    "%"
-            Breathing.Visible = true
-        else
-            Breathing.Visible = false
-        end
-        end
+local Strong = Workspace.npc["you are one rude person"]
+for i, v in pairs(Strong:GetChildren()) do
+    if not v:FindFirstChildOfClass("Folder") then
+        v.Name = ""
+        v:Destroy()
+    elseif v.Name ~= "" then
+        v.Name = "Mobs"
+        v:FindFirstChildOfClass("Folder").Name = "Mobs"
     end
-)
-local script = Instance.new("LocalScript", Hunger)
-spawn(function()
-while wait() do
-        if Settings.Visible then wait()
-            Hunger.Text =
-                "Hunger " ..
-                math.floor(
-                    game:GetService("Players").LocalPlayer:WaitForChild("CharStats"):WaitForChild("Hunger").Value
-                ) ..
-                    "%"
-            Hunger.Visible = true
-        else
-            Hunger.Visible = false
-        end
-        end
-    end
-)
-local script = Instance.new("LocalScript", Health)
-spawn(function()
-while wait() do
-        if Settings.Visible then wait()
-            Health.Text =
-                "Health " ..
-                math.floor(game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid").Health) .. "%"
-            Health.Visible = true
-        else
-            Health.Visible = false
-        end
-        end
-    end
-)
-
-local script = Instance.new("LocalScript", Rep)
-spawn(function()
-while wait() do
-        if Settings.Visible then wait()
-            Rep.Text = "Rep " .. game:GetService("Players").LocalPlayer:WaitForChild("Data"):WaitForChild("Rep").Value
-            Rep.Visible = true
-        else
-            Rep.Visible = false
-        end
-        end
-    end
-)
-
-local script = Instance.new("LocalScript", Time)
-spawn(function()
-while wait() do
-        if Settings.Visible then
-            if game:GetService("Lighting").ClockTime >= 13 then wait()
-            Time.Text =  math.floor(game:GetService("Lighting").ClockTime - 12) .. "PM"
-            else
-            Time.Text =  math.floor(game:GetService("Lighting").ClockTime) .. "AM"
-            end 
-            Time.Visible = true
-        else
-            Time.Visible = false
-        end
-        end
-    end
-)
 end
-
-
-
-
-Mobs = {"Demon Slayer", "Strong Demon Slayer","Demon","Strong Demon","Fast Demon","Mukago"}
-
-
-
-
-local String = game:GetService("Workspace").npc.npcs
-
-local Strong = game:GetService("Workspace").npc.npcs
-
-if game:GetService("Workspace"):FindFirstChild("chatnpcs")  then
-    for i, v in pairs(game:GetService("Workspace").chatnpcs.Quest:GetChildren()) do
+if Workspace:FindFirstChild("chatnpcs") then
+    for i, v in pairs(Workspace.chatnpcs.Quest:GetChildren()) do
         if v:IsA("Model") then
-            pcall(function()
-            v.Parent = game:GetService("Workspace").chatnpcs
-            end)
+            pcall(
+                function()
+                    v.Parent = Workspace.chatnpcs
+                end
+            )
         end
     end
 end
 local function GetAwayAssHats()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(game.Players:GetPlayers()) do
-        if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-            local Mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Character.PrimaryPart.Position).Magnitude
+    for i, v in ipairs(Players:GetPlayers()) do
+        if v ~= Player and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            local Mag = (Player.Character.HumanoidRootPart.Position - v.Character.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -323,13 +340,12 @@ end
 local function getNearestMobFinalSeclection()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+    for i, v in ipairs(String:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0
          then
-            local Mag =
-                (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
+            local Mag = (Player.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
 
             if Mag < TargetDistance then
                 TargetDistance = Mag
@@ -343,15 +359,18 @@ end
 local function getNearestMob()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+    for i, v in ipairs(String:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
          then
-            local Mag =
-                (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
+            local Mag = (Player.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
 
-            if Mag < TargetDistance and TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude  then
+            if
+                Mag < TargetDistance and
+                    TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude
+             then
                 TargetDistance = Mag
                 Target = v
             end
@@ -363,13 +382,17 @@ end
 local function getNearestiii()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+    for i, v in ipairs(String:GetChildren()) do
         if
-            v.Name == Settings.Mobs and v:IsA("Model")  and v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
+            v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
          then
             local Mag = (Vector3.new(-673, -288, -648) - v.PrimaryPart.Position).Magnitude
-            if Mag < TargetDistance  and TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude then
+            if
+                Mag < TargetDistance and
+                    TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude
+             then
                 TargetDistance = Mag
                 Target = v
             end
@@ -381,14 +404,18 @@ end
 local function getNearestCustom()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+    for i, v in ipairs(String:GetChildren()) do
         if
-            v.Name == Settings.Mobs and v:IsA("Model")  and v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
-                then
+            v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
+         then
             local Mag =
                 (Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3) - v.PrimaryPart.Position).Magnitude
-            if Mag < TargetDistance and TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude then
+            if
+                Mag < TargetDistance and
+                    TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude
+             then
                 TargetDistance = Mag
                 Target = v
             end
@@ -400,13 +427,17 @@ end
 local function getNearesti()
     local TargetDistance = math.huge
     local Target
-    for i, v in ipairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+    for i, v in ipairs(String:GetChildren()) do
         if
             v.Name == Settings.Mobs and v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and
-                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
+                v:FindFirstChildOfClass("Humanoid").Health ~= 0 and
+                (GetAwayAssHats().Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude > 100
          then
             local Mag = (Vector3.new(10000, 10000, 0) - v.PrimaryPart.Position).Magnitude
-            if Mag < TargetDistance and TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude then
+            if
+                Mag < TargetDistance and
+                    TargetDistance > (GetAwayAssHats().Character.HumanoidRootPart.Position).Magnitude
+             then
                 TargetDistance = Mag
                 Target = v
             end
@@ -415,50 +446,48 @@ local function getNearesti()
     return Target
 end
 
-local Number = math.random(1,500)
+local Number = math.random(1, 500)
 
 Areas = {}
-for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
+for i, v in pairs(ReplicatedStorage.Areas:GetChildren()) do
     if v:IsA("BasePart") then
         table.insert(Areas, v.Name)
     end
 end
-if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
+if Workspace:FindFirstChild("chatnpcs") then
     Que = {}
-    for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
-        if v:FindFirstChild("Chat") and v.Chat:FindFirstChild("Start") and v.Chat.Start:FindFirstChild("b") and 
-            v.Chat.Start.b:FindFirstChild("Quest")  and
+    for i, v in pairs(Workspace.chatnpcs:GetChildren()) do
+        if
+            v:FindFirstChild("Chat") and v.Chat:FindFirstChild("Start") and v.Chat.Start:FindFirstChild("b") and
+                v.Chat.Start.b:FindFirstChild("Quest") and
                 not table.find(Que, v.Chat.Start.b.Quest.Value)
          then
             table.insert(Que, v.Chat.Start.b.Quest.Value)
         end
     end
     Areas = {}
-    for i, v in pairs(game:GetService("ReplicatedStorage").Areas:GetChildren()) do
+    for i, v in pairs(ReplicatedStorage.Areas:GetChildren()) do
         if v:IsA("BasePart") then
             table.insert(Areas, v.Name)
         end
     end
 
     Breathings1 = {}
-    for i, v in pairs(game:GetService("Workspace").chatnpcs.breath:GetChildren()) do
+    for i, v in pairs(Workspace.chatnpcs.breath:GetChildren()) do
         if v:IsA("Model") then
             table.insert(Breathings1, v.Name)
         end
     end
     NPCS = {}
-    for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
+    for i, v in pairs(Workspace.chatnpcs:GetChildren()) do
         if v:IsA("Model") then
             table.insert(NPCS, v.Name)
         end
     end
 end
 
-
-
-
 local function Esp(v)
-     if v:WaitForChild("Humanoid") then
+    if v:WaitForChild("Humanoid") then
         v:WaitForChild("Humanoid").HealthDisplayDistance = 100
         v:WaitForChild("Humanoid").HealthDisplayType = Enum.HumanoidHealthDisplayType.AlwaysOn
     end
@@ -468,74 +497,67 @@ spawn(
         while wait(5) do
             pcall(
                 function()
-                    for _, v in next, game:GetService("Players"):GetPlayers() do
+                    for _, v in next, Players:GetPlayers() do
                         if v.Character ~= nil then
                             Esp(v.Character)
                         end
                     end
-                    for i,v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+                    for i, v in pairs(String:GetChildren()) do
                         if v:IsA("Model") and v:FindFirstChild("Humanoid") then
                             Esp(v)
                         end
-                    end 
+                    end
                 end
             )
         end
     end
 )
 
-local function CheckMate() 
-    if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
-    if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Katana") then
-        wait()
-        game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):EquipTool(
-            game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Katana")
-        )
+local function CheckMate()
+    if not Player.Character:FindFirstChildOfClass("ForceField") then
+        if Player.Backpack:FindFirstChild("Katana") then
+            Player.Character:WaitForChild("Humanoid"):EquipTool(Player.Backpack:FindFirstChild("Katana"))
+        end
+        if not Player.states:FindFirstChild("exeing") then
+            game:GetService("VirtualInputManager"):SendKeyEvent(true, "B", false, game)
+        end
+        if not Player.states:FindFirstChild("selfstun") then
+            game:GetService("VirtualInputManager"):SendKeyEvent(true, "R", false, game)
+        end
+        VirtualUser:ClickButton1(Vector2.new(0, 300))
+        ReplicatedStorage.events.remote:FireServer("NormalAttack")
     end
-    if not game:GetService("Players").LocalPlayer.states:FindFirstChild("exeing") then
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, "B", false, game)
-    end
-    if not game:GetService("Players").LocalPlayer.states:FindFirstChild("selfstun") then
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, "R", false, game)
-    end
-    wait()
-    game:GetService("VirtualUser"):ClickButton1(Vector2.new(0, 300))
-    game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
-    end 
 end
 
 local function Use()
-    for i, v in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
+    for i, v in pairs(Player.Backpack:GetChildren()) do
         if
             v:IsA("Tool") and v:FindFirstChild("Move") and not v:FindFirstChild("Cash") and
-                not game:GetService("Players").LocalPlayer.cds:FindFirstChild(v.Name)
-         then wait()
-            if game:GetService("Players").LocalPlayer.NoSaveValue.Air.Value >= 100 then
-                game:GetService("ReplicatedStorage").events.remote:FireServer(v.Name)
+                not Player.cds:FindFirstChild(v.Name)
+         then
+            wait()
+            if Player.NoSaveValue.Air.Value >= 100 then
+                ReplicatedStorage.events.remote:FireServer(v.Name)
             end
         end
     end
 end
 
-
 local function Start(v)
-print("Hi")
+    print(v)
 end
 
-
-if not game:GetService("Workspace"):FindFirstChild("First") then
-local Part = Instance.new("Part",Workspace)
-Part.Name = "First"
-Part.Anchored = true
-Part.Size = Vector3.new(9e9,1,9e9)
-Part.Transparency = 1
-Part.Massless = true
-Part.CFrame = CFrame.new(10000, 10000, 0)
-end 
-
+if not Workspace:FindFirstChild("First") then
+    local Part = Instance.new("Part", Workspace)
+    Part.Name = "First"
+    Part.Anchored = true
+    Part.Size = Vector3.new(9e9, 1, 9e9)
+    Part.Transparency = 1
+    Part.Massless = true
+    Part.CFrame = CFrame.new(10000, 10000, 0)
+end
 
 local Gourd = {"Small Gourd", "Medium Gourd", "Big Gourd"}
-
 
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
@@ -550,23 +572,23 @@ local Section3 = Tab2:CreateSection("Menu")
 local Section4 = Tab2:CreateSection("Background")
 
 
-if not game.Workspace:FindFirstChild("chatnpcs") then
+if not Workspace:FindFirstChild("chatnpcs") then
 local Toggle1 = Section1:CreateToggle("Auto Final Selection", Settings.AutoFinalSelection, function(State)
 Settings.AutoFinalSelection = State
 
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.AutoFinalSelection then
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+            Player.Character:WaitForChild("Humanoid"):ChangeState(11)
         end
     end
 )
 Settings.AutoFinalSelection = State
 
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.AutoFinalSelection then
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+            Player.Character:WaitForChild("Humanoid"):ChangeState(11)
         end
     end
 )
@@ -580,16 +602,16 @@ spawn(
                         if Settings.AutoFinalSelection == false then
                             break
                         end
-                        if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
+                        if not Player.Character:FindFirstChildOfClass("ForceField") then
                             if getNearestMobFinalSeclection().Humanoid.Health > 10 then
                                 
-                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestMobFinalSeclection().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) *
                                     CFrame.Angles(90, 0, 0)
                             end
 
                             if getNearestMobFinalSeclection().Humanoid.Health < 10 then
-                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestMobFinalSeclection().HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) *
                                     CFrame.Angles(0, 0, 0)
                             end
@@ -614,7 +636,7 @@ spawn(
                     CheckMate()
                     Use()
                     if isnetworkowner then
-                    for i,v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do 
+                    for i,v in pairs(String:GetChildren()) do 
                     if v:IsA("Model") and v:FindFirstChildOfClass("Humanoid") and isnetworkowner(v.HumanoidRootPart) then
                     v.HumanoidRootPart.Anchored = true
                     elseif not isnetworkowner(v.HumanoidRootPart) then
@@ -632,12 +654,12 @@ end
 
 local Toggle1 = Section1:CreateToggle("Semi HideName", Settings.HideName, function(State)
 Settings.HideName = State
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.HideName then
             pcall(function()
-            game:GetService("ReplicatedStorage").DashWithNoDelay:InvokeServer("Dash")
-            game:GetService("Workspace").EFFECT:Destroy()
+            ReplicatedStorage.DashWithNoDelay:InvokeServer("Dash")
+            Workspace.EFFECT:Destroy()
             end)
         end
     end
@@ -651,7 +673,7 @@ spawn(
         while Settings.Attack do
             wait()
             Use()
-            game:GetService("ReplicatedStorage").events.remote:FireServer("NormalAttack")
+            ReplicatedStorage.events.remote:FireServer("NormalAttack")
         end
     end
 )
@@ -665,13 +687,13 @@ while Settings.Gourds do
     wait()
     pcall(
         function()
-            if game:GetService("Players").LocalPlayer.NoSaveValue.Air.Value == 100 then
-                if not game.Players.LocalPlayer.Character:FindFirstChild(Settings.Gourd) then
-                game.Players.LocalPlayer.Character.Humanoid:EquipTool(
-                    game.Players.LocalPlayer.Backpack:FindFirstChild(Settings.Gourd)
+            if Player.NoSaveValue.Air.Value == 100 then
+                if not Player.Character:FindFirstChild(Settings.Gourd) then
+                Player.Character.Humanoid:EquipTool(
+                    Player.Backpack:FindFirstChild(Settings.Gourd)
                 )
                 end
-                game:GetService("ReplicatedStorage").events.remote:FireServer(Settings.Gourd)
+                ReplicatedStorage.events.remote:FireServer(Settings.Gourd)
             end
         end
     )
@@ -687,7 +709,7 @@ end)
 local Toggle1 = Section1:CreateToggle("Player Silent Aim", Settings.PlayerSilentAim, function(State)
 Settings.PlayerSilentAim = State
 
-local Players = game:GetService("Players")
+local Players = Players
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 function ClosestPlayerToCurser()
@@ -732,12 +754,12 @@ end)
 local Toggle1 = Section1:CreateToggle("Mob Silent Aim", Settings.MobSilentAim, function(State)
 
 Settings.MobSilentAim = State
-local Players = game:GetService("Players")
+local Players = Players
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 function ClosestMobToCurser()
     local MaxDistance, Closest = math.huge
-    for i, v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+    for i, v in pairs(String:GetChildren()) do
         if v:IsA("Model")  then
             local H = v:FindFirstChild("Head")
             if H then
@@ -778,13 +800,13 @@ end)
 
 local Toggle1 = Section1:CreateToggle("Auto Steal MoneyBags", Settings.Type, function(State)
 Settings.Type = State
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         pcall(
             function()
-                for i, v in pairs(game:GetService("Workspace"):GetChildren()) do
+                for i, v in pairs(Workspace:GetChildren()) do
                     if v.Name == "MoneyBag" and v:IsA("BasePart") and Settings.Type then
-                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v, 0)
+                        firetouchinterest(Player.Character.HumanoidRootPart, v, 0)
                     end
                 end
             end
@@ -808,26 +830,26 @@ end)
 local Toggle1 = Section1:CreateToggle("Full Bright", Settings.FullBright, function(State)
 Settings.FullBright = State
         if Settings.FullBright then wait()
-            game:GetService("Lighting").FogEnd = 9e9
-            game:GetService("Lighting").Ambient = Color3.new(1, 1, 1)
-            game:GetService("Lighting").ColorShift_Bottom = Color3.new(1, 1, 1)
-            game:GetService("Lighting").ColorShift_Top = Color3.new(1, 1, 1)
+            Lighting.FogEnd = 9e9
+            Lighting.Ambient = Color3.new(1, 1, 1)
+            Lighting.ColorShift_Bottom = Color3.new(1, 1, 1)
+            Lighting.ColorShift_Top = Color3.new(1, 1, 1)
         else
-            game:GetService("Lighting").Ambient = Color3.new(0, 0, 0)
-            game:GetService("Lighting").ColorShift_Bottom = Color3.new(0, 0, 0)
-            game:GetService("Lighting").ColorShift_Top = Color3.new(0, 0, 0)
+            Lighting.Ambient = Color3.new(0, 0, 0)
+            Lighting.ColorShift_Bottom = Color3.new(0, 0, 0)
+            Lighting.ColorShift_Top = Color3.new(0, 0, 0)
         end
-game.Lighting.Changed:connect(
+Lighting.Changed:connect(
     function()
         if Settings.FullBright then wait()
-            game:GetService("Lighting").FogEnd = 9e9
-            game:GetService("Lighting").Ambient = Color3.new(1, 1, 1)
-            game:GetService("Lighting").ColorShift_Bottom = Color3.new(1, 1, 1)
-            game:GetService("Lighting").ColorShift_Top = Color3.new(1, 1, 1)
+            Lighting.FogEnd = 9e9
+            Lighting.Ambient = Color3.new(1, 1, 1)
+            Lighting.ColorShift_Bottom = Color3.new(1, 1, 1)
+            Lighting.ColorShift_Top = Color3.new(1, 1, 1)
         else
-            game:GetService("Lighting").Ambient = Color3.new(0, 0, 0)
-            game:GetService("Lighting").ColorShift_Bottom = Color3.new(0, 0, 0)
-            game:GetService("Lighting").ColorShift_Top = Color3.new(0, 0, 0)
+            Lighting.Ambient = Color3.new(0, 0, 0)
+            Lighting.ColorShift_Bottom = Color3.new(0, 0, 0)
+            Lighting.ColorShift_Top = Color3.new(0, 0, 0)
         end
     end)
 end)
@@ -841,10 +863,10 @@ end)
 local Toggle1 = Section1:CreateToggle("AutoFarm Mobs", Settings.AutoFarmMobs, function(State)
 Settings.AutoFarmMobs = State
 
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.AutoFarmMobs then
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+            Player.Character:WaitForChild("Humanoid"):ChangeState(11)
         end
     end
 )
@@ -853,24 +875,18 @@ spawn(
         while wait() and Settings.AutoFarmMobs do
             pcall(
                 function()
-                    repeat
-                        wait()
-                        if Settings.AutoFarmMobs == false then
-                            break
-                        end
-                        if not game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("ForceField") then
+                        if not Player.Character:FindFirstChildOfClass("ForceField") then
                             if getNearestMob().Humanoid.Health > 10 then wait()
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                            Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(90, 0, 0)
                                 end 
 
                             if getNearestMob().Humanoid.Health < 10 then wait()
-                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) *
                                     CFrame.Angles(0, 0, 0)
                             end
                         end
-                    until Settings.AutoFarmMobs == false or getNearestMob().Humanoid.Health == 0 wait()
                     if getNearestMob().Humanoid.Health == 0 then
                         getNearestMob():remove()
                     end
@@ -899,12 +915,12 @@ end)
 if isnetworkowner then
 local Toggle1 = Section1:CreateToggle("AutoFarm Mobs Safely", Settings.AutoFarmSafely, function(State)
 Settings.AutoFarmSafely = State
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.AutoFarmSafely then
             pcall(
                 function()
-                    game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+                    Player.Character:WaitForChild("Humanoid"):ChangeState(11)
                 end
             )
         end
@@ -919,21 +935,21 @@ spawn(
                     if getNearestiii() == nil then
                         if Settings.Options == "Matter" then
                             wait()
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                            Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
                         end
                     end
                     if getNearesti() == nil then
                         if Settings.Options == "Away" then
                             wait()
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                            Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 CFrame.new(0, -5000, 0)
                         end
                     end
                     if getNearesti() == nil then
                         if Settings.Options == "Custom" then
                             wait()
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                            Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 CFrame.new(0, -5000, 0)
                         end
                     end
@@ -945,23 +961,23 @@ spawn(
 
 spawn(
     function()
-        while wait() and Settings.AutoFarmSafely do
+        while wait(0.1) and Settings.AutoFarmSafely do
             wait()
             pcall(
                 function()
                     if Settings.Options == "Matter" then
                         wait(Settings.Delay)
                         
-                        if isnetworkowner(getNearestiii().PrimaryPart) then
+                        if isnetworkowner(getNearestiii().PrimaryPart) and wait() then
                             getNearestiii().PrimaryPart.CFrame =
                                 CFrame.new(math.random(-673, -450), -288, math.random(-648, -450))
                         end
                         if getNearestiii().Humanoid.Health > 10 then
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                            Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 CFrame.new(getNearestiii().PrimaryPart.Position - Vector3.new(0, 9, 0)) * CFrame.Angles(90, 0, 0)
                         end
                         if getNearestiii().Humanoid.Health < 10 and (Vector3.new(math.random(-673, -450), -288, math.random(-648, -450)) - getNearestiii().PrimaryPart.Position).Magnitude <= 100  then
-                             game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                             Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearestiii().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                         end
                         if getNearestiii().Humanoid.Health == 0 then
@@ -972,7 +988,7 @@ spawn(
                     if Settings.Options == "Away" then
                         wait(Settings.Delay)
                         if getNearesti().Humanoid.Health > 10  then
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                            Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 CFrame.new(getNearesti().PrimaryPart.Position - Vector3.new(0, 8, 0)) * CFrame.Angles(90, 0, 0)
                         end
                         
@@ -980,7 +996,7 @@ spawn(
                             wait(Settings.Delay)
                             getNearesti().PrimaryPart.CFrame = CFrame.new(10000, 10003, Number)
                             if getNearesti().Humanoid.Health < 10 and (Vector3.new(10000, 10003, Number) - getNearesti().PrimaryPart.Position).Magnitude <= 50 then
-                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                     getNearesti().PrimaryPart.CFrame * CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
                             end
                         end
@@ -991,14 +1007,14 @@ spawn(
                     if Settings.Options == "Custom" then
                         wait(Settings.Delay)
                         if getNearestCustom().Humanoid.Health > 10 then
-                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                            Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                 getNearestCustom().PrimaryPart.CFrame * CFrame.new(0, -8, 0) * CFrame.Angles(90, 0, 0)
                         end
                         if isnetworkowner(getNearestCustom().PrimaryPart) then
                             getNearestCustom().PrimaryPart.Position =
                                 Vector3.new(Settings.Position1, Settings.Position2, Settings.Position3)
                             if getNearestCustom().Humanoid.Health < 10 then
-                                game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                Player.Character:WaitForChild("HumanoidRootPart").CFrame =
                                    CFrame.new( getNearesti().PrimaryPart.Position - Vector3.new(0, -1, 0)) * CFrame.Angles(0, 0, 0)
                             end
                         end
@@ -1039,9 +1055,9 @@ end)
 
 local Button1 = Section1:CreateButton("Save Custom Position", function()
 
-Settings.Position1 = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position.X
-Settings.Position2 = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position.Y
-Settings.Position3 = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position.Z
+Settings.Position1 = Player.Character:WaitForChild("HumanoidRootPart").Position.X
+Settings.Position2 = Player.Character:WaitForChild("HumanoidRootPart").Position.Y
+Settings.Position3 = Player.Character:WaitForChild("HumanoidRootPart").Position.Z
 end)
 end
 
@@ -1050,13 +1066,13 @@ local Dropdown1 = Section1:CreateDropdown("Mobs", Mobs, function(String)
 end)
 
 
-if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
+if Workspace:FindFirstChild("chatnpcs") then
 local Toggle1 = Section1:CreateToggle("Auto Accept Quest", Settings.AutoQuest, function(State)
 Settings.AutoQuest = State
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.AutoQuest then
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+            Player.Character:WaitForChild("Humanoid"):ChangeState(11)
         end
     end
 )
@@ -1065,15 +1081,15 @@ spawn(
         while Settings.AutoQuest do
             wait()
             if
-                not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") and
-                    not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest")
+                not Player.PlayerGui:FindFirstChild("dialogGUI") and
+                    not Player.PlayerGui:FindFirstChild("Quest")
              then
-                for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
+                for i, v in pairs(Workspace.chatnpcs:GetChildren()) do
             if v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Chat") and v.Chat:FindFirstChild("Start") and v.Chat.Start:FindFirstChild("b") and 
             v.Chat.Start.b:FindFirstChild("Quest")  and
                             v:WaitForChild("Chat"):WaitForChild("Start"):WaitForChild("b"):WaitForChild("Quest").Value == Settings.Quest
                      then
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame *CFrame.new(0,-26,0)
+                        Player.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame *CFrame.new(0,-26,0)
                         if v:FindFirstChild("JumpHitbox") then
                         fireclickdetector(v.JumpHitbox.ClickDetector)
                         elseif v:FindFirstChild("Part") then
@@ -1082,9 +1098,9 @@ spawn(
                     end
                 end
             end 
-            if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") then
-                game:GetService("VirtualUser"):ClickButton1(Vector2.new(900, 900))
-                for i, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.dialogGUI.f.sf:GetChildren()) do
+            if Player.PlayerGui:FindFirstChild("dialogGUI") then
+                VirtualUser:ClickButton1(Vector2.new(900, 900))
+                for i, v in pairs(Player.PlayerGui.dialogGUI.f.sf:GetChildren()) do
                     if v:IsA("UIGridLayout") then
                         v.CellSize = UDim2.new(500, 500, -500, -500)
                     end
@@ -1115,10 +1131,10 @@ Title = "This is CS";
 Text = "But Still Looks Cool";
 })
 end 
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
-        if game.Players.LocalPlayer.Character:FindFirstChild("Weapon") and Settings.RainBow then
-            for i, v in pairs(game.Players.LocalPlayer.Character.Weapon:GetChildren()) do
+        if Player.Character:FindFirstChild("Weapon") and Settings.RainBow then
+            for i, v in pairs(Player.Character.Weapon:GetChildren()) do
                 if v:IsA("BasePart") then
                     v.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
                 end
@@ -1130,10 +1146,10 @@ end)
 
 local Toggle1 = Section1:CreateToggle("Transparent Blade", Settings.Transparents, function(State)
 Settings.Transparents = State
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
-        if game.Players.LocalPlayer.Character:FindFirstChild("Weapon") and Settings.Transparents then
-            for i, v in pairs(game.Players.LocalPlayer.Character.Weapon:GetChildren()) do
+        if Player.Character:FindFirstChild("Weapon") and Settings.Transparents then
+            for i, v in pairs(Player.Character.Weapon:GetChildren()) do
                 if v:IsA("BasePart") then
                     v.Transparency = Settings.Transparency 
                 end
@@ -1154,11 +1170,11 @@ Title = "This is CS";
 Text = "But Still Looks Cool";
 })
 end 
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if 
         Settings.RainBowMan then
-            for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            for i, v in pairs(Player.Character:GetChildren()) do
                 if v:IsA("BasePart") then
                     pcall(function()
                     v.Color = Color3.fromHSV(tick() % 5 / 5, 1, 1)
@@ -1172,10 +1188,10 @@ end)
 
 local Toggle1 = Section1:CreateToggle("Transparent Person", Settings.TransparentsMan, function(State)
 Settings.TransparentsMan = State
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.TransparentsMan then
-            for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            for i, v in pairs(Player.Character:GetChildren()) do
                 if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
                     pcall(function()
                     v.Transparency = Settings.Transparency1
@@ -1199,15 +1215,15 @@ spawn(
             wait()
             repeat
                 wait()
-                if math.floor(game:GetService("Players").LocalPlayer.CharStats.Hunger.Value) <= 50 then
-                    for i, v in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
+                if math.floor(Player.CharStats.Hunger.Value) <= 50 then
+                    for i, v in pairs(Player.Backpack:GetChildren()) do
                         if v:IsA("Tool") and v:FindFirstChild("NameChange") then
-                            game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
-                            game:GetService("VirtualUser"):ClickButton1(Vector2.new())
+                            Player.Character.Humanoid:EquipTool(v)
+                            VirtualUser:ClickButton1(Vector2.new())
                         end
                     end
                 end
-            until math.floor(game:GetService("Players").LocalPlayer.CharStats.Hunger.Value) == 100
+            until math.floor(Player.CharStats.Hunger.Value) == 100
             end)
         end
     end
@@ -1217,12 +1233,12 @@ end)
 
 local Toggle1 = Section1:CreateToggle("Hard Reset/LifeSaver", Settings.Reset, function(State)
 Settings.Reset = State
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
-        if game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Health <= 10 and Settings.Reset then
+        if Player.Character:WaitForChild("Humanoid").Health <= 10 and Settings.Reset then
             pcall(
                 function()
-                    game.Players.LocalPlayer.Character:WaitForChild("Head"):Destroy()
+                    Player.Character:WaitForChild("Head"):Destroy()
                 end
             )
         end
@@ -1237,7 +1253,7 @@ Settings.Crimson = State
 spawn(function()
 while Settings.Crimson do
     wait(2)
-    game:GetService("ReplicatedStorage").events.remote:FireServer("Crimson Red Nichirin Blade")
+    ReplicatedStorage.events.remote:FireServer("Crimson Red Nichirin Blade")
 end
 end)
 end)
@@ -1245,10 +1261,10 @@ end)
 
 local Toggle1 = Section1:CreateToggle("Auto Buy Food", Settings.Food, function(State)
 Settings.Food = State
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.Food then
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+            Player.Character:WaitForChild("Humanoid"):ChangeState(11)
         end
     end
 )
@@ -1256,12 +1272,12 @@ spawn(function()
 while wait() and Settings.Food do
     pcall(
         function()
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                game:GetService("Workspace").Store.Onigiri.CFrame * CFrame.new(0, -26, 0)
-            fireclickdetector(game:GetService("Workspace").Store.Onigiri.ClickDetector)
-            if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") then
-                game:GetService("VirtualUser"):ClickButton1(Vector2.new())
-                for i, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.dialogGUI.f.sf:GetChildren()) do
+            Player.Character.HumanoidRootPart.CFrame =
+                Workspace.Store.Onigiri.CFrame * CFrame.new(0, -26, 0)
+            fireclickdetector(Workspace.Store.Onigiri.ClickDetector)
+            if Player.PlayerGui:FindFirstChild("dialogGUI") then
+                VirtualUser:ClickButton1(Vector2.new())
+                for i, v in pairs(Player.PlayerGui.dialogGUI.f.sf:GetChildren()) do
                     if v:IsA("UIGridLayout") then
                         v.CellSize = UDim2.new(500, 500, -500, -500)
                     end
@@ -1283,9 +1299,9 @@ spawn(
     function()
         while Settings.AutoTeleport do
             wait(2)
-            for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart and not game:GetService("Workspace").GameState:FindFirstChild("Night") then
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+            for i, v in pairs(Workspace.map.Stuff:GetChildren()) do
+                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart and not Workspace.GameState:FindFirstChild("Night") then
+                    Player.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
                 end
             end
         end
@@ -1300,42 +1316,42 @@ spawn(
     function()
         while Settings.AutoTeleport do
             wait(2)
-            for i, v in pairs(game:GetService("Workspace").map.Stuff:GetChildren()) do
-                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart and game:GetService("Workspace").GameState:FindFirstChild("Night") then
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+            for i, v in pairs(Workspace.map.Stuff:GetChildren()) do
+                if v:IsA("Model") and v.Name == "Barrel" and v:FindFirstChildWhichIsA('BasePart') and Workspace.GameState:FindFirstChild("Night") then
+                    Player.Character.HumanoidRootPart.CFrame = v:FindFirstChildWhichIsA('BasePart').CFrame
                 end
             end
         end
     end
 )
 end)
-if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
+if Workspace:FindFirstChild("chatnpcs") then
 
 local Toggle1 = Section1:CreateToggle("Money Farm | Fast", Settings.Money, function(State)
 Settings.Money = State
 
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.Money then
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid"):ChangeState(11)
+            Player.Character:WaitForChild("Humanoid"):ChangeState(11)
         end
     end
 )
 repeat
     wait()
     if Settings.Money then
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-        game:GetService("ReplicatedStorage").Areas["Yokai Village"].CFrame
+    Player.Character.HumanoidRootPart.CFrame =
+        ReplicatedStorage.Areas["Yokai Village"].CFrame
         end
-until game:GetService("Workspace"):WaitForChild("chatnpcs").Box:FindFirstChild("Main") or Settings.Money == false
+until Workspace:WaitForChild("chatnpcs").Box:FindFirstChild("Main") or Settings.Money == false
 spawn(
     function()
         while wait(Settings.MoneyDelay) and Settings.Money do
             pcall(
                 function()
-                    if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") then
-                        game:GetService("VirtualUser"):ClickButton1(Vector2.new())
-                        for i, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.dialogGUI.f.sf:GetChildren()) do
+                    if Player.PlayerGui:FindFirstChild("dialogGUI") then
+                        VirtualUser:ClickButton1(Vector2.new())
+                        for i, v in pairs(Player.PlayerGui.dialogGUI.f.sf:GetChildren()) do
                             if v:IsA("UIGridLayout") then
                                 v.CellSize = UDim2.new(500, 500, -500, -500)
                             end
@@ -1344,17 +1360,17 @@ spawn(
                             end
                         end
                     end
-                    for i, v in pairs(game:GetService("Workspace").chatnpcs:GetChildren()) do
-                        if v:IsA("Model") and v:FindFirstChild("Amazon Box") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest") then
-                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                                v.PrimaryPart.CFrame * CFrame.new(0, -26, 0)
+                    for i, v in pairs(Workspace.chatnpcs:GetChildren()) do
+                        if v:IsA("Model") and v:FindFirstChild("Amazon Box") and not Player.PlayerGui:FindFirstChild("Quest") then
+                            Player.Character.HumanoidRootPart.CFrame =
+                                v.PrimaryPart.CFrame * CFrame.new(0, -23, 0)
                             fireclickdetector(v.hitbox:FindFirstChildOfClass("ClickDetector"))
                         elseif
-                            game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Quest") and v:IsA("Model") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("dialogGUI") and
+                            Player.PlayerGui:FindFirstChild("Quest") and v:IsA("Model") and not Player.PlayerGui:FindFirstChild("dialogGUI") and
                                 v:FindFirstChild("Main")
                          then
-                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
-                                v.PrimaryPart.CFrame * CFrame.new(0, -26, 0)
+                            Player.Character.HumanoidRootPart.CFrame =
+                                v.PrimaryPart.CFrame * CFrame.new(0, -23, 0) wait(1)
                             fireclickdetector(v.pp:FindFirstChildOfClass("ClickDetector"))
                         end
                     end
@@ -1378,7 +1394,7 @@ spawn(function()
 while wait(2) and Settings.Anchored do
     pcall(
         function()
-            for i, v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+            for i, v in pairs(String:GetChildren()) do
                 if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart)  then
                     v.HumanoidRootPart.Anchored = true
                 elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart)  then
@@ -1397,7 +1413,7 @@ spawn(function()
 while wait(2) and Settings.Jump do
     pcall(
         function()
-            for i, v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+            for i, v in pairs(String:GetChildren()) do
                 if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart)  then
                     v.Humanoid.Jump = true
                 elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart)  then
@@ -1416,7 +1432,7 @@ spawn(function()
 while wait(2) and Settings.Stun do
     pcall(
         function()
-            for i, v in pairs(game:GetService("Workspace").npc.npcs:GetChildren()) do
+            for i, v in pairs(String:GetChildren()) do
                 if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and isnetworkowner(v.PrimaryPart)  then
                     v.Humanoid.PlatformStand = true
                 elseif v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") and not isnetworkowner(v.PrimaryPart)   then
@@ -1437,7 +1453,7 @@ spawn(
             wait(nil)
             pcall(
                 function()
-                    if not game:GetService("Workspace").GameState:FindFirstChild("Night") then
+                    if not Workspace.GameState:FindFirstChild("Night") then
                         local PlaceID = game.PlaceId
                         local AllIDs = {}
                         local foundAnything = ""
@@ -1511,10 +1527,10 @@ spawn(
                                                     game:GetService("HttpService"):JSONEncode(AllIDs)
                                                 )
                                                 wait()
-                                                game:GetService("TeleportService"):TeleportToPlaceInstance(
+                                                TeleportService:TeleportToPlaceInstance(
                                                     PlaceID,
                                                     ID,
-                                                    game.Players.LocalPlayer
+                                                    Player
                                                 )
                                             end
                                         )
@@ -1552,9 +1568,9 @@ spawn(
     function()
         while Settings.InfiniteBreath do
             wait()
-            game:GetService("ReplicatedStorage").events.remote:FireServer("manacharges")
+            ReplicatedStorage.events.remote:FireServer("manacharges")
             wait(3)
-            game:GetService("ReplicatedStorage").events.remote:FireServer("manacharged")
+            ReplicatedStorage.events.remote:FireServer("manacharged")
         end
     end
 )
@@ -1563,11 +1579,11 @@ end)
 
 local Toggle1 = Section2:CreateToggle("Enable WalkSpeed/JumpPower", Settings.Go, function(State)
 Settings.Go = State
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if Settings.Go then
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = Settings.WalkSpeed
-            game.Players.LocalPlayer.Character:WaitForChild("Humanoid").JumpPower = Settings.JumpPower
+            Player.Character:WaitForChild("Humanoid").WalkSpeed = Settings.WalkSpeed
+            Player.Character:WaitForChild("Humanoid").JumpPower = Settings.JumpPower
             if not game:GetService("UserInputService").WindowFocusReleased then
                 setfpscap(Settings.Fps)
             end
@@ -1597,23 +1613,23 @@ spawn(
     function()
         while Settings.DropYen do
             wait()
-            game:GetService("ReplicatedStorage").events.remote:FireServer("Drop Yen", tonumber(Settings.YenAmount))
+            ReplicatedStorage.events.remote:FireServer("Drop Yen", tonumber(Settings.YenAmount))
         end
     end
 )
 end)
 
 local Button1 = Section2:CreateButton("Teleport To Area", function()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Areas[Areas].CFrame
+    Player.Character.HumanoidRootPart.CFrame = ReplicatedStorage.Areas[Areas].CFrame
 end)
 
 local Dropdown1 = Section2:CreateDropdown("Areas", Areas, function(String)
 	Areas = String
 end)
 
-if game:GetService("Workspace"):FindFirstChild("chatnpcs") then
+if Workspace:FindFirstChild("chatnpcs") then
 local Button1 = Section2:CreateButton("Teleport To Breathing Teacher", function()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").chatnpcs.breath[Breathings1].HumanoidRootPart.CFrame
+    Player.Character.HumanoidRootPart.CFrame = Workspace.chatnpcs.breath[Breathings1].HumanoidRootPart.CFrame
 end)
 
 local Dropdown1 = Section2:CreateDropdown("Breathing Teachers", Breathings1, function(String)
@@ -1621,7 +1637,7 @@ local Dropdown1 = Section2:CreateDropdown("Breathing Teachers", Breathings1, fun
 end)
 
 local Button1 = Section2:CreateButton("Teleport To NPC", function()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").chatnpcs[NPCS].HumanoidRootPart.CFrame
+    Player.Character.HumanoidRootPart.CFrame = Workspace.chatnpcs[NPCS].HumanoidRootPart.CFrame
 end)
 
 local Dropdown1 = Section2:CreateDropdown("NPCS", NPCS, function(String)
@@ -1653,11 +1669,11 @@ local Toggle1 = Section1:CreateToggle("Enable Esp", Settings.Esp, function(State
     ESP:Toggle(Settings.Esp)
     
 end)
-if game:GetService("Workspace").map:FindFirstChild("Stuff") then
+if Workspace.map:FindFirstChild("Stuff") then
 local Toggle1 = Section1:CreateToggle("EarRing Esp", Settings.EarRing, function(State)
 Settings.EarRing = State
 ESP.EarRing = Settings.EarRing
-ESP:AddObjectListener(game:GetService("Workspace").map.Stuff, {
+ESP:AddObjectListener(Workspace.map.Stuff, {
     Color = Color3.new(0,0,255),
     Type = "Model",
     PrimaryPart = function(v)
@@ -1669,8 +1685,8 @@ ESP:AddObjectListener(game:GetService("Workspace").map.Stuff, {
         return H
     end,
     Validator = function(v)
-    if v.Name == "Barrel" and not game:GetService("Workspace").GameState:FindFirstChild("Night") then
-        return not game.Players:GetPlayerFromCharacter(v) and v
+    if v.Name == "Barrel" and not Workspace.GameState:FindFirstChild("Night") then
+        return not Players:GetPlayerFromCharacter(v) and v
     end 
     end,
     CustomName = function(v)
@@ -1683,7 +1699,7 @@ end)
 local Toggle1 = Section1:CreateToggle("Flute Esp", Settings.FluteEsps, function(State)
 Settings.FluteEsps = State
 ESP.Flute = Settings.FluteEsps
-ESP:AddObjectListener(game:GetService("Workspace").map.Stuff, {
+ESP:AddObjectListener(Workspace.map.Stuff, {
     Color = Color3.new(255,0,0),
     Type = "Model",
     PrimaryPart = function(v)
@@ -1695,8 +1711,8 @@ ESP:AddObjectListener(game:GetService("Workspace").map.Stuff, {
         return H
     end,
     Validator = function(v)
-    if v.Name == "Barrel" and game:GetService("Workspace").GameState:FindFirstChild("Night") then
-        return not game.Players:GetPlayerFromCharacter(v) and v
+    if v.Name == "Barrel" and Workspace.GameState:FindFirstChild("Night") then
+        return not Players:GetPlayerFromCharacter(v) and v
     end 
     end,
     CustomName = function(v)
@@ -1742,9 +1758,9 @@ end
 local Toggle1 = Section2:CreateToggle("Invisicam", Settings.Sorry, function(State)
 Settings.Sorry = State
 if Settings.Sorry then
-    game:GetService("Players").LocalPlayer.DevCameraOcclusionMode = "Invisicam"
+    Player.DevCameraOcclusionMode = "Invisicam"
 else
-    game:GetService("Players").LocalPlayer.DevCameraOcclusionMode = "Zoom"
+    Player.DevCameraOcclusionMode = "Zoom"
 end
 end)
 local Toggle1 = Section2:CreateToggle("Be Wired", Settings.Weird, function(State)
@@ -1755,10 +1771,10 @@ spawn(
             wait()
             pcall(
                 function()
-                    game.Players.LocalPlayer.Character["Left Leg"]:remove()
-                    game.Players.LocalPlayer.Character["Left Arm"]:remove()
-                    game.Players.LocalPlayer.Character["Right Arm"]:remove()
-                    game.Players.LocalPlayer.Character["Right Leg"]:remove()
+                    Player.Character["Left Leg"]:remove()
+                    Player.Character["Left Arm"]:remove()
+                    Player.Character["Right Arm"]:remove()
+                    Player.Character["Right Leg"]:remove()
                 end
             )
         end
@@ -1769,12 +1785,12 @@ end)
 local Toggle1 = Section2:CreateToggle("N Noclip", Settings.Sex1, function(State)
 noclips = false
 Settings.Sex1 = State
-game.Players.LocalPlayer:GetMouse().KeyDown:connect(
+Player:GetMouse().KeyDown:connect(
     function(v)
         if v == "n" then
             if Settings.Sex1 then
                 noclips = not noclips
-                for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                for i, v in pairs(Player.Character:GetChildren()) do
                     if v:IsA("BasePart") then
                         v.CanCollide = false
                     end
@@ -1783,10 +1799,10 @@ game.Players.LocalPlayer:GetMouse().KeyDown:connect(
         end
     end
 )
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if noclips then
-            for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            for i, v in pairs(Player.Character:GetChildren()) do
                 if v:IsA("BasePart") then
                     v.CanCollide = false
                 end
@@ -1800,20 +1816,20 @@ end)
 local Toggle1 = Section2:CreateToggle("G Noclip", Settings.Sex, function(State)
 Settings.Sex = State
 noclip = false
-game:GetService("RunService").Stepped:connect(
+RunService.Stepped:connect(
     function()
         if noclip then
-            game.Players.LocalPlayer.Character.Humanoid:ChangeState(11)
+            Player.Character.Humanoid:ChangeState(11)
         end
     end
 )
-mouse = game.Players.LocalPlayer:GetMouse()
-game.Players.LocalPlayer:GetMouse().KeyDown:connect(
+mouse = Player:GetMouse()
+Player:GetMouse().KeyDown:connect(
     function(v)
         if v == "g" then
             if Settings.Sex then
                 noclip = not noclip
-                game.Players.LocalPlayer.Character.Humanoid:ChangeState(11)
+                Player.Character.Humanoid:ChangeState(11)
             end
         end
     end
@@ -1822,7 +1838,7 @@ end)
 local Toggle1 = Section2:CreateToggle("H Fly", Settings.Sex2, function(State)
 Settings.Sex2 = State
 local Max = 0
-local Players = game.Players
+local Players = Players
 local LP = Players.LocalPlayer
 local Mouse = LP:GetMouse()
 Mouse.KeyDown:connect(
@@ -1866,10 +1882,10 @@ Mouse.KeyDown:connect(
                                 end
                                 if (S.L + S.R) ~= 0 or (S.F + S.B) ~= 0 then
                                     BodyVelocity.velocity =
-                                        ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (S.F + S.B)) +
-                                        ((game.Workspace.CurrentCamera.CoordinateFrame *
+                                        ((Workspace.CurrentCamera.CoordinateFrame.lookVector * (S.F + S.B)) +
+                                        ((Workspace.CurrentCamera.CoordinateFrame *
                                             CFrame.new(S.L + S.R, (S.F + S.B) * 0.2, 0).p) -
-                                            game.Workspace.CurrentCamera.CoordinateFrame.p)) *
+                                            Workspace.CurrentCamera.CoordinateFrame.p)) *
                                         SPEED
                                     S2 = {
                                         F = S.F,
@@ -1879,15 +1895,15 @@ Mouse.KeyDown:connect(
                                     }
                                 elseif (S.L + S.R) == 0 and (S.F + S.B) == 0 and SPEED ~= 0 then
                                     BodyVelocity.velocity =
-                                        ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (S2.F + S2.B)) +
-                                        ((game.Workspace.CurrentCamera.CoordinateFrame *
+                                        ((Workspace.CurrentCamera.CoordinateFrame.lookVector * (S2.F + S2.B)) +
+                                        ((Workspace.CurrentCamera.CoordinateFrame *
                                             CFrame.new(S2.L + S2.R, (S2.F + S2.B) * 0.2, 0).p) -
-                                            game.Workspace.CurrentCamera.CoordinateFrame.p)) *
+                                            Workspace.CurrentCamera.CoordinateFrame.p)) *
                                         SPEED
                                 else
                                     BodyVelocity.velocity = Vector3.new(0, 0.1, 0)
                                 end
-                                BodyGyro.cframe = game.Workspace.CurrentCamera.CoordinateFrame
+                                BodyGyro.cframe = Workspace.CurrentCamera.CoordinateFrame
                             until not getgenv().Fly
                             S = {
                                 F = 0,
@@ -1945,7 +1961,7 @@ Mouse.KeyDown:connect(
 )
 end)
 local Button1 = Section2:CreateButton("Anti Lag", function()
-for _, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+for _, v in pairs(Workspace:GetDescendants()) do
     if v:IsA("BasePart") and not v.Parent:FindFirstChild("Humanoid") then
         v.Material = Enum.Material.SmoothPlastic
         if v:IsA("Texture") then
@@ -1956,9 +1972,9 @@ end
 end)
 
 local Button1 = Section2:CreateButton("Teleport to RandomPlayer", function()
-local randomPlayer = game.Players:GetPlayers()[math.random(1, #game.Players:GetPlayers())]
+local randomPlayer = Players:GetPlayers()[math.random(1, #Players:GetPlayers())]
 
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+Player.Character.HumanoidRootPart.CFrame =
     CFrame.new(
     Vector3.new(
         randomPlayer.Character.Head.Position.X,
@@ -2031,7 +2047,7 @@ function TPReturner()
                 pcall(function()
                     writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
                     wait()
-                    game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+                    TeleportService:TeleportToPlaceInstance(PlaceID, ID, Player)
                 end)
                 wait(4)
             end
@@ -2054,7 +2070,7 @@ end
 Teleport() 
 end)
 local Button1 = Section2:CreateButton("Rejoin", function()
-game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer) end)
+TeleportService:Teleport(game.PlaceId, Player) end)
 
 
 
@@ -2075,7 +2091,7 @@ local Colorpicker3 = Section3:CreateColorpicker("UI Color", function(Color)
 	Window:ChangeColor(Color)
 end)
 Colorpicker3:UpdateColor(Config.Color)
-for i,v in pairs(game:GetService("ReplicatedStorage").funs:GetChildren()) do
+for i,v in pairs(ReplicatedStorage.funs:GetChildren()) do
 local OldNameCall = nil
 OldNameCall =
     hookmetamethod(
