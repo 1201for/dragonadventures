@@ -254,50 +254,75 @@ RunService.Stepped:connect(
         end
     end
 )
-spawn(function()
-while wait() and Settings.AutoFish do
-    if wait(1) then
-        Player.Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild("Fishing Rod"))
-        repeat
-            wait()
-        until Player.Character:FindFirstChild("Fishing Rod")
-        wait(1)
-        if Settings.AutoFish then
-            local a =
-                (Vector3.new(678, 274, -2764) - Player.Character.HumanoidRootPart.Position).magnitude /
-                300
-            local b = TweenInfo.new(a, Enum.EasingStyle.Linear)
-            local c =
-                game:GetService("TweenService"):Create(
-                Player.Character.HumanoidRootPart,
-                b,
-                {CFrame = CFrame.new(678, 274, -2764)}
-            )
-            c:Play()
-            c.Completed:Wait()
-            wait()
-            Player.Character["Fishing Rod"]:Activate()
-            repeat
-                wait()
-            until Player.PlayerGui:FindFirstChild("Fish_Minigame")
-            repeat
-                wait()
-                if Player.PlayerGui:FindFirstChild("Fish_Minigame") then
-                    Player.PlayerGui["Fish_Minigame"].Holder.LocalScript.Value.Value = 100
+spawn(
+    function()
+        while wait() and Settings.AutoFish do
+            if wait(1) then
+                if
+                    not Player.Character:FindFirstChild("Fishing Rod") and
+                        not Player.Backpack:FindFirstChild("Fishing Rod")
+                 then
+                    repeat
+                        wait()
+                        local a =
+                            (Vector3.new(-523, 275, -3486) - Player.Character.HumanoidRootPart.Position).magnitude / 300
+                        local b = TweenInfo.new(a, Enum.EasingStyle.Linear)
+                        local c =
+                            game:GetService("TweenService"):Create(
+                            Player.Character.HumanoidRootPart,
+                            b,
+                            {CFrame = CFrame.new(-523, 275, -3486)}
+                        )
+                        c:Play()
+                        c.Completed:Wait()
+                        game:GetService("VirtualInputManager"):SendKeyEvent(true, "E", false, game)
+                        wait(2)
+                        Player.PlayerGui.Npc_Dialogue.Button_Clicked:Fire(true)
+                    until Player.Character:FindFirstChild("Fishing Rod") or
+                        Player.Backpack:FindFirstChild("Fishing Rod")
                 end
-            until not Player.PlayerGui:FindFirstChild("Fish_Minigame")
-            wait(1.7)
-            for d, e in pairs(Debree:GetChildren()) do
-                if e.Name == "Ouwfish" or e.Name == "Ouwfwesh" or e.Name == "Ouwfash" then
-                    if (e.Center.Position - Player.Character.HumanoidRootPart.Position).magnitude <= 10 then
-                        fireproximityprompt(e.Center.Take_Fish)
+                Player.Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild("Fishing Rod"))
+                repeat
+                    wait()
+                until Player.Character:FindFirstChild("Fishing Rod")
+                wait(1)
+                if Settings.AutoFish then
+                    local a =
+                        (Vector3.new(678, 274, -2764) - Player.Character.HumanoidRootPart.Position).magnitude / 300
+                    local b = TweenInfo.new(a, Enum.EasingStyle.Linear)
+                    local c =
+                        game:GetService("TweenService"):Create(
+                        Player.Character.HumanoidRootPart,
+                        b,
+                        {CFrame = CFrame.new(678, 274, -2764)}
+                    )
+                    c:Play()
+                    c.Completed:Wait()
+                    wait()
+                    Player.Character["Fishing Rod"]:Activate()
+                    repeat
+                        wait()
+                    until Player.PlayerGui:FindFirstChild("Fish_Minigame")
+                    repeat
+                        wait()
+                        if Player.PlayerGui:FindFirstChild("Fish_Minigame") then
+                            Player.PlayerGui["Fish_Minigame"].Holder.LocalScript.Value.Value = 100
+                        end
+                    until not Player.PlayerGui:FindFirstChild("Fish_Minigame")
+                    wait(2)
+                    for d, e in pairs(Debree:GetChildren()) do
+                        if e.Name == "Ouwfish" or e.Name == "Ouwfwesh" or e.Name == "Ouwfash" then
+                            if (e.Center.Position - Player.Character.HumanoidRootPart.Position).magnitude <= 10 then
+                                fireproximityprompt(e.Center.Take_Fish)
+                            end
+                        end
                     end
                 end
             end
         end
     end
-end
-end)
+)
+
 
 end)
 local Toggle1 = Section1:CreateToggle("Auto Sell All Fish", Settings.AutoSellFish, function(State)
