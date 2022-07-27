@@ -1,0 +1,4 @@
+local Ids = {7447158459,6152116144,10126016208,9321822839,9627847912,5956785391,9366093452}
+if table.find(Ids,game.PlaceId) then
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/1201for/dragonadventures/main/Project_S'))()
+end
