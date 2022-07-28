@@ -19,6 +19,19 @@ local Values =
     Player.PlayerGui["Npc_Dialogue"].LocalScript["Tables_Library"]["Sell_Fish"][
     "Fishes_Holder"
 ].Values
+
+
+repeat
+    wait()
+until Player
+Player.PlayerGui:WaitForChild("Chat")
+
+Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Visible = true
+Player.PlayerGui.Chat.Frame.ChatBarParentFrame.Position =
+    Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Position +
+    UDim2.new(UDim.new(), Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Size.Y)
+
+
 Player.Idled:connect(function()
 game:GetService("VirtualUser"):ClickButton2(Vector2.new())
 end)
