@@ -19,7 +19,9 @@ local Values =
     Player.PlayerGui["Npc_Dialogue"].LocalScript["Tables_Library"]["Sell_Fish"][
     "Fishes_Holder"
 ].Values
-
+Player.Idled:connect(function()
+game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+end)
 
 repeat
     wait()
@@ -30,11 +32,6 @@ Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Visible = true
 Player.PlayerGui.Chat.Frame.ChatBarParentFrame.Position =
     Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Position +
     UDim2.new(UDim.new(), Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Size.Y)
-
-
-Player.Idled:connect(function()
-game:GetService("VirtualUser"):ClickButton2(Vector2.new())
-end)
 
 
 for i,v in pairs(getconnections(Player.Idled)) do
@@ -72,15 +69,29 @@ local function Save()
     writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Settings))
 end
 
-local function Tween(A, B, C)
-    if A and B then
-        local Time = (B.Position - A.Position).magnitude/C
-        local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
-        local Tween = TweenService:Create(A,Info,{CFrame = B})
-        Tween:Play()
-        wait(Time)
+
+
+
+local Invis = function(Number)
+for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+    if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then 
+         game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(
+            "Change_Transparency",
+            {{v, Number}}
+        )
     end
+end
 end 
+
+local function Tween(A, B, C)
+    if A then
+        local Time = (B.p - A.Position).magnitude / C
+        local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
+        local Tween = game:GetService("TweenService"):Create(A, Info, {CFrame = B})
+        Tween:Play()
+    end
+end
+
 
 local OldNameCall = nil
 OldNameCall = hookmetamethod(game, "__namecall", function(self, ...)
@@ -91,8 +102,8 @@ OldNameCall = hookmetamethod(game, "__namecall", function(self, ...)
     return OldNameCall(self, ...)
 end)
 
-local function Click() wait(0.2)
-game:GetService("VirtualInputManager"):SendMouseButtonEvent(0,0,0, true, game, 1)
+local function Click() 
+
 end
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
@@ -108,6 +119,7 @@ local Section4 = Tab2:CreateSection("Background")
 
 local Toggle1 = Section1:CreateToggle("AutoFarm Mobs", nil, function(State)
 Settings.Mobs = State
+Settings.Troll = State
 RunService.Stepped:connect(
     function()
         if Settings.Mobs then
@@ -232,6 +244,45 @@ spawn(
     end
 )
 
+end)
+
+
+local Slider1 = Section1:CreateSlider("Change Player Transparency",0,1,nil,false, function(Value)
+	Invis(Value)
+end)
+
+local Toggle1 = Section1:CreateToggle("Kill Aura", Settings.Troll, function(State)
+Settings.Troll = State
+spawn(
+    function()
+        while wait(1.5) and Settings.Troll do
+            for i = 1, 5 do
+                for i, v in pairs(Player.Character:GetChildren()) do
+                    if string.find(v.Name, "Sword") then
+                        ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
+                            "Sword_Combat_Slash",
+                            Player,
+                            Player.Character,
+                            Player.Character.HumanoidRootPart,
+                            Player.Character.Humanoid,
+                            i
+                        )
+                    end
+                end
+                if Player.Character:FindFirstChild("Combat") then
+                    ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
+                        "fist_combat",
+                        Player,
+                        Player.Character,
+                        Player.Character.HumanoidRootPart,
+                        Player.Character.Humanoid,
+                        i
+                    )
+                end
+            end
+        end
+    end
+)
 end)
 local Toggle1 = Section1:CreateToggle("Infinite Stamima", Settings.InfiniteStamima, function(State)
 Settings.InfiniteStamima = State
@@ -682,7 +733,7 @@ function TPReturner()
     end
 end
 
-function Teleport()
+function Tween()
     while wait() do
         pcall(function()
             TPReturner()
@@ -693,8 +744,8 @@ function Teleport()
     end
 end
 
--- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
-Teleport() 
+-- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Tween() after it collected everything.
+Tween() 
 end 
 end)
 end)
@@ -794,7 +845,7 @@ function TPReturner()
     end
 end
 
-function Teleport()
+function Tween()
     while wait() do
         pcall(function()
             TPReturner()
@@ -805,8 +856,8 @@ function Teleport()
     end
 end
 
--- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Teleport() after it collected everything.
-Teleport() 
+-- If you'd like to use a script before server hopping (Like a Automatic Chest collector you can put the Tween() after it collected everything.
+Tween() 
 end)
 local Button1 = Section2:CreateButton("Rejoin", function()
 game:GetService("TeleportService"):Teleport(game.PlaceId, Player) end)
