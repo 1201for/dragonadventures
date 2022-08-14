@@ -1,4 +1,3 @@
-game.StarterGui:SetCore("SendNotification", {Title = "Warning", Text = "Patched for rn"})
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local StarterGui = game:GetService("StarterGui")
@@ -783,22 +782,24 @@ RunService.Stepped:connect(
 spawn(
     function()
         while wait() and Settings.AutoFarmMobs do
-            pcall(function()
-                    if Player.Character:FindFirstChildWhichIsA("ForceField") then
+            pcall(
+                function()
                          Player.Character:FindFirstChildWhichIsA("ForceField"):Destroy() 
-                    end 
-                            if getNearestMob():FindFirstChildWhichIsA("Humanoid").Health > 10 then wait()
-                            Tween(Player.Character.HumanoidRootPart,getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0,-8,0) * CFrame.Angles(math.rad(90),0,0),200)
+                            if getNearestMob().Humanoid.Health > 10 then wait()
+                            Tween(Player.Character.HumanoidRootPart,
+                                getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(math.rad(90,0,0)),150)
                                 end 
 
                             if getNearestMob().Humanoid.Health < 10 then wait()
-                                Tween(Player.Character.HumanoidRootPart,getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0,0,0) * CFrame.Angles(math.rad(90),0,0),200)
+                                Tween(Player.Character.HumanoidRootPart,getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) *
+                                    CFrame.Angles(0, 0, 0),150)
                             end
                    
                     if getNearestMob().Humanoid.Health == 0 then
                         getNearestMob():remove()
                     end
-                end)
+                end
+            )
         end
     end
 )
@@ -1129,67 +1130,7 @@ spawn(
     end
 )
 end)
-if Workspace:FindFirstChild("chatnpcs") then
 
-local Toggle1 = Section1:CreateToggle("Money Farm | Fast", Settings.Money, function(State)
-Settings.Money = State
-
-RunService.Stepped:connect(
-    function()
-        if Settings.Money then
-            Player.Character:WaitForChild("Humanoid"):ChangeState(11)
-        end
-    end
-)
-repeat
-    wait()
-    if Settings.Money then
-    Player.Character.HumanoidRootPart.CFrame =
-        ReplicatedStorage.Areas["Yokai Village"].CFrame
-        end
-until Workspace:WaitForChild("chatnpcs").Box:FindFirstChild("Main") or Settings.Money == false
-spawn(
-    function()
-        while wait(Settings.MoneyDelay) and Settings.Money do
-            pcall(
-                function()
-                    if Player.PlayerGui:FindFirstChild("dialogGUI") then
-                        VirtualUser:ClickButton1(Vector2.new())
-                        for i, v in pairs(Player.PlayerGui.dialogGUI.f.sf:GetChildren()) do
-                            if v:IsA("UIGridLayout") then
-                                v.CellSize = UDim2.new(500, 500, -500, -500)
-                            end
-                            if v.Name == "button" then
-                                v:remove()
-                            end
-                        end
-                    end
-                    for i, v in pairs(Workspace.chatnpcs:GetChildren()) do
-                        if v:IsA("Model") and v:FindFirstChild("Amazon Box") and not Player.PlayerGui:FindFirstChild("Quest") then
-                            Player.Character.HumanoidRootPart.CFrame =
-                                v.PrimaryPart.CFrame * CFrame.new(0, -23, 0)
-                            fireclickdetector(v.hitbox:FindFirstChildWhichIsA("ClickDetector"))
-                        elseif
-                            Player.PlayerGui:FindFirstChild("Quest") and v:IsA("Model") and not Player.PlayerGui:FindFirstChild("dialogGUI") and
-                                v:FindFirstChild("Main")
-                         then
-                            Player.Character.HumanoidRootPart.CFrame =
-                                v.PrimaryPart.CFrame * CFrame.new(0, -23, 0) wait(1)
-                            fireclickdetector(v.pp:FindFirstChildWhichIsA("ClickDetector"))
-                        end
-                    end
-                end
-            )
-        end
-    end
-)
-
-end)
-end
-
-local Slider1 = Section1:CreateSlider("Money Farm Delay",0,7,Settings.MoneyDelay,false, function(Value)
-	Settings.MoneyDelay = Value
-end)
 
 if isnetworkowner then
 local Toggle1 = Section1:CreateToggle("Anchored Mob Aura", Settings.Anchored, function(State)
