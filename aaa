@@ -322,7 +322,7 @@ if Workspace:FindFirstChild("chatnpcs") then
         end
     end
 end
-local Shit = Vector3.new(math.random(100),-100,math.random(100))
+local Shit = Vector3.new(math.random(100),-50,math.random(100))
 
 local function getNearestMob() 
     local TargetDistance = math.huge
@@ -418,11 +418,10 @@ local function Tween(A, B, C)
         local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
         local Tween = TweenService:Create(A,Info,{CFrame = B})
         Tween:Play()
-        wait(Time)
     end
 end 
 
-local function CheckMate()
+local function CheckMate() wait(0.1)
     if not Player.Character:FindFirstChildWhichIsA("ForceField") then
         if Player.Backpack:FindFirstChild("Katana") then
             Player.Character:WaitForChild("Humanoid"):EquipTool(Player.Backpack:FindFirstChild("Katana"))
@@ -438,7 +437,7 @@ local function CheckMate()
     end
 end
 
-local function Use()
+local function Use() 
     for i, v in pairs(Player.Backpack:GetChildren()) do
         if
             v:IsA("Tool") and v:FindFirstChild("Move") and not v:FindFirstChild("Cash") and
@@ -724,23 +723,6 @@ RunService.Stepped:connect(
 )
 end)
 
-
-local Toggle1 = Section1:CreateToggle("No FallDamage", Settings.NoFallDamage, function(State)
-Settings.NoFallDamage = State
-local OldNameCall = nil
-OldNameCall =
-    hookmetamethod(
-    game,
-    "__namecall",
-    function(self, ...)
-        local Args = {...}
-        if Args[1] == ("FallDamage") and Settings.NoFallDamage then
-            return wait(math.huge) or nil
-        end
-        return OldNameCall(self, unpack(Args))
-    end
-)
-end)
 local Toggle1 = Section1:CreateToggle("Auto Load Map", Settings.LoadMap, function(State)
 Settings.LoadMap = State
 spawn(
@@ -845,9 +827,10 @@ Settings.AutoFarmSafely = State
 RunService.Stepped:connect(function()
     if Settings.AutoFarmSafely then
         pcall(function()
+        CheckMate()
         Player.Character:WaitForChild('Humanoid'):ChangeState(11)
         getNearestMob():WaitForChild("Humanoid"):ChangeState(11)
-        CheckMate()
+        
         end)
     end 
 end)
@@ -855,21 +838,24 @@ end)
 spawn(function()
     while wait() and Settings.AutoFarmSafely do 
         pcall(function()
+            
             if Player.Character:FindFirstChildWhichIsA("ForceField") then
             Player.Character:FindFirstChildWhichIsA("ForceField"):Destroy() 
-            end 
-        
+            end
+        CheckMate()
         repeat wait()
         Tween(Player.Character.HumanoidRootPart,getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0,-8,0) * CFrame.Angles(math.rad(90),0,0),200)
         until isnetworkowner(getNearestMob():FindFirstChild("HumanoidRootPart")) or not Settings.AutoFarmSafely
         if isnetworkowner(getNearestMob().HumanoidRootPart) then
             repeat wait()
             getNearestMob().HumanoidRootPart.CFrame = CFrame.new(Shit)
-            until (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude <100 or not Settings.AutoFarmSafely
+            until (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude <20 or not Settings.AutoFarmSafely
         end 
-        if (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude <100 and wait(0.2) then
+        repeat wait()
+        if (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude <20 and wait() then
             Tween(Player.Character.HumanoidRootPart.CFrame, CFrame.new(getNearestMob().HumanoidRootPart.Position) *CFrame.new(0,-8,0)  *CFrame.Angles(math.rad(90),0,0),250)
-            end 
+        end 
+        until getNearestMob().Humanoid.Health == 0 
        end)
     end 
 end)
@@ -911,12 +897,11 @@ spawn(
             v.Chat.Start.b:FindFirstChild("Quest")  and
                             v:WaitForChild("Chat"):WaitForChild("Start"):WaitForChild("b"):WaitForChild("Quest").Value == Settings.Quest
                      then
-                        Player.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame *CFrame.new(0,-26,0)
-                        if v:FindFirstChild("JumpHitbox") then
-                        fireclickdetector(v.JumpHitbox.ClickDetector)
-                        elseif v:FindFirstChild("Part") then
-                        fireclickdetector(v.Part.ClickDetector)
-                        end 
+                         repeat wait()
+                             Player.Character:MoveTo(v.HumanoidRootPart.Position)
+                         Tween(Player.Character.HumanoidRootPart,v.HumanoidRootPart.CFrame * CFrame.new(0,-8,0) * CFrame.Angles(math.rad(90),0,0),200)
+                        fireproximityprompt(v.ProximityPrompt)
+                        until (Player.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).Magnitude < 10
                     end
                 end
             end 
