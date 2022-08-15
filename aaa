@@ -9,6 +9,7 @@ local TeleportService = game:GetService("TeleportService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
 local wait = task.wait 
 local spawn = task.spawn
 local Config = {
@@ -33,6 +34,14 @@ CoreGui.RobloxPromptGui.promptOverlay.DescendantAdded:Connect(
     end
 )
 
+local function Tween(A, B, C)
+    if A and B then
+        local Time = (B.Position - A.Position).magnitude/C
+        local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
+        local Tween = TweenService:Create(A,Info,{CFrame = B})
+        Tween:Play()
+    end
+end 
 game.StarterGui:SetCore(
     "SendNotification",
     {
@@ -63,9 +72,9 @@ StarterGui:SetCore(
 repeat
     wait()
 until  Workspace.npc["you are one rude person"]:FindFirstChildWhichIsA("Folder")
-wait(3)
+
 if not Workspace.npc:FindFirstChild("npcs") then
-    wait(3)
+    wait(1)
     TeleportService:Teleport(game.PlaceId, Player)
 end
 repeat
@@ -132,10 +141,10 @@ RunService.Stepped:connect(
 
 
 local function LoadMap()
+    
     for i, v in pairs(ReplicatedStorage.Areas:GetChildren()) do
         if v:IsA("BasePart") then
-            wait(1.5)
-            Player.Character.HumanoidRootPart.CFrame = v.CFrame
+            Player.Character.HumanoidRootPart.Position = Vector3.new(v.Position) wait(0.5)
         end
     end
 end
@@ -411,15 +420,7 @@ spawn(
         end
     end
 )
-local TweenService = game:GetService("TweenService")
-local function Tween(A, B, C)
-    if A and B then
-        local Time = (B.Position - A.Position).magnitude/C
-        local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
-        local Tween = TweenService:Create(A,Info,{CFrame = B})
-        Tween:Play()
-    end
-end 
+
 
 local function CheckMate() wait(0.1)
     if not Player.Character:FindFirstChildWhichIsA("ForceField") then
@@ -558,7 +559,22 @@ spawn(
 
 end)
 end
-
+local Toggle1 = Section1:CreateToggle("NoFallDamage", Settings.NOFALL, function(State)
+    Settings.NOFALL = State
+local OldNameCall = nil
+OldNameCall =
+    hookmetamethod(
+    game,
+    "__namecall",
+    function(self, ...)
+        local Args = {...}
+        if Args[1] == "FallDamage" and Settings.NOFALL then
+            return nil
+        end
+        return OldNameCall(self, unpack(Args))
+    end
+)
+end)
 
 local Toggle1 = Section1:CreateToggle("Semi HideName", Settings.HideName, function(State)
 Settings.HideName = State
