@@ -1,12 +1,15 @@
 local Config = {
     WindowName = "V.G Hub",
-	Color = Color3.fromRGB(255,128,64),
-	Keybind = Enum.KeyCode.RightControl
+    Color = Color3.fromRGB(255, 128, 64),
+    Keybind = Enum.KeyCode.RightControl
 }
-repeat wait() until game:IsLoaded() wait()
+repeat
+    wait()
+until game:IsLoaded()
+wait()
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
-local RunService = game:GetService('RunService')
+local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
@@ -15,13 +18,12 @@ local Debree = Workspace.Debree
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local PlayerData = ReplicatedStorage.Player_Data:WaitForChild(Player.Name)
 local wait = task.wait
-local Values =
-    Player.PlayerGui["Npc_Dialogue"].LocalScript["Tables_Library"]["Sell_Fish"][
-    "Fishes_Holder"
-].Values
-Player.Idled:connect(function()
-game:GetService("VirtualUser"):ClickButton2(Vector2.new())
-end)
+local Values = Player.PlayerGui["Npc_Dialogue"].LocalScript["Tables_Library"]["Sell_Fish"]["Fishes_Holder"].Values
+Player.Idled:connect(
+    function()
+        game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+    end
+)
 
 repeat
     wait()
@@ -33,10 +35,9 @@ Player.PlayerGui.Chat.Frame.ChatBarParentFrame.Position =
     Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Position +
     UDim2.new(UDim.new(), Player.PlayerGui.Chat.Frame.ChatChannelParentFrame.Size.Y)
 
-
-for i,v in pairs(getconnections(Player.Idled)) do
+for i, v in pairs(getconnections(Player.Idled)) do
     v:Disable()
-end 
+end
 
 RunService.Stepped:connect(
     function()
@@ -63,31 +64,33 @@ if
     writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Des))
 end
 if readfile("V.G Hub//" .. Name) then
-Settings = HttpService:JSONDecode(readfile("V.G Hub//" .. Name))
+    Settings = HttpService:JSONDecode(readfile("V.G Hub//" .. Name))
 end
 local function Save()
     writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Settings))
 end
 local Mobs = {}
-for i,v in pairs(Workspace.Mobs:GetChildren()) do
+for i, v in pairs(Workspace.Mobs:GetChildren()) do
     for i, v in pairs(v:GetChildren()) do
-                            for i, v in pairs(v:GetChildren()) do
-                                for i, v in pairs(v:GetChildren()) do
-    if v:IsA("Model") and not table.find(Mobs,v.Name) then
-        table.insert(Mobs,v.Name)
-        end end end 
-    end 
-end 
-local Invis = function(Number)
-for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-    if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then 
-         game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(
-            "Change_Transparency",
-            {{v, Number}}
-        )
+        for i, v in pairs(v:GetChildren()) do
+            for i, v in pairs(v:GetChildren()) do
+                if v:IsA("Model") and not table.find(Mobs, v.Name) then
+                    table.insert(Mobs, v.Name)
+                end
+            end
+        end
     end
 end
-end 
+local Invis = function(Number)
+    for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
+            game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(
+                "Change_Transparency",
+                {{v, Number}}
+            )
+        end
+    end
+end
 
 local function Tween(A, B, C)
     if A then
@@ -98,42 +101,48 @@ local function Tween(A, B, C)
     end
 end
 
-
 local OldNameCall = nil
-OldNameCall = hookmetamethod(game, "__namecall", function(self, ...)
-    local Args = {...}
-    if  self.Name:find("Moddel") then
-        return wait(math.huge)
+OldNameCall =
+    hookmetamethod(
+    game,
+    "__namecall",
+    function(self, ...)
+        local Args = {...}
+        if self.Name:find("Moddel") then
+            return wait(math.huge)
+        end
+        return OldNameCall(self, ...)
     end
-    return OldNameCall(self, ...)
-end)
+)
 
-local function Click() wait(1.5)
-     for i = 1, 5 do
-                for i, v in pairs(Player.Character:GetChildren()) do
-                    if string.find("Sword", v.Name) then
-                        ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
-                            "Sword_Combat_Slash",
-                            Player,
-                            Player.Character,
-                            Player.Character.HumanoidRootPart,
-                            Player.Character.Humanoid,
-                            i
-                        )
-                    end
-                end
-                if Player.Character:FindFirstChild("Combat") then
-                    ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
-                        "fist_combat",
-                        Player,
-                        Player.Character,
-                        Player.Character.HumanoidRootPart,
-                        Player.Character.Humanoid,
-                        i
-                    )
-                end
+local function Click()
+    wait(1.5)
+    for i = 1, 5 do
+        for i, v in pairs(Player.Character:GetChildren()) do
+            if v:FindFirstChild("Sword_Combat") then
+                ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
+                    "Sword_Combat_Slash",
+                    Player,
+                    Player.Character,
+                    Player.Character.HumanoidRootPart,
+                    Player.Character.Humanoid,
+                    i
+                )
             end
+        end
+        if Player.Character:FindFirstChild("Combat") then
+            ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
+                "fist_combat",
+                Player,
+                Player.Character,
+                Player.Character.HumanoidRootPart,
+                Player.Character.Humanoid,
+                i
+            )
+        end
+    end
 end
+
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
 local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
@@ -162,9 +171,9 @@ spawn(
             pcall(
                 function()
                     for i, v in pairs(Player.Backpack:GetChildren()) do
-                        if v:IsA("Tool") and v:FindFirstChild("SwordName") then
+                        if v:IsA("Tool") and v:FindFirstChild("SwordName") and Settings.FightMethod == "Sword" then
                             Player.Character.Humanoid:EquipTool(v)
-                        elseif v:IsA("Tool") and v.Name:find("Combat") then
+                        elseif v:IsA("Tool") and v.Name:find("Combat") and Settings.FightMethod == "Fist"  then
                             Player.Character.Humanoid:EquipTool(v)
                         end
                     end
@@ -175,6 +184,11 @@ spawn(
                                     if v:IsA("Model")  and v.Name == Settings.Mob then
                                         repeat
                                             wait()
+                                            if isnetworkowner and isnetworkowner(v.HumanoidRootPart) then
+                                                v.HumanoidRootPart.Anchored = true 
+                                            elseif not isnetworkowner(v.HumanoidRootPart) then
+                                                v.HumanoidRootPart.Anchored = false
+                                            end 
                                             Tween(
                                                 Player.Character.HumanoidRootPart,
                                                 v:GetModelCFrame() * CFrame.new(Vector3.new(0, -7, 0)) *
@@ -203,7 +217,10 @@ end)
 local Dropdown3 = Section1:CreateDropdown("Mobs", Mobs, function(Name)
     Settings.Mob = Name
 end)
-
+local Dropdown3 = Section1:CreateDropdown("Kill Method", {"Fist","Sword"}, function(Name)
+    Settings.FightMethod = Name
+end)
+Dropdown3:SetOption("Fist" or Settings.FightMethod)
 local Toggle1 = Section1:CreateToggle("Rice AutoFarm", Settings.AutoQuest, function(State)
 Settings.AutoQuest = State
 
