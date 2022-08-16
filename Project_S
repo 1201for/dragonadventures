@@ -68,10 +68,16 @@ end
 local function Save()
     writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Settings))
 end
-
-
-
-
+local Mobs = {}
+for i,v in pairs(Workspace.Mobs:GetChildren()) do
+    for i, v in pairs(v:GetChildren()) do
+                            for i, v in pairs(v:GetChildren()) do
+                                for i, v in pairs(v:GetChildren()) do
+    if v:IsA("Model") and not table.find(Mobs,v.Name) then
+        table.insert(Mobs,v.Name)
+        end end end 
+    end 
+end 
 local Invis = function(Number)
 for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
     if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then 
@@ -102,8 +108,31 @@ OldNameCall = hookmetamethod(game, "__namecall", function(self, ...)
     return OldNameCall(self, ...)
 end)
 
-local function Click() 
-
+local function Click() wait(1.5)
+     for i = 1, 5 do
+                for i, v in pairs(Player.Character:GetChildren()) do
+                    if string.find("Sword", v.Name) then
+                        ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
+                            "Sword_Combat_Slash",
+                            Player,
+                            Player.Character,
+                            Player.Character.HumanoidRootPart,
+                            Player.Character.Humanoid,
+                            i
+                        )
+                    end
+                end
+                if Player.Character:FindFirstChild("Combat") then
+                    ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
+                        "fist_combat",
+                        Player,
+                        Player.Character,
+                        Player.Character.HumanoidRootPart,
+                        Player.Character.Humanoid,
+                        i
+                    )
+                end
+            end
 end
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
@@ -143,16 +172,15 @@ spawn(
                         for i, v in pairs(v:GetChildren()) do
                             for i, v in pairs(v:GetChildren()) do
                                 for i, v in pairs(v:GetChildren()) do
-                                    if v:IsA("Model") and v:FindFirstChild("HumanoidRootPart") then
+                                    if v:IsA("Model")  and v.Name == Settings.Mob then
                                         repeat
                                             wait()
                                             Tween(
                                                 Player.Character.HumanoidRootPart,
-                                                CFrame.new(v.HumanoidRootPart.Position) * CFrame.new(0, -7, 0) *
+                                                v:GetModelCFrame() * CFrame.new(Vector3.new(0, -7, 0)) *
                                                     CFrame.Angles(90, 0, 0),
                                                 300
                                             )
-                                            Click()
                                         until v.Humanoid.Health == 0 or not v or not Settings.Mobs
                                     end
                                 end
@@ -165,7 +193,15 @@ spawn(
     end
 )
 
+spawn(function()
+    while wait() and Settings.Mobs do 
+        Click()
+    end 
+end)
+end)
 
+local Dropdown3 = Section1:CreateDropdown("Mobs", Mobs, function(Name)
+    Settings.Mob = Name
 end)
 
 local Toggle1 = Section1:CreateToggle("Rice AutoFarm", Settings.AutoQuest, function(State)
@@ -255,31 +291,8 @@ local Toggle1 = Section1:CreateToggle("Kill Aura", Settings.Troll, function(Stat
 Settings.Troll = State
 spawn(
     function()
-        while wait(1.5) and Settings.Troll do
-            for i = 1, 5 do
-                for i, v in pairs(Player.Character:GetChildren()) do
-                    if string.find(v.Name, "Sword") then
-                        ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
-                            "Sword_Combat_Slash",
-                            Player,
-                            Player.Character,
-                            Player.Character.HumanoidRootPart,
-                            Player.Character.Humanoid,
-                            i
-                        )
-                    end
-                end
-                if Player.Character:FindFirstChild("Combat") then
-                    ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
-                        "fist_combat",
-                        Player,
-                        Player.Character,
-                        Player.Character.HumanoidRootPart,
-                        Player.Character.Humanoid,
-                        i
-                    )
-                end
-            end
+        while wait() and Settings.Troll do
+           Click()
         end
     end
 )
@@ -308,6 +321,8 @@ spawn(
 )
 
 end)
+
+
 
 local Toggle1 = Section1:CreateToggle("AutoFish", Settings.AutoFish, function(State)
 Settings.AutoFish = State
