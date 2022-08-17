@@ -198,14 +198,9 @@ spawn(
                                     if v:IsA("Model")  and v.Name == Settings.Mob then
                                         repeat
                                             wait()
-                                            if isnetworkowner and isnetworkowner(v.HumanoidRootPart) then
-                                                v.HumanoidRootPart.Anchored = true 
-                                            elseif not isnetworkowner(v.HumanoidRootPart) then
-                                                v.HumanoidRootPart.Anchored = false
-                                            end 
                                             Tween(
                                                 Player.Character.HumanoidRootPart,
-                                                v:GetModelCFrame() * CFrame.new(Vector3.new(0, -7, 0)) *
+                                                v:GetModelCFrame() * CFrame.new(Vector3.new(0, -Settings.Distance, 0)) *
                                                     CFrame.Angles(90, 0, 0),
                                                 300
                                             )
@@ -238,7 +233,9 @@ local Dropdown3 = Section1:CreateDropdown("Kill Method", {"Fist","Sword"}, funct
 end)
 
 Dropdown3:SetOption("Fist")
-
+local Slider1 = Section1:CreateSlider("Mob Distance",0,13,Settings.Distance,false, function(Value)
+	Settings.Distance = Value
+end)
 
 local Dropdown3 = Section1:CreateDropdown("Teleport To Locations", Locations, function(Name)
     for i,v in pairs(Beast) do
