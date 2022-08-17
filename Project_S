@@ -19,11 +19,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local PlayerData = ReplicatedStorage.Player_Data:WaitForChild(Player.Name)
 local wait = task.wait
 local Values = Player.PlayerGui["Npc_Dialogue"].LocalScript["Tables_Library"]["Sell_Fish"]["Fishes_Holder"].Values
+local Beast = require(ReplicatedStorage.Modules.Global["Map_Locaations"])
 Player.Idled:connect(
     function()
         game:GetService("VirtualUser"):ClickButton2(Vector2.new())
     end
 )
+
 
 repeat
     wait()
@@ -69,6 +71,11 @@ end
 local function Save()
     writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Settings))
 end
+local Locations = {}
+for i,v in pairs(Beast) do
+    table.insert(Locations,i)
+end 
+
 local Mobs = {}
 for i, v in pairs(Workspace.Mobs:GetChildren()) do
     for i, v in pairs(v:GetChildren()) do
@@ -81,6 +88,12 @@ for i, v in pairs(Workspace.Mobs:GetChildren()) do
         end
     end
 end
+NPCS = {}
+for i,v in pairs(Workspace:GetChildren()) do
+    if v:FindFirstChildWhichIsA("Humanoid") and v:FindFirstChild("Body Colors") and not table.find(Players:GetPlayers(),v.Name) and not table.find(NPCS,v.Name) then
+        table.insert(NPCS,v.Name)
+    end
+end 
 local Invis = function(Number)
     for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
         if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
@@ -88,6 +101,7 @@ local Invis = function(Number)
                 "Change_Transparency",
                 {{v, Number}}
             )
+            v.Transparency = Number
         end
     end
 end
@@ -209,7 +223,9 @@ spawn(
 
 spawn(function()
     while wait() and Settings.Mobs do 
-        Click()
+        pcall(function()
+            Click()
+        end)
     end 
 end)
 end)
@@ -220,7 +236,22 @@ end)
 local Dropdown3 = Section1:CreateDropdown("Kill Method", {"Fist","Sword"}, function(Name)
     Settings.FightMethod = Name
 end)
-Dropdown3:SetOption("Fist" or Settings.FightMethod)
+
+Dropdown3:SetOption("Fist")
+
+
+local Dropdown3 = Section1:CreateDropdown("Teleport To Locations", Locations, function(Name)
+    for i,v in pairs(Beast) do
+        if i == Name then
+            Player.Character.HumanoidRootPart.CFrame = CFrame.new(v) 
+        end 
+    end 
+end)
+
+local Dropdown3 = Section1:CreateDropdown("Teleport To NPCS", NPCS, function(Name)
+    Player.Character.HumanoidRootPart.CFrame = Workspace[Name]:GetModelCFrame()
+ end)
+
 local Toggle1 = Section1:CreateToggle("Rice AutoFarm", Settings.AutoQuest, function(State)
 Settings.AutoQuest = State
 
@@ -309,7 +340,9 @@ Settings.Troll = State
 spawn(
     function()
         while wait() and Settings.Troll do
-           Click()
+            pcall(function()
+                Click()
+            end)
         end
     end
 )
