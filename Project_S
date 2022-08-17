@@ -115,6 +115,29 @@ local function Tween(A, B, C)
     end
 end
 
+local function getNearestMob()
+    local TargetDistance = math.huge
+    local Target
+    for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
+        for i, v in pairs(v:GetChildren()) do
+            for i, v in pairs(v:GetChildren()) do
+                for i, v in pairs(v:GetChildren()) do
+                    if v:IsA("Model") and v.Name == Settings.Mob or Settings.Troll and v:IsA("Model") then
+                        local Mag =
+                            (v:GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+                        if Mag < TargetDistance then
+                            TargetDistance = Mag
+                            Target = v
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return Target
+end
+
+
 local OldNameCall = nil
 OldNameCall =
     hookmetamethod(
@@ -132,6 +155,7 @@ OldNameCall =
 local function Click()
     wait(1.5)
     for i = 1, 5 do
+        if (getNearestMob():GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15 then
         for i, v in pairs(Player.Character:GetChildren()) do
             if v:FindFirstChild("Sword_Combat") then
                 ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
@@ -154,6 +178,7 @@ local function Click()
                 i
             )
         end
+        end 
     end
 end
 
@@ -171,7 +196,7 @@ local Section4 = Tab2:CreateSection("Background")
 
 local Toggle1 = Section1:CreateToggle("AutoFarm Mobs", nil, function(State)
 Settings.Mobs = State
-Settings.Troll = State
+
 RunService.Stepped:connect(
     function()
         if Settings.Mobs then
@@ -187,34 +212,23 @@ spawn(
                     for i, v in pairs(Player.Backpack:GetChildren()) do
                         if v:IsA("Tool") and v:FindFirstChild("SwordName") and Settings.FightMethod == "Sword" then
                             Player.Character.Humanoid:EquipTool(v)
-                        elseif v:IsA("Tool") and v.Name:find("Combat") and Settings.FightMethod == "Fist"  then
+                        elseif v:IsA("Tool") and v.Name:find("Combat") and Settings.FightMethod == "Fist" then
                             Player.Character.Humanoid:EquipTool(v)
                         end
                     end
-                    for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
-                        for i, v in pairs(v:GetChildren()) do
-                            for i, v in pairs(v:GetChildren()) do
-                                for i, v in pairs(v:GetChildren()) do
-                                    if v:IsA("Model")  and v.Name == Settings.Mob then
-                                        repeat
-                                            wait()
-                                            Tween(
-                                                Player.Character.HumanoidRootPart,
-                                                v:GetModelCFrame() * CFrame.new(Vector3.new(0, -Settings.Distance, 0)) *
-                                                    CFrame.Angles(90, 0, 0),
-                                                300
-                                            )
-                                        until v.Humanoid.Health == 0 or not v or not Settings.Mobs
-                                    end
-                                end
-                            end
-                        end
-                    end
+
+                    Tween(
+                        Player.Character.HumanoidRootPart,
+                        getNearestMob():GetModelCFrame() * CFrame.new(Vector3.new(0, -Settings.Distance, 0)) *
+                            CFrame.Angles(90, 0, 0),
+                        300
+                    )
                 end
             )
         end
     end
 )
+
 
 spawn(function()
     while wait() and Settings.Mobs do 
