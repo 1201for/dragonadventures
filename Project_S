@@ -200,15 +200,9 @@ Settings.Mobs = State
 RunService.Stepped:connect(
     function()
         if Settings.Mobs then
-            Player.Character:WaitForChild("Humanoid"):ChangeState(11)
-        end
-    end
-)
-spawn(
-    function()
-        while wait() and Settings.Mobs do
             pcall(
                 function()
+                    Player.Character:WaitForChild("Humanoid"):ChangeState(11)
                     for i, v in pairs(Player.Backpack:GetChildren()) do
                         if v:IsA("Tool") and v:FindFirstChild("SwordName") and Settings.FightMethod == "Sword" then
                             Player.Character.Humanoid:EquipTool(v)
@@ -216,6 +210,18 @@ spawn(
                             Player.Character.Humanoid:EquipTool(v)
                         end
                     end
+                end
+            )
+        end
+    end
+)
+
+spawn(
+    function()
+        while wait() and Settings.Mobs do
+            pcall(
+                function()
+                 
 
                     Tween(
                         Player.Character.HumanoidRootPart,
