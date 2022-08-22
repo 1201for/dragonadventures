@@ -799,19 +799,27 @@ spawn(
         while wait() and Settings.AutoFarmMobs do
             pcall(
                 function()
-                         Player.Character:FindFirstChildWhichIsA("ForceField"):Destroy() 
-                            if getNearestMob().Humanoid.Health > 10 then wait()
-                            Tween(Player.Character.HumanoidRootPart,
-                                getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) * CFrame.Angles(math.rad(90,0,0)),150)
-                                end 
+                    if Player.Character:FindFirstChildWhichIsA("ForceField") then
+                        Player.Character:FindFirstChildWhichIsA("ForceField"):Destroy()
+                    end
+                    if getNearestMob().Humanoid.Health > 10 then
+                        wait()
+                        Tween(
+                            Player.Character.HumanoidRootPart,
+                            CFrame.new(getNearestMob().HumanoidRootPart.Position) * CFrame.new(0, -8, 0) *
+                                CFrame.Angles(math.rad(90), 0, 0),
+                            250
+                        )
+                    end
 
-                            if getNearestMob().Humanoid.Health < 10 then wait()
-                                Tween(Player.Character.HumanoidRootPart,getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) *
-                                    CFrame.Angles(0, 0, 0),150)
-                            end
-                   
-                    if getNearestMob().Humanoid.Health == 0 then
-                        getNearestMob():remove()
+                    if getNearestMob().Humanoid.Health < 10 then
+                        wait()
+                        Tween(
+                            Player.Character.HumanoidRootPart,
+                            CFrame.new(getNearestMob().HumanoidRootPart.Position) * CFrame.new(0, 0, 0) *
+                                CFrame.Angles(math.rad(90), 0, 0),
+                            250
+                        )
                     end
                 end
             )
@@ -833,48 +841,70 @@ spawn(
     end
 )
 
+
 end)
 
 if isnetworkowner then
 local Toggle1 = Section1:CreateToggle("AutoFarm Mobs Safely", Settings.AutoFarmSafely, function(State)
 Settings.AutoFarmSafely = State
 
+RunService.Stepped:connect(
+    function()
+        if Settings.AutoFarmSafely then
+            pcall(
+                function()
+                    CheckMate()
+                    Player.Character:WaitForChild("Humanoid"):ChangeState(11)
+                    getNearestMob():WaitForChild("Humanoid"):ChangeState(11)
+                end
+            )
+        end
+    end
+)
 
-RunService.Stepped:connect(function()
-    if Settings.AutoFarmSafely then
-        pcall(function()
-        CheckMate()
-        Player.Character:WaitForChild('Humanoid'):ChangeState(11)
-        getNearestMob():WaitForChild("Humanoid"):ChangeState(11)
-        
-        end)
-    end 
-end)
+spawn(
+    function()
+        while wait() and Settings.AutoFarmSafely do
+            pcall(
+                function()
+                    if Player.Character:FindFirstChildWhichIsA("ForceField") then
+                        Player.Character:FindFirstChildWhichIsA("ForceField"):Destroy()
+                    end
+                    CheckMate()
+                    repeat
+                        wait()
+                        Tween(
+                            Player.Character.HumanoidRootPart,
+                            getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, -8, 0) *
+                                CFrame.Angles(math.rad(90), 0, 0),
+                            200
+                        )
+                    until isnetworkowner(getNearestMob():FindFirstChild("HumanoidRootPart")) or
+                        not Settings.AutoFarmSafely
+                    if isnetworkowner(getNearestMob().HumanoidRootPart) then
+                        repeat
+                            wait()
+                            getNearestMob().HumanoidRootPart.CFrame = CFrame.new(Shit)
+                        until (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude < 20 or
+                            not Settings.AutoFarmSafely
+                    end
+                    repeat
+                        wait()
+                        if (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude < 20 and wait() then
+                            Tween(
+                                Player.Character.HumanoidRootPart,
+                                CFrame.new(getNearestMob().HumanoidRootPart.Position) * CFrame.new(0, -8, 0) *
+                                    CFrame.Angles(math.rad(90), 0, 0),
+                                250
+                            )
+                        end
+                    until getNearestMob().Humanoid.Health == 0
+                end
+            )
+        end
+    end
+)
 
-spawn(function()
-    while wait() and Settings.AutoFarmSafely do 
-        pcall(function()
-            
-            if Player.Character:FindFirstChildWhichIsA("ForceField") then
-            Player.Character:FindFirstChildWhichIsA("ForceField"):Destroy() 
-            end
-        CheckMate()
-        repeat wait()
-        Tween(Player.Character.HumanoidRootPart,getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0,-8,0) * CFrame.Angles(math.rad(90),0,0),200)
-        until isnetworkowner(getNearestMob():FindFirstChild("HumanoidRootPart")) or not Settings.AutoFarmSafely
-        if isnetworkowner(getNearestMob().HumanoidRootPart) then
-            repeat wait()
-            getNearestMob().HumanoidRootPart.CFrame = CFrame.new(Shit)
-            until (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude <20 or not Settings.AutoFarmSafely
-        end 
-        repeat wait()
-        if (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude <20 and wait() then
-            Tween(Player.Character.HumanoidRootPart.CFrame, CFrame.new(getNearestMob().HumanoidRootPart.Position) *CFrame.new(0,-8,0)  *CFrame.Angles(math.rad(90),0,0),250)
-        end 
-        until getNearestMob().Humanoid.Health == 0 
-       end)
-    end 
-end)
 end)
 local Slider1 = Section1:CreateSlider("AutoFarm Delay",0,7,Settings.Delay,false, function(Value)
 	Settings.Delay = Value
