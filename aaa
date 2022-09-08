@@ -148,163 +148,6 @@ local function LoadMap()
         end
     end
 end
--- Instances:
-if not CoreGui:FindFirstChild("Chad Stats") then
-    local ChadStats = Instance.new("ScreenGui")
-    local Breathing = Instance.new("TextLabel")
-    local Hunger = Instance.new("TextLabel")
-    local Health = Instance.new("TextLabel")
-    local Rep = Instance.new("TextLabel")
-    local Time = Instance.new("TextLabel")
-
-    --Properties:
-
-    ChadStats.Name = "Chad Stats"
-    ChadStats.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-    if syn and syn.protect_gui then
-        syn.protect_gui(ChadStats)
-        ChadStats.Parent = CoreGui
-    elseif gethui then
-        ChadStats.Parent = gethui()
-    else
-        ChadStats.Parent = CoreGui
-    end
-
-    Breathing.Name = "Breathing"
-    Breathing.Parent = ChadStats
-    Breathing.Active = true
-    Breathing.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-    Breathing.BackgroundTransparency = 0
-    Breathing.Position = UDim2.new(0.823636413, 0, 0, 0)
-    Breathing.Size = UDim2.new(0, 200, 0, 50)
-    Breathing.Font = Enum.Font.SourceSans
-    Breathing.TextColor3 = Color3.fromRGB(255, 0.0)
-    Breathing.TextSize = 16
-
-    Hunger.Name = "Hunger"
-    Hunger.Parent = ChadStats
-    Hunger.Active = true
-    Hunger.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-    Hunger.BackgroundTransparency = 0
-    Hunger.Position = UDim2.new(0.823636413, 0, 0.199999988, 0)
-    Hunger.Size = UDim2.new(0, 200, 0, 50)
-    Hunger.Font = Enum.Font.SourceSans
-    Hunger.TextColor3 = Color3.fromRGB(255, 0.0)
-    Hunger.TextSize = 16
-
-    Health.Name = "Health"
-    Health.Parent = ChadStats
-    Health.Active = true
-    Health.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-    Health.BackgroundTransparency = 0
-    Health.Position = UDim2.new(0.823030353, 0, 0.130061358, 0)
-    Health.Size = UDim2.new(0, 200, 0, 50)
-    Health.Font = Enum.Font.SourceSans
-    Health.TextColor3 = Color3.fromRGB(255, 0.0)
-    Health.TextSize = 16
-
-    Rep.Name = "Rep"
-    Rep.Parent = ChadStats
-    Rep.Active = true
-    Rep.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-    Rep.BackgroundTransparency = 0
-    Rep.Position = UDim2.new(0.823286057, 0, 0.0613496974, 0)
-    Rep.Size = UDim2.new(0, 200, 0, 50)
-    Rep.Font = Enum.Font.SourceSans
-    Rep.TextColor3 = Color3.fromRGB(255, 0.0)
-    Rep.TextSize = 16
-
-    Time.Name = "Time"
-    Time.Parent = ChadStats
-    Time.Active = true
-    Time.BackgroundColor3 = Color3.fromRGB(0, 19, 0)
-    Time.BackgroundTransparency = 0
-    Time.Position = UDim2.new(0.82328605, 0, 0.259079749, 0)
-    Time.Size = UDim2.new(0, 200, 0, 50)
-    Time.Font = Enum.Font.SourceSans
-    Time.TextColor3 = Color3.fromRGB(255, 0.0)
-    Time.TextSize = 16
-
-    local script = Instance.new("LocalScript", Breathing)
-    spawn(
-        function()
-            while wait() do
-                if Settings.Visible then
-                    wait()
-                    Breathing.Text =
-                        "Breath " .. math.floor(Player:WaitForChild("NoSaveValue"):WaitForChild("Air").Value) .. "%"
-                    Breathing.Visible = true
-                else
-                    Breathing.Visible = false
-                end
-            end
-        end
-    )
-    local script = Instance.new("LocalScript", Hunger)
-    spawn(
-        function()
-            while wait() do
-                if Settings.Visible then
-                    wait()
-                    Hunger.Text =
-                        "Hunger " .. math.floor(Player:WaitForChild("CharStats"):WaitForChild("Hunger").Value) .. "%"
-                    Hunger.Visible = true
-                else
-                    Hunger.Visible = false
-                end
-            end
-        end
-    )
-    local script = Instance.new("LocalScript", Health)
-    spawn(
-        function()
-            while wait() do
-                if Settings.Visible then
-                    wait()
-                    Health.Text = "Health " .. math.floor(Player.Character:WaitForChild("Humanoid").Health) .. "%"
-                    Health.Visible = true
-                else
-                    Health.Visible = false
-                end
-            end
-        end
-    )
-
-    local script = Instance.new("LocalScript", Rep)
-    spawn(
-        function()
-            while wait() do
-                if Settings.Visible then
-                    wait()
-                    Rep.Text = "Rep " .. Player:WaitForChild("Data"):WaitForChild("Rep").Value
-                    Rep.Visible = true
-                else
-                    Rep.Visible = false
-                end
-            end
-        end
-    )
-
-    local script = Instance.new("LocalScript", Time)
-    spawn(
-        function()
-            while wait() do
-                if Settings.Visible then
-                    if Lighting.ClockTime >= 13 then
-                        wait()
-                        Time.Text = math.floor(Lighting.ClockTime - 12) .. "PM"
-                    else
-                        Time.Text = math.floor(Lighting.ClockTime) .. "AM"
-                    end
-                    Time.Visible = true
-                else
-                    Time.Visible = false
-                end
-            end
-        end
-    )
-end
 
 Mobs = {"Demon Slayer", "Strong Demon Slayer", "Demon", "Strong Demon", "Fast Demon", "Mukago"}
 
@@ -425,7 +268,7 @@ spawn(
 local function CheckMate() wait(0.1)
     if not Player.Character:FindFirstChildWhichIsA("ForceField") then
         if Player.Backpack:FindFirstChild("Katana") then
-            Player.Character:WaitForChild("Humanoid"):EquipTool(Player.Backpack:FindFirstChild("Katana"))
+            Player.Character:WaitForChild("Humanoid"):EquipTool(Player.Backpack:WaitForChild("Katana"))
         end
         if not Player.states:FindFirstChild("exeing") then
             game:GetService("VirtualInputManager"):SendKeyEvent(true, "B", false, game)
@@ -492,15 +335,7 @@ RunService.Stepped:connect(
         end
     end
 )
-Settings.AutoFinalSelection = State
 
-RunService.Stepped:connect(
-    function()
-        if Settings.AutoFinalSelection then
-            Player.Character:WaitForChild("Humanoid"):ChangeState(11)
-        end
-    end
-)
 spawn(
     function()
         while wait() and Settings.AutoFinalSelection do
@@ -514,15 +349,15 @@ spawn(
                         if not Player.Character:FindFirstChildWhichIsA("ForceField") then
                             if getNearestMobFinalSeclection().Humanoid.Health > 10 then
                                 
-                                Player.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                Tween(Player.Character:WaitForChild("HumanoidRootPart"),
                                     getNearestMobFinalSeclection().HumanoidRootPart.CFrame * CFrame.new(0, -7, 0) *
-                                    CFrame.Angles(90, 0, 0)
+                                    CFrame.Angles(90, 0, 0),150)
                             end
 
                             if getNearestMobFinalSeclection().Humanoid.Health < 10 then
-                                Player.Character:WaitForChild("HumanoidRootPart").CFrame =
+                                Tween(Player.Character:WaitForChild("HumanoidRootPart"),
                                     getNearestMobFinalSeclection().HumanoidRootPart.CFrame * CFrame.new(0, 0, 0) *
-                                    CFrame.Angles(0, 0, 0)
+                                    CFrame.Angles(0, 0, 0),150)
                             end
                         end
                     until Settings.AutoFinalSelection == false or getNearestMobFinalSeclection().Humanoid.Health == 0
@@ -779,9 +614,6 @@ Lighting.Changed:connect(
 end)
 
 if game.PlaceId == 2483973525 and game.PlaceId ~=  4638327541 then
-local Toggle1 = Section1:CreateToggle("Stats", Settings.Visible, function(State)
-Settings.Visible = State
-end)
 
 
 local Toggle1 = Section1:CreateToggle("AutoFarm Mobs", Settings.AutoFarmMobs, function(State)
@@ -856,6 +688,7 @@ RunService.Stepped:connect(
                     CheckMate()
                     Player.Character:WaitForChild("Humanoid"):ChangeState(11)
                     getNearestMob():WaitForChild("Humanoid"):ChangeState(11)
+                    
                 end
             )
         end
@@ -864,7 +697,7 @@ RunService.Stepped:connect(
 
 spawn(
     function()
-        while wait() and Settings.AutoFarmSafely do
+        while wait(Settings.Delay) and Settings.AutoFarmSafely do
             pcall(
                 function()
                     if Player.Character:FindFirstChildWhichIsA("ForceField") then
@@ -875,30 +708,27 @@ spawn(
                         wait()
                         Tween(
                             Player.Character.HumanoidRootPart,
-                            getNearestMob().HumanoidRootPart.CFrame * CFrame.new(0, -8, 0) *
+                            getNearestMob():GetModelCFrame() * CFrame.new(0, -8, 0) *
                                 CFrame.Angles(math.rad(90), 0, 0),
                             200
                         )
                     until isnetworkowner(getNearestMob():FindFirstChild("HumanoidRootPart")) or
                         not Settings.AutoFarmSafely
                     if isnetworkowner(getNearestMob().HumanoidRootPart) then
-                        repeat
-                            wait()
                             getNearestMob().HumanoidRootPart.CFrame = CFrame.new(Shit)
-                        until (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude < 20 or
-                            not Settings.AutoFarmSafely
                     end
                     repeat
                         wait()
-                        if (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude < 20 and wait() then
+                        if (getNearestMob().HumanoidRootPart.Position - Shit).Magnitude < 9e9 and wait() then
                             Tween(
                                 Player.Character.HumanoidRootPart,
-                                CFrame.new(getNearestMob().HumanoidRootPart.Position) * CFrame.new(0, -8, 0) *
+                                CFrame.new(getNearestMob():GetModelCFrame().Position) * CFrame.new(0, -8, 0) *
                                     CFrame.Angles(math.rad(90), 0, 0),
                                 250
                             )
                         end
-                    until getNearestMob().Humanoid.Health == 0
+                    until getNearestMob().Humanoid.Health == 0 or not isnetworkowner(getNearestMob().HumanoidRootPart)
+                   
                 end
             )
         end
@@ -1152,11 +982,13 @@ spawn(
     function()
         while Settings.AutoTeleport do
             wait(2)
-            for i, v in pairs(Workspace.map.Stuff:GetChildren()) do
-                if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart and not Workspace.GameState:FindFirstChild("Night") then
-                    Player.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+            pcall(function()
+                for i, v in pairs(Workspace.map.Stuff:GetChildren()) do
+                    if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart and not Workspace.GameState:FindFirstChild("Night") then
+                        Tween(Player.Character.HumanoidRootPart,v:FindFirstChildWhichIsA('BasePart').CFrame,150)
+                    end
                 end
-            end
+            end)
         end
     end
 )
@@ -1169,11 +1001,13 @@ spawn(
     function()
         while Settings.AutoTeleport do
             wait(2)
-            for i, v in pairs(Workspace.map.Stuff:GetChildren()) do
-                if v:IsA("Model") and v.Name == "Barrel" and v:FindFirstChildWhichIsA('BasePart') and Workspace.GameState:FindFirstChild("Night") then
-                    Player.Character.HumanoidRootPart.CFrame = v:FindFirstChildWhichIsA('BasePart').CFrame
+            pcall(function()
+                for i, v in pairs(Workspace.map.Stuff:GetChildren()) do
+                    if v:IsA("Model") and v.Name == "Barrel" and v:FindFirstChildWhichIsA('BasePart') and Workspace.GameState:FindFirstChild("Night") then
+                        Tween(Player.Character.HumanoidRootPart,v:FindFirstChildWhichIsA('BasePart').CFrame,150)
+                    end
                 end
-            end
+            end)
         end
     end
 )
@@ -1413,7 +1247,7 @@ spawn(
 end)
 
 local Button1 = Section2:CreateButton("Teleport To Area", function()
-    Player.Character.HumanoidRootPart.CFrame = ReplicatedStorage.Areas[Areas].CFrame
+    Tween(Player.Character.HumanoidRootPart,ReplicatedStorage.Areas[Areas].CFrame,150)
 end)
 
 local Dropdown1 = Section2:CreateDropdown("Areas", Areas, function(String)
@@ -1422,7 +1256,7 @@ end)
 
 if Workspace:FindFirstChild("chatnpcs") then
 local Button1 = Section2:CreateButton("Teleport To Breathing Teacher", function()
-    Player.Character.HumanoidRootPart.CFrame = Workspace.chatnpcs.breath[Breathings1].HumanoidRootPart.CFrame
+    Tween(Player.Character.HumanoidRootPart,Workspace.chatnpcs.breath[Breathings1].HumanoidRootPart.CFrame,150)
 end)
 
 local Dropdown1 = Section2:CreateDropdown("Breathing Teachers", Breathings1, function(String)
@@ -1430,7 +1264,7 @@ local Dropdown1 = Section2:CreateDropdown("Breathing Teachers", Breathings1, fun
 end)
 
 local Button1 = Section2:CreateButton("Teleport To NPC", function()
-    Player.Character.HumanoidRootPart.CFrame = Workspace.chatnpcs[NPCS].HumanoidRootPart.CFrame
+    Tween(Player.Character.HumanoidRootPart, Workspace.chatnpcs[NPCS].HumanoidRootPart.CFrame,150)
 end)
 
 local Dropdown1 = Section2:CreateDropdown("NPCS", NPCS, function(String)
