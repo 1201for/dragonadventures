@@ -34,6 +34,15 @@ local function Save()
     writefile("V.G Hub//" .. Name, game:service "HttpService":JSONEncode(Settings))
 end
 
+spawn(function()
+    while wait() do
+for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
+    if
+        v.ClassName == "Model" and v:FindFirstChild("NPC")
+     then
+v.Name = string.gsub(v.Name,"%d+","")
+      end end end end)
+wait(5)
 Ores = {}
 for i,v in pairs(game.Workspace:GetChildren()) do
 if v.ClassName == 'Model'and v:FindFirstChild("DataName") and not table.find(Ores,v.DataName.Value) then
@@ -43,13 +52,10 @@ end end
 Mobs = {}
 for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
     if
-        v.ClassName == "Model" and v:FindFirstChild("NPC") and v:FindFirstChild("Head") and v.Head:FindFirstChild("HPGui") and
-            not table.find(Mobs, v.Head:WaitForChild("HPGui").Frame.plrname.Text)
+        v.ClassName == "Model" and v:FindFirstChild("NPC")  and
+            not table.find(Mobs, v.Name)
      then
-        v.Name = string.sub(v.Name, i)
-        pcall(function()
-        table.insert(Mobs, v.Head.HPGui.Frame.plrname.Text)
-        end)
+        table.insert(Mobs, v.Name)
     end
 end
 
@@ -57,8 +63,8 @@ local function getNearestChests()
     local TargetDistance = math.huge
     local Target
     for i, v in ipairs(game:GetService("Workspace").Chests:GetChildren()) do
-        if v.ClassName == "Model" and v:FindFirstChild("Main")  then
-            local Mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Main.Position).Magnitude
+        if v.ClassName == "Model" then
+            local Mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -73,7 +79,7 @@ local function getNearestOre()
     local Target
     for i, v in ipairs(game:GetService("Workspace"):GetChildren()) do
         if v.ClassName == "Model" and v:FindFirstChild("Main") and v.Name == Settings.Ore and v:FindFirstChild("Interact") and  v.Interact.Value == true then
-            local Mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Main.Position).Magnitude
+            local Mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -161,14 +167,14 @@ spawn(
                     for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
                         if v:IsA("Model") and v:FindFirstChildWhichIsA("Humanoid") then
                             local Time =
-                                (v.HumanoidRootPart.CFrame.p + Vector3.new(0, 0, 3) -
+                                (v:GetModelCFrame().Position + Vector3.new(0, 0, 3) -
                                 game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude / Settings.Speed
                             local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
                             local Tween =
                                 game:GetService("TweenService"):Create(
                                 game.Players.LocalPlayer.Character.HumanoidRootPart,
                                 Info,
-                                {CFrame = CFrame.new(v.HumanoidRootPart.CFrame.p + Vector3.new(0, 0, 3))}
+                                {CFrame = CFrame.new(v:GetModelCFrame().Position + Vector3.new(0, 0, 3))}
                             )
                             Tween:Play()
                             game:GetService("VirtualUser"):ClickButton1(Vector2.new(9e9, 9e9))
@@ -231,14 +237,14 @@ spawn(
                 function()
                     if game:GetService("Players").LocalPlayer.Character:FindFirstChildWhichIsA("Tool") then
                         local Time =
-                            (getNearestMob().HumanoidRootPart.CFrame.p + Vector3.new(0, 0, 3) -
+                            (getNearestMob():GetModelCFrame().Position + Vector3.new(0, 0, 3) -
                             game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude / Settings.Speed
                         local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
                         local Tween =
                             game:GetService("TweenService"):Create(
                             game.Players.LocalPlayer.Character.HumanoidRootPart,
                             Info,
-                            {CFrame = CFrame.new(getNearestMob().HumanoidRootPart.CFrame.p + Vector3.new(0, 0, 3))}
+                            {CFrame = CFrame.new(getNearestMob():GetModelCFrame().Position + Vector3.new(0, 0, 3))}
                         )
                         Tween:Play()
                         game:GetService("VirtualUser"):ClickButton1(Vector2.new(9e9, 9e9))
@@ -352,19 +358,19 @@ spawn(
             pcall(
                 function()
                     local Time =
-                        (getNearestChests().Main.CFrame.p + Vector3.new(0, 0, 3) -
+                        (getNearestChests():GetModelCFrame().Position + Vector3.new(0, 0, 3) -
                         game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude / Settings.Speed
                     local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
                     local Tween =
                         game:GetService("TweenService"):Create(
                         game.Players.LocalPlayer.Character.HumanoidRootPart,
                         Info,
-                        {CFrame = CFrame.new(getNearestChests().Main.CFrame.p + Vector3.new(0, 0, 3))}
+                        {CFrame = CFrame.new(getNearestChests():GetModelCFrame().Position + Vector3.new(0, 0, 3))}
                     )
                     Tween:Play()
                     repeat
                         wait()
-                    until (getNearestChests().Main.CFrame.p + Vector3.new(0, 0, 3) -
+                    until (getNearestChests():GetModelCFrame().Position + Vector3.new(0, 0, 3) -
                         game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 5
                     wait(2)
                     if getNearestChests().Claimed.Value == false then
@@ -425,7 +431,7 @@ local function esp(v)
             game:GetService('RunService').Stepped:Connect(
             function()
                 if v and v:FindFirstChild("Main") then
-                    local Vector, Screen = workspace.CurrentCamera:WorldToViewportPoint(v.Main.Position)
+                    local Vector, Screen = workspace.CurrentCamera:WorldToViewportPoint(v:GetModelCFrame().Position)
                     if Settings.Esp and Screen then
                         T.Position = Vector2.new(Vector.X, Vector.Y)
                         T.Visible = true
@@ -475,7 +481,7 @@ local function esp(v)
             game:GetService('RunService').Stepped:Connect(
             function()
                 if v and v:FindFirstChild("Main") then
-                    local Vector, Screen = workspace.CurrentCamera:WorldToViewportPoint(v.Main.Position)
+                    local Vector, Screen = workspace.CurrentCamera:WorldToViewportPoint(v:GetModelCFrame().Position)
                     if Settings.Esp2 and Screen then
                         T.Position = Vector2.new(Vector.X, Vector.Y)
                         T.Visible = true
@@ -718,7 +724,7 @@ Mouse.KeyDown:connect(
                     getgenv().Fly = true
                     local BodyGyro = Instance.new("BodyGyro", T)
                     local BodyVelocity = Instance.new("BodyVelocity", T)
-                    BodyGyro.P = 9e4
+                    BodyGyro.Position = 9e4
                     BodyGyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
                     BodyGyro.cframe = T.CFrame
                     BodyVelocity.velocity = Vector3.new(0, 0.1, 0)
