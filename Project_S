@@ -16,9 +16,12 @@ local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
 local Debree = Workspace.Debree
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+if game.PlaceId == 6152116144 then
 local PlayerData = ReplicatedStorage.Player_Data:WaitForChild(Player.Name)
 local wait = task.wait
-local Values = Player.PlayerGui["Npc_Dialogue"].LocalScript["Tables_Library"]["Sell_Fish"]["Fishes_Holder"].Values
+
+local Values = Player.PlayerGui["Npc_Dialogue"]:FindFirstChild("LocalScript")["Tables_Library"]:FindFirstChild("Sell_Fish")["Fishes_Holder"].Values
+end 
 local Beast = require(ReplicatedStorage.Modules.Global["Map_Locaations"])
 Player.Idled:connect(
     function()
@@ -138,6 +141,24 @@ local function getNearestMob()
 end
 
 
+local function getNearestMob1()
+    local TargetDistance = math.huge
+    local Target
+    for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
+        for i, v in pairs(v:GetChildren()) do
+            if v:IsA("Model") and v.Name == Settings.Mob or Settings.Troll and v:IsA("Model") then
+                    local Mag =
+                        (v:GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+                    if Mag < TargetDistance then
+                        TargetDistance = Mag
+                    Target = v
+                end
+            end
+        end
+    end
+    return Target
+end
+
 local OldNameCall = nil
 OldNameCall =
     hookmetamethod(
@@ -155,7 +176,7 @@ OldNameCall =
 local function Click()
     wait(1.5)
     for i = 1, 5 do
-        if (getNearestMob():GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15 then
+        if (getNearestMob():GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15 or game.PlaceId == 10636616861 and (getNearestMob1():GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15  then
         for i, v in pairs(Player.Character:GetChildren()) do
             if v:FindFirstChild("Sword_Combat") then
                 ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
@@ -182,7 +203,9 @@ local function Click()
     end
 end
 
-
+if Settings.Distance == nil then
+    Settings.Distance = 5 
+end 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
 local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
 
@@ -194,6 +217,51 @@ local Section2 = Tab1:CreateSection("")
 local Section3 = Tab2:CreateSection("Menu")
 local Section4 = Tab2:CreateSection("Background")
 
+
+--[[
+local Toggle1 = Section1:CreateToggle("AutoFarm Dungon", Settings.Dungon, function(State)
+Settings.Dungon = State
+if game.PlaceId == 10636616861 then
+    RunService.Stepped:connect(
+        function()
+            pcall(
+                function()
+                    if Settings.Dungon then
+                        Player.Character.Humanoid:ChangeState(11)
+                        Tween(
+                            Player.Character.HumanoidRootPart,
+                            getNearestMob1().HumanoidRootPart.CFrame * CFrame.new(Vector3.new(0, -10, 0)) *
+                                CFrame.Angles(90, 0, 0),
+                            300
+                        )
+                        getNearestMob1().Humanoid.Health = 0
+                    end
+                end
+            )
+        end
+    )
+
+    Player.Character.Humanoid.Died:connect(
+        function()
+            game:GetService("TeleportService"):Teleport(6152116144, Player)
+        end
+    )
+spawn(function()
+    while wait(2) and Settings.Mobs do 
+        pcall(function()
+            Click()
+        end)
+    end 
+end)
+end
+if game.PlaceId == 6152116144 then
+    if Settings.Dungon then
+        game:GetService("TeleportService"):Teleport(10636616861, Player)
+    end
+end
+
+end)
+]]--
 local Toggle1 = Section1:CreateToggle("AutoFarm Mobs", nil, function(State)
 Settings.Mobs = State
 
@@ -205,9 +273,9 @@ RunService.Stepped:connect(
                     Player.Character:WaitForChild("Humanoid"):ChangeState(11)
                     for i, v in pairs(Player.Backpack:GetChildren()) do
                         if v:IsA("Tool") and v:FindFirstChild("SwordName") and Settings.FightMethod == "Sword" then
-                            Player.Character.Humanoid:EquipTool(v)
+                            v.Parent = Player.Character
                         elseif v:IsA("Tool") and v.Name:find("Combat") and Settings.FightMethod == "Fist" then
-                            Player.Character.Humanoid:EquipTool(v)
+                            v.Parent = Player.Character
                         end
                     end
                 end
@@ -221,8 +289,6 @@ spawn(
         while wait() and Settings.Mobs do
             pcall(
                 function()
-                 
-
                     Tween(
                         Player.Character.HumanoidRootPart,
                         getNearestMob():GetModelCFrame() * CFrame.new(Vector3.new(0, -Settings.Distance, 0)) *
@@ -256,6 +322,7 @@ Dropdown3:SetOption("Fist")
 local Slider1 = Section1:CreateSlider("Mob Distance",0,13,Settings.Distance,false, function(Value)
 	Settings.Distance = Value
 end)
+
 
 local Dropdown3 = Section1:CreateDropdown("Teleport To Locations", Locations, function(Name)
     for i,v in pairs(Beast) do
