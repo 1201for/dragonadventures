@@ -7,6 +7,9 @@ repeat
     wait()
 until game:IsLoaded()
 wait()
+local Table = {5956785391,6152116144,7447158459,9321822839,9366093452,9627847912,10126016208,10636616861,11468034852,11468075017,11468159863}
+
+if not table.find(Table,game.PlaceId) then return end 
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local RunService = game:GetService("RunService")
