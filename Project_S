@@ -7,9 +7,6 @@ repeat
     wait()
 until game:IsLoaded()
 wait()
-local Table = {5956785391,6152116144,7447158459,9321822839,9366093452,9627847912,10126016208,10636616861,11468034852,11468075017,11468159863}
-
-if not table.find(Table,game.PlaceId) then return end 
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local RunService = game:GetService("RunService")
@@ -83,15 +80,9 @@ for i,v in pairs(Beast) do
 end 
 
 local Mobs = {}
-for i, v in pairs(Workspace.Mobs:GetChildren()) do
-    for i, v in pairs(v:GetChildren()) do
-        for i, v in pairs(v:GetChildren()) do
-            for i, v in pairs(v:GetChildren()) do
-                if v:IsA("Model") and not table.find(Mobs, v.Name) then
-                    table.insert(Mobs, v.Name)
-                end
-            end
-        end
+for i, v in pairs(Workspace.Mobs:GetDescendants()) do
+    if v:IsA("Model") and not table.find(Mobs, v.Name) and not (v.Name:find("Shoe") or v.Name:find("Pants") or v.Name:find("Shirt")) then
+        table.insert(Mobs, v.Name)
     end
 end
 NPCS = {}
@@ -114,7 +105,7 @@ end
 
 local function Tween(A, B, C)
     if A then
-        local Time = (B.p - A.Position).magnitude / C
+        local Time = (B.Position - A.Position).magnitude / C
         local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
         local Tween = game:GetService("TweenService"):Create(A, Info, {CFrame = B})
         Tween:Play()
@@ -149,7 +140,7 @@ local function getNearestMob1()
     local Target
     for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
         for i, v in pairs(v:GetChildren()) do
-            if v:IsA("Model") and v.Name == Settings.Mob or Settings.Troll and v:IsA("Model") then
+            if v:IsA("Model") and v.Name:find(Settings.Mob) or Settings.Troll and v:IsA("Model") then
                     local Mag =
                         (v:GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
                     if Mag < TargetDistance then
@@ -207,7 +198,7 @@ local function Click()
 end
 
 if Settings.Distance == nil then
-    Settings.Distance = 5 
+    Settings.Distance = 7
 end 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
 local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
