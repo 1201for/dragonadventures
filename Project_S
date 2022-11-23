@@ -20,7 +20,6 @@ if game.PlaceId == 6152116144 then
 local PlayerData = ReplicatedStorage.Player_Data:WaitForChild(Player.Name)
 local wait = task.wait
 
-local Values = Player.PlayerGui["Npc_Dialogue"]:FindFirstChild("LocalScript")["Tables_Library"]:FindFirstChild("Sell_Fish")["Fishes_Holder"].Values
 end 
 local Beast = require(ReplicatedStorage.Modules.Global["Map_Locaations"])
 Player.Idled:connect(
@@ -66,7 +65,9 @@ if
         end
     )
  then
-    writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Des))
+    if not isfile("V.G Hub//" .. Name) then
+        writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Des))
+    end 
 end
 if readfile("V.G Hub//" .. Name) then
     Settings = HttpService:JSONDecode(readfile("V.G Hub//" .. Name))
@@ -92,7 +93,7 @@ for i,v in pairs(Workspace:GetChildren()) do
     end
 end 
 local Invis = function(Number)
-    for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+    for i, v in pairs(Player.Character:GetDescendants()) do
         if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
             game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(
                 "Change_Transparency",
@@ -121,7 +122,7 @@ local function getNearestMob()
                 for i, v in pairs(v:GetChildren()) do
                     if v:IsA("Model") and v.Name == Settings.Mob or Settings.Troll and v:IsA("Model") then
                         local Mag =
-                            (v:GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+                            (v:GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude
                         if Mag < TargetDistance then
                             TargetDistance = Mag
                             Target = v
@@ -142,7 +143,7 @@ local function getNearestMob1()
         for i, v in pairs(v:GetChildren()) do
             if v:IsA("Model") and v.Name:find(Settings.Mob) or Settings.Troll and v:IsA("Model") then
                     local Mag =
-                        (v:GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+                        (v:GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude
                     if Mag < TargetDistance then
                         TargetDistance = Mag
                     Target = v
@@ -170,7 +171,7 @@ OldNameCall =
 local function Click()
     wait(1.5)
     for i = 1, 5 do
-        if (getNearestMob():GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15 or game.PlaceId == 10636616861 and (getNearestMob1():GetModelCFrame().Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 15  then
+        if ((getNearestMob():GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude < 15 or (getNearestMob1():GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude < 15 and game.PlaceId == 10636616861)   then
         for i, v in pairs(Player.Character:GetChildren()) do
             if v:FindFirstChild("Sword_Combat") then
                 ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
@@ -266,11 +267,9 @@ RunService.Stepped:connect(
                 function()
                     Player.Character:WaitForChild("Humanoid"):ChangeState(11)
                     for i, v in pairs(Player.Backpack:GetChildren()) do
-                        if v:IsA("Tool") and v:FindFirstChild("SwordName") and Settings.FightMethod == "Sword" then
-                            v.Parent = Player.Character
-                        elseif v:IsA("Tool") and v.Name:find("Combat") and Settings.FightMethod == "Fist" then
-                            v.Parent = Player.Character
-                        end
+                        if v:FindFirstChild("SwordName") and Settings.FightMethod == "Sword" or v.Name:find("Combat") and Settings.FightMethod == "Fist" then
+                            Player.Character:FindFirstChildWhichIsA("Humanoid"):EquipTool(v)
+                        end 
                     end
                 end
             )
@@ -536,6 +535,7 @@ local Toggle1 = Section1:CreateToggle("Auto Sell All Fish", Settings.AutoSellFis
 Settings.AutoSellFish = State
 spawn(function()
 while Settings.AutoSellFish do
+    local Values = Player.PlayerGui["Npc_Dialogue"]:FindFirstChild("LocalScript")["Tables_Library"]:FindFirstChild("Sell_Fish")["Fishes_Holder"].Values
     wait()
     if Values.Ouwfish.Value ~= 0 or Values.Ouwfash.Value ~= 0 or Values.Ouwfwesh.Value ~= 0 then
     game.ReplicatedStorage.Remotes.Sell_Fish:InvokeServer(
