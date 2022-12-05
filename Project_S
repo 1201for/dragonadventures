@@ -17,17 +17,15 @@ local Workspace = game:GetService("Workspace")
 local Debree = Workspace.Debree
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 if game.PlaceId == 6152116144 then
-local PlayerData = ReplicatedStorage.Player_Data:WaitForChild(Player.Name)
-local wait = task.wait
-
-end 
+    local PlayerData = ReplicatedStorage.Player_Data:WaitForChild(Player.Name)
+    local wait = task.wait
+end
 local Beast = require(ReplicatedStorage.Modules.Global["Map_Locaations"])
 Player.Idled:connect(
     function()
         game:GetService("VirtualUser"):ClickButton2(Vector2.new())
     end
 )
-
 
 repeat
     wait()
@@ -65,9 +63,7 @@ if
         end
     )
  then
-    if not isfile("V.G Hub//" .. Name) then
-        writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Des))
-    end 
+    writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Des))
 end
 if readfile("V.G Hub//" .. Name) then
     Settings = HttpService:JSONDecode(readfile("V.G Hub//" .. Name))
@@ -76,22 +72,29 @@ local function Save()
     writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Settings))
 end
 local Locations = {}
-for i,v in pairs(Beast) do
-    table.insert(Locations,i)
-end 
+for i, v in pairs(Beast) do
+    table.insert(Locations, i)
+end
 
 local Mobs = {}
 for i, v in pairs(Workspace.Mobs:GetDescendants()) do
-    if v:IsA("Model") and not table.find(Mobs, v.Name) and not (v.Name:find("Shoe") or v.Name:find("Pants") or v.Name:find("Shirt")) then
+    if
+        v:IsA("Model") and not table.find(Mobs, v.Name) and
+            not (v.Name:find("Shoe") or v.Name:find("Pants") or v.Name:find("Shirt"))
+     then
         table.insert(Mobs, v.Name)
     end
 end
 NPCS = {}
-for i,v in pairs(Workspace:GetChildren()) do
-    if v:FindFirstChildWhichIsA("Humanoid") and v:FindFirstChild("Body Colors") and not table.find(Players:GetPlayers(),v.Name) and not table.find(NPCS,v.Name) then
-        table.insert(NPCS,v.Name)
+for i, v in pairs(Workspace:GetChildren()) do
+    if
+        v:FindFirstChildWhichIsA("Humanoid") and v:FindFirstChild("Body Colors") and
+            not table.find(Players:GetPlayers(), v.Name) and
+            not table.find(NPCS, v.Name)
+     then
+        table.insert(NPCS, v.Name)
     end
-end 
+end
 local Invis = function(Number)
     for i, v in pairs(Player.Character:GetDescendants()) do
         if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
@@ -121,8 +124,7 @@ local function getNearestMob()
             for i, v in pairs(v:GetChildren()) do
                 for i, v in pairs(v:GetChildren()) do
                     if v:IsA("Model") and v.Name == Settings.Mob or Settings.Troll and v:IsA("Model") then
-                        local Mag =
-                            (v:GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude
+                        local Mag = (v:GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude
                         if Mag < TargetDistance then
                             TargetDistance = Mag
                             Target = v
@@ -135,17 +137,15 @@ local function getNearestMob()
     return Target
 end
 
-
 local function getNearestMob1()
     local TargetDistance = math.huge
     local Target
     for i, v in pairs(game:GetService("Workspace").Mobs:GetChildren()) do
         for i, v in pairs(v:GetChildren()) do
             if v:IsA("Model") and v.Name:find(Settings.Mob) or Settings.Troll and v:IsA("Model") then
-                    local Mag =
-                        (v:GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude
-                    if Mag < TargetDistance then
-                        TargetDistance = Mag
+                local Mag = (v:GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude
+                if Mag < TargetDistance then
+                    TargetDistance = Mag
                     Target = v
                 end
             end
@@ -171,20 +171,11 @@ OldNameCall =
 local function Click()
     wait(1.5)
     for i = 1, 5 do
-        if ((getNearestMob():GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude < 15 or (getNearestMob1():GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude < 15 and game.PlaceId == 10636616861)   then
-        for i, v in pairs(Player.Character:GetChildren()) do
-            if v:FindFirstChild("Sword_Combat") then
-                ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
-                    "Sword_Combat_Slash",
-                    Player,
-                    Player.Character,
-                    Player.Character.HumanoidRootPart,
-                    Player.Character.Humanoid,
-                    i
-                )
-            end
-        end
-        if Player.Character:FindFirstChild("Combat") then
+        if
+            ((getNearestMob():GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude < 15 or
+                (getNearestMob1():GetModelCFrame().Position - Player.Character.HumanoidRootPart.Position).Magnitude < 15 and
+                    game.PlaceId == 10636616861)
+         then
             ReplicatedStorage.Remotes.To_Server.Handle_Initiate_S_:InvokeServer(
                 "fist_combat",
                 Player,
@@ -194,13 +185,13 @@ local function Click()
                 i
             )
         end
-        end 
     end
 end
 
 if Settings.Distance == nil then
     Settings.Distance = 7
-end 
+end
+
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
 local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
 
@@ -267,7 +258,7 @@ RunService.Stepped:connect(
                 function()
                     Player.Character:WaitForChild("Humanoid"):ChangeState(11)
                     for i, v in pairs(Player.Backpack:GetChildren()) do
-                        if v:FindFirstChild("SwordName") and Settings.FightMethod == "Sword" or v.Name:find("Combat") and Settings.FightMethod == "Fist" then
+                        if v:IsA("Tool") and (v:FindFirstChild("SwordName") and Settings.FightMethod == "Sword" or v.Name == ("Combat") and Settings.FightMethod == "Fist") then
                             Player.Character:FindFirstChildWhichIsA("Humanoid"):EquipTool(v)
                         end 
                     end
@@ -284,8 +275,8 @@ spawn(
                 function()
                     Tween(
                         Player.Character.HumanoidRootPart,
-                        getNearestMob():GetModelCFrame() * CFrame.new(Vector3.new(0, -Settings.Distance, 0)) *
-                            CFrame.Angles(90, 0, 0),
+                        getNearestMob():GetModelCFrame() * CFrame.new(Vector3.new(0, Settings.Distance, 0)) *
+                            CFrame.Angles(-90, 0, 0),
                         300
                     )
                 end
