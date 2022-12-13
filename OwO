@@ -5,19 +5,22 @@ local Config = {
 }
 
 local Players = Get.Players
-local VirtualUser = Get.VirtualUser
-local Workspace = Get.Workspace
 local HttpService = Get.HttpService
-local TeleportService = Get.TeleportService
+local Workspace = Get.Workspace
+local VirtualUser = Get.VirtualUser
+local VirtualInputManager = Get.VirtualInputManager
+local UserInputService = Get.UserInputService
 local RunService = Get.RunService
 
-local Player = Players.LocalPlayer
-
-repeat wait() until game:IsLoaded() wait()
-Player.Idled:connect(function()
-VirtualUser:ClickButton2(Vector2.new())
-end)
-
+repeat
+    wait()
+until game:IsLoaded()
+wait()
+Players.LocalPlayer.Idled:connect(
+    function()
+        VirtualUser:ClickButton2(Vector2.new())
+    end
+)
 
 local Name = "Legends-Re-Written.txt"
 
@@ -45,20 +48,17 @@ local function Save()
 end
 
 Ores = {}
-for i,v in pairs(Workspace.Ores:GetChildren()) do
-    if v:IsA("Model") and v:FindFirstChild("DataName") and not table.find(Ores,v.DataName.Value) then
+for i, v in pairs(Workspace.Ores:GetChildren()) do
+    if v.ClassName == "Model" and v:FindFirstChild("DataName") and not table.find(Ores, v.DataName.Value) then
         table.insert(Ores, v.DataName.Value)
     end
-end 
+end
 
 Mobs = {}
 for i, v in pairs(Workspace.Mobs:GetChildren()) do
-    if
-        v:IsA("Model") and v:FindFirstChild("NPC") and v:FindFirstChild("Head") and v.Head:FindFirstChild("HPGui") and
-            not table.find(Mobs, v.Head:WaitForChild("HPGui").Frame.plrname.Text)
-     then
-        v.Name = string.sub(v.Name, i)
-        table.insert(Mobs, v.Head.HPGui.Frame.plrname.Text)
+    v.Name = string.gsub(v.Name, "%d+", "")
+    if v.ClassName == "Model" and v:FindFirstChild("NPC") and not table.find(Mobs, v.Name) then
+        table.insert(Mobs, v.Name)
     end
 end
 
@@ -66,8 +66,8 @@ local function getNearestChests()
     local TargetDistance = math.huge
     local Target
     for i, v in ipairs(Workspace.Chests:GetChildren()) do
-        if v:IsA("Model") and v:FindFirstChild("Main")  then
-            local Mag = (Player.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude
+        if v.ClassName == "Model" and v:FindFirstChild("Main") then
+            local Mag = (Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Main.Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -75,14 +75,18 @@ local function getNearestChests()
         end
     end
     return Target
-end;
+end
 
 local function getNearestOre()
     local TargetDistance = math.huge
     local Target
     for i, v in ipairs(Workspace.Ores:GetChildren()) do
-        if v:IsA("Model") and v.Name == Settings.Ore and v:FindFirstChild("Interact") and  v.Interact.Value then
-            local Mag = (Player.Character.HumanoidRootPart.Position - v:GetModelCFrame().Position).Magnitude
+        if
+            v.ClassName == "Model" and v:FindFirstChild("Main") and v.Name == Settings.Ore and
+                v:FindFirstChild("Interact") and
+                v.Interact.Value == true
+         then
+            local Mag = (Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Main.Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -90,14 +94,19 @@ local function getNearestOre()
         end
     end
     return Target
-end;
+end
 
 local function getNearestMob()
     local TargetDistance = math.huge
     local Target
     for i, v in ipairs(Workspace.Mobs:GetChildren()) do
-        if v:IsA("Model") and v:FindFirstChild("NPC") and v:FindFirstChild("Head") and v.Head:FindFirstChild("HPGui") and v.Head.HPGui.Frame.plrname.Text == Settings.Mob then
-            local Mag = (Player.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
+        if
+            v.ClassName == "Model" and v:FindFirstChild("NPC") and v:FindFirstChild("Head") and
+                v.Head:FindFirstChild("HPGui") and
+                v.Head.HPGui.Frame.plrname.Text == Settings.Mob
+         then
+            local Mag =
+                (Players.LocalPlayer.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
             if Mag < TargetDistance then
                 TargetDistance = Mag
                 Target = v
@@ -105,8 +114,17 @@ local function getNearestMob()
         end
     end
     return Target
-end;
+end
 
+local function Tween(A, B, C)
+    if A and B then
+        local Time = (B - A.Position).magnitude / C
+        local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
+        local Tween = game:GetService("TweenService"):Create(A, Info, {CFrame = CFrame.new(B.X, B.Y, B.Z)})
+        Tween:Play()
+        wait(Time)
+    end
+end
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G-Hub/main/test"))()
 local Window = Library:CreateWindow(Config, game:GetService("CoreGui"))
@@ -126,7 +144,7 @@ spawn(
     function()
         while Settings.Start do
             wait()
-            TeleportService:Teleport(8793520828, Player)
+            game:GetService("TeleportService"):Teleport(8793520828, Players.LocalPlayer)
             wait(5)
         end
     end
@@ -143,18 +161,18 @@ RunService.Stepped:connect(
         pcall(
             function()
                 if Settings.AutoRaid then
-                    Player.Character.Humanoid:ChangeState(11)
+                    Players.LocalPlayer.Character.Humanoid:ChangeState(11)
                 end
             end
         )
     end
 )
 VirtualInputManager:SendKeyEvent(true, 52, false, game)
-Player.CharacterAdded:Connect(
+Players.LocalPlayer.CharacterAdded:Connect(
     function()
         repeat
             wait()
-        until Player.Character:WaitForChild("HumanoidRootPart")
+        until Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
         if Settings.AutoRaid then
             wait(3)
             VirtualInputManager:SendKeyEvent(true, 52, false, game)
@@ -169,17 +187,8 @@ spawn(
                     wait()
                     for i, v in pairs(Workspace.Mobs:GetChildren()) do
                         if v:IsA("Model") and v:FindFirstChildWhichIsA("Humanoid") then
-                            local Time =
-                                (v.HumanoidRootPart.CFrame.p + Vector3.new(0, 0, 3) -
-                                Player.Character.HumanoidRootPart.Position).magnitude / Settings.Speed
-                            local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
-                            local Tween =
-                                game:GetService("TweenService"):Create(
-                                Player.Character.HumanoidRootPart,
-                                Info,
-                                {CFrame = CFrame.new(v.HumanoidRootPart.CFrame.p + Vector3.new(0, 0, 3))}
-                            )
-                            Tween:Play()
+                            Tween(Players.LocalPlayer.Character.HumanoidRootPart,v.HumanoidRootPart.CFrame.Position,Settings.Speed)
+                           
                             VirtualUser:ClickButton1(Vector2.new(9e9, 9e9))
                         end
                     end
@@ -198,7 +207,7 @@ spawn(
     function()
         while Settings.Speeds do
             wait()
-            Player.PlayerGui.Parkour.Script.Dash:FireServer()
+            Players.LocalPlayer.PlayerGui.Parkour.Script.Dash:FireServer()
         end
     end
 )
@@ -214,44 +223,23 @@ RunService.Stepped:connect(
         pcall(
             function()
                 if Settings.AutoMob then
-                    Player.Character.Humanoid:ChangeState(11)
+                    Players.LocalPlayer.Character.Humanoid:ChangeState(11)
                 end
             end
         )
     end
 )
-VirtualInputManager:SendKeyEvent(true, 52, false, game)
-Player.CharacterAdded:Connect(
-    function()
-        repeat
-            wait()
-        until Player.Character:WaitForChild("HumanoidRootPart")
-        if Settings.AutoMob then
-            wait(3)
-            VirtualInputManager:SendKeyEvent(true, 52, false, game)
-        end
-    end
-)
+
 spawn(
     function()
         while Settings.AutoMob do
             wait()
             pcall(
                 function()
-                    if Player.Character:FindFirstChildWhichIsA("Tool") then
-                        local Time =
-                            (getNearestMob().HumanoidRootPart.CFrame.p + Vector3.new(0, 0, 3) -
-                            Player.Character.HumanoidRootPart.Position).magnitude / Settings.Speed
-                        local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
-                        local Tween =
-                            game:GetService("TweenService"):Create(
-                            Player.Character.HumanoidRootPart,
-                            Info,
-                            {CFrame = CFrame.new(getNearestMob().HumanoidRootPart.CFrame.p + Vector3.new(0, 0, 3))}
-                        )
-                        Tween:Play()
+                    if Players.LocalPlayer.Character:FindFirstChildWhichIsA("Tool") then
+                        Tween(Players.LocalPlayer.Character.HumanoidRootPart,getNearestMob().HumanoidRootPart.CFrame.Position,Settings.Speed)
                         VirtualUser:ClickButton1(Vector2.new(9e9, 9e9))
-                    elseif not Player.Character:FindFirstChildWhichIsA("Tool") then
+                    elseif not Players.LocalPlayer.Character:FindFirstChildWhichIsA("Tool") then
                         game.StarterGui:SetCore(
                             "SendNotification",
                             {
@@ -265,13 +253,13 @@ spawn(
                     for _, v in pairs(Workspace.Drops:GetChildren()) do
                         if
                             v:IsA("TouchTransmitter") and
-                                (Player.Character.HumanoidRootPart.Position - v.Parent.Position).Magnitude <
+                                (Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Parent.Position).Magnitude <
                                     50
                          then
                             wait()
-                            firetouchinterest(Player.Character.HumanoidRootPart, v.Parent, 0) --0 is touch
+                            firetouchinterest(Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0) --0 is touch
                             wait()
-                            firetouchinterest(Player.Character.HumanoidRootPart, v.Parent, 1) -- 1 is untouch
+                            firetouchinterest(Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) -- 1 is untouch
                         end
                     end
                 end
@@ -287,6 +275,7 @@ end)
 
 
 
+
 local Toggle1 = Section1:CreateToggle("Auto Mine", Settings.AutoMine, function(State)
 Settings.AutoMine = State
 
@@ -295,7 +284,7 @@ RunService.Stepped:connect(
         pcall(
             function()
                 if Settings.AutoMine then
-                    Player.Character.Humanoid:ChangeState(11)
+                    Players.LocalPlayer.Character.Humanoid:ChangeState(11)
                 end
             end
         )
@@ -306,25 +295,16 @@ spawn(
         while Settings.AutoMine do
                 pcall(function()
                     wait()
-                    print(getNearestOre())
-                        local Time =
-                            (Vector3.new(getNearestOre():GetModelCFrame().Position) + Vector3.new(0, 0, 3) -
-                            Player.Character.HumanoidRootPart.Position).magnitude / Settings.Speed
-                        local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
-                        local Tween =
-                            game:GetService("TweenService"):Create(
-                            Player.Character.HumanoidRootPart,
-                            Info,
-                            {CFrame = CFrame.new(getNearestOre():GetModelCFrame().Position + Vector3.new(0, 0, 3))}
-                        )
-                        Tween:Play()
+                    Tween(Players.LocalPlayer.Character.HumanoidRootPart,getNearestOre().Main.CFrame.Position,Settings.Speed)
+                    
                         if getNearestOre().Interact.Value == true then
-                            Player.Character:FindFirstChildWhichIsA("Tool").SwordScript.Activate:FireServer(
+                            Players.LocalPlayer.Character:FindFirstChildWhichIsA("Tool").SwordScript.Activate:FireServer(
 
                             )
 
-                    elseif not Player.Character:FindFirstChildWhichIsA("Tool") then
-    
+                    elseif not Players.LocalPlayer.Character:FindFirstChildWhichIsA("Tool")  then
+                        game:GetService("ReplicatedStorage").Remotes.BackWeapon:FireServer("RightWeapon","BronzePickaxe","BackRight","PickAxe")
+                        VirtualInputManager:SendKeyEvent(true, 52, false, game)
                     end
                 end)
         end
@@ -348,7 +328,7 @@ RunService.Stepped:connect(
         pcall(
             function()
                 if Settings.AutoChests then
-                    Player.Character.Humanoid:ChangeState(11)
+                    Players.LocalPlayer.Character.Humanoid:ChangeState(11)
                 end
             end
         )
@@ -360,26 +340,17 @@ spawn(
             wait(1)
             pcall(
                 function()
-                    local Time =
-                        (getNearestChests():GetModelCFrame().CFrame.p + Vector3.new(0, 0, 3) -
-                        Player.Character.HumanoidRootPart.Position).magnitude / Settings.Speed
-                    local Info = TweenInfo.new(Time, Enum.EasingStyle.Linear)
-                    local Tween =
-                        game:GetService("TweenService"):Create(
-                        Player.Character.HumanoidRootPart,
-                        Info,
-                        {CFrame = CFrame.new(getNearestChests():GetModelCFrame().CFrame.p + Vector3.new(0, 0, 3))}
-                    )
-                    Tween:Play()
+                    Tween(Players.LocalPlayer.Character.HumanoidRootPart,getNearestChests().Main.CFrame.Position,Settings.Speed)
+                  
                     repeat
                         wait()
-                    until (getNearestChests():GetModelCFrame().CFrame.p + Vector3.new(0, 0, 3) -
-                        Player.Character.HumanoidRootPart.Position).Magnitude < 5
+                    until (getNearestChests().Main.CFrame.p + Vector3.new(0, 0, 3) -
+                        Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 5
                     wait(2)
                     if getNearestChests().Claimed.Value == false then
-                        Player.PlayerGui.Loot.Ado.PickUp:FireServer(
+                        Players.LocalPlayer.PlayerGui.Loot.Ado.PickUp:FireServer(
                             getNearestChests(),
-                            Player.Character
+                            Players.LocalPlayer.Character
                         )
                     end
                     wait(0.5)
@@ -388,13 +359,13 @@ spawn(
                         for _, v in pairs(Workspace.Drops:GetDescendants()) do
                             if
                                 v:IsA("TouchTransmitter") and
-                                    (Player.Character.HumanoidRootPart.Position - v.Parent.Position).Magnitude <
+                                    (Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Parent.Position).Magnitude <
                                         50
                              then
                                 wait()
-                                firetouchinterest(Player.Character.HumanoidRootPart, v.Parent, 0) --0 is touch
+                                firetouchinterest(Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0) --0 is touch
                                 wait()
-                                firetouchinterest(Player.Character.HumanoidRootPart, v.Parent, 1) -- 1 is untouch
+                                firetouchinterest(Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) -- 1 is untouch
                             end
                         end
                     end
@@ -412,7 +383,7 @@ spawn(
     function()
         while wait(3) and Settings.AutoFish do
             wait()
-            Player.PlayerGui.Fish.Ado.catch:FireServer(Workspace.FishingSpawns.Fishing)
+            Players.LocalPlayer.PlayerGui.Fish.Ado.catch:FireServer(Workspace.FishingSpawns.Fishing)
         end
     end
 )
@@ -431,10 +402,10 @@ local function esp(v)
     local function update()
         local Re
         Re =
-            RunService.Stepped:Connect(
+            game:GetService('RunService').Stepped:Connect(
             function()
                 if v and v:FindFirstChild("Main") then
-                    local Vector, Screen = Workspace.CurrentCamera:WorldToViewportPoint(v:GetModelCFrame().Position)
+                    local Vector, Screen = Workspace.CurrentCamera:WorldToViewportPoint(v.Main.Position)
                     if Settings.Esp and Screen then
                         T.Position = Vector2.new(Vector.X, Vector.Y)
                         T.Visible = true
@@ -452,7 +423,7 @@ local function esp(v)
     update()
 end
 for i, v in ipairs(Workspace:GetChildren()) do
-        if v:IsA("Model") and v:FindFirstChild("Main") and v:FindFirstChild("Interact")  and v.Interact.Value == true then
+        if v.ClassName == "Model" and v:FindFirstChild("Main") and v:FindFirstChild("Interact")  and v.Interact.Value == true then
         esp(v)
     end
 end
@@ -481,10 +452,10 @@ local function esp(v)
     local function update()
         local Re
         Re =
-            RunService.Stepped:Connect(
+            game:GetService('RunService').Stepped:Connect(
             function()
                 if v and v:FindFirstChild("Main") then
-                    local Vector, Screen = Workspace.CurrentCamera:WorldToViewportPoint(v:GetModelCFrame().Position)
+                    local Vector, Screen = Workspace.CurrentCamera:WorldToViewportPoint(v.Main.Position)
                     if Settings.Esp2 and Screen then
                         T.Position = Vector2.new(Vector.X, Vector.Y)
                         T.Visible = true
@@ -502,7 +473,7 @@ local function esp(v)
     update()
 end
 for i, v in ipairs(Workspace.Chests:GetChildren()) do
-        if v:IsA("Model") and v:FindFirstChild("Main") then
+        if v.ClassName == "Model" and v:FindFirstChild("Main") then
         esp(v)
     end
 end
@@ -525,9 +496,9 @@ RunService.Stepped:connect(
         pcall(
             function()
                 if Settings.Burn then
-                    Player.Character.Burned:remove()
+                    Players.LocalPlayer.Character.Burned:remove()
                 else
-                    Player.Character.Huamnoid.Health = 0
+                    Players.LocalPlayer.Character.Huamnoid.Health = 0
                 end
             end
         )
@@ -543,9 +514,9 @@ RunService.Stepped:connect(
         pcall(
             function()
                 if Settings.Pos then
-                    Player.Character.Poisoned:remove()
+                    Players.LocalPlayer.Character.Poisoned:remove()
                 else
-                    Player.Character.Huamnoid.Health = 0
+                    Players.LocalPlayer.Character.Huamnoid.Health = 0
                 end
             end
         )
@@ -559,8 +530,8 @@ Settings.Go = State
 RunService.Stepped:connect(
     function()
         if Settings.Go then
-            Player.Character:WaitForChild("Humanoid").WalkSpeed = Settings.WalkSpeed
-            Player.Character:WaitForChild("Humanoid").JumpPower = Settings.JumpPower
+            Players.LocalPlayer.Character:WaitForChild("Humanoid").WalkSpeed = Settings.WalkSpeed
+            Players.LocalPlayer.Character:WaitForChild("Humanoid").JumpPower = Settings.JumpPower
             if not game:GetService("UserInputService").WindowFocusReleased then
                 setfpscap(Settings.Fps)
             end
@@ -587,7 +558,7 @@ Settings.InfiniteJump = State
 game:GetService("UserInputService").JumpRequest:connect(
     function()
         if Settings.InfiniteJump then
-            Player.Character:FindFirstChildWhichIsA "Humanoid":ChangeState("Jumping")
+            game:GetService "Players".LocalPlayer.Character:FindFirstChildWhichIsA "Humanoid":ChangeState("Jumping")
         end
     end
 )
@@ -620,9 +591,9 @@ end)
 local Toggle1 = Section2:CreateToggle("Invisicam", Settings.Sorry, function(State)
 Settings.Sorry = State
 if Settings.Sorry then
-    Player.DevCameraOcclusionMode = "Invisicam"
+    Players.LocalPlayer.DevCameraOcclusionMode = "Invisicam"
 else
-    Player.DevCameraOcclusionMode = "Zoom"
+    Players.LocalPlayer.DevCameraOcclusionMode = "Zoom"
 end
 end)
 local Toggle1 = Section2:CreateToggle("Be Wired", Settings.Weird, function(State)
@@ -633,10 +604,10 @@ spawn(
             wait()
             pcall(
                 function()
-                    Player.Character["Left Leg"]:remove()
-                    Player.Character["Left Arm"]:remove()
-                    Player.Character["Right Arm"]:remove()
-                    Player.Character["Right Leg"]:remove()
+                    Players.LocalPlayer.Character["Left Leg"]:remove()
+                    Players.LocalPlayer.Character["Left Arm"]:remove()
+                    Players.LocalPlayer.Character["Right Arm"]:remove()
+                    Players.LocalPlayer.Character["Right Leg"]:remove()
                 end
             )
         end
@@ -647,12 +618,12 @@ end)
 local Toggle1 = Section2:CreateToggle("N Noclip", Settings.Sex1, function(State)
 noclips = false
 Settings.Sex1 = State
-Player:GetMouse().KeyDown:connect(
+Players.LocalPlayer:GetMouse().KeyDown:connect(
     function(v)
         if v == "n" then
             if Settings.Sex1 then
                 noclips = not noclips
-                for i, v in pairs(Player.Character:GetChildren()) do
+                for i, v in pairs(Players.LocalPlayer.Character:GetChildren()) do
                     if v:IsA("BasePart") then
                         v.CanCollide = false
                     end
@@ -664,7 +635,7 @@ Player:GetMouse().KeyDown:connect(
 RunService.Stepped:connect(
     function()
         if noclips then
-            for i, v in pairs(Player.Character:GetChildren()) do
+            for i, v in pairs(Players.LocalPlayer.Character:GetChildren()) do
                 if v:IsA("BasePart") then
                     v.CanCollide = false
                 end
@@ -681,17 +652,17 @@ noclip = false
 RunService.Stepped:connect(
     function()
         if noclip then
-            Player.Character.Humanoid:ChangeState(11)
+            Players.LocalPlayer.Character.Humanoid:ChangeState(11)
         end
     end
 )
-mouse = Player:GetMouse()
-Player:GetMouse().KeyDown:connect(
+mouse = Players.LocalPlayer:GetMouse()
+Players.LocalPlayer:GetMouse().KeyDown:connect(
     function(v)
         if v == "g" then
             if Settings.Sex then
                 noclip = not noclip
-                Player.Character.Humanoid:ChangeState(11)
+                Players.LocalPlayer.Character.Humanoid:ChangeState(11)
             end
         end
     end
@@ -701,7 +672,7 @@ local Toggle1 = Section2:CreateToggle("H Fly", Settings.Sex2, function(State)
 Settings.Sex2 = State
 local Max = 0
 local Players = Players
-local LP = Player
+local LP = Players.LocalPlayer
 local Mouse = LP:GetMouse()
 Mouse.KeyDown:connect(
     function(k)
@@ -836,7 +807,7 @@ end)
 local Button1 = Section2:CreateButton("Teleport to RandomPlayer", function()
 local randomPlayer = Players:GetPlayers()[math.random(1, #Players:GetPlayers())]
 
-Player.Character.HumanoidRootPart.CFrame =
+Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
     CFrame.new(
     Vector3.new(
         randomPlayer.Character.Head.Position.X,
@@ -865,18 +836,18 @@ local foundAnything = ""
 local actualHour = os.date("!*t").hour
 local Deleted = false
 local File = pcall(function()
-    AllIDs = HttpService:JSONDecode(readfile("NotSameServers.json"))
+    AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
 end)
 if not File then
     table.insert(AllIDs, actualHour)
-    writefile("NotSameServers.json", HttpService:JSONEncode(AllIDs))
+    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
 end
 function TPReturner()
     local Site;
     if foundAnything == "" then
-        Site = HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
     else
-        Site = HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+        Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
     end
     local ID = ""
     if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
@@ -907,9 +878,9 @@ function TPReturner()
                 table.insert(AllIDs, ID)
                 wait()
                 pcall(function()
-                    writefile("NotSameServers.json", HttpService:JSONEncode(AllIDs))
+                    writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
                     wait()
-                    TeleportService:TeleportToPlaceInstance(PlaceID, ID, Player)
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, Players.LocalPlayer)
                 end)
                 wait(4)
             end
@@ -932,7 +903,7 @@ end
 Teleport() 
 end)
 local Button1 = Section2:CreateButton("Rejoin", function()
-TeleportService:Teleport(game.PlaceId, Player) end)
+game:GetService("TeleportService"):Teleport(game.PlaceId, Players.LocalPlayer) end)
 
 
 
