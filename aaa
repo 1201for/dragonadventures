@@ -976,43 +976,6 @@ end)
 end)
 
 
-local Toggle1 = Section1:CreateToggle("Auto Tp To EarRing", Settings.AutoTeleport, function(State)
-Settings.AutoTeleport = State
-spawn(
-    function()
-        while Settings.AutoTeleport do
-            wait(2)
-            pcall(function()
-                for i, v in pairs(Workspace.map.Stuff:GetChildren()) do
-                    if v:IsA("Model") and v.Name == "Barrel" and v.PrimaryPart and not Workspace.GameState:FindFirstChild("Night") then
-                        Tween(Player.Character.HumanoidRootPart,v:FindFirstChildWhichIsA('BasePart').CFrame,150)
-                    end
-                end
-            end)
-        end
-    end
-)
-end)
-
-
-local Toggle1 = Section1:CreateToggle("Auto Tp To Flute", Settings.AutoTeleport2, function(State)
-Settings.AutoTeleport2 = State
-spawn(
-    function()
-        while Settings.AutoTeleport do
-            wait(2)
-            pcall(function()
-                for i, v in pairs(Workspace.map.Stuff:GetChildren()) do
-                    if v:IsA("Model") and v.Name == "Barrel" and v:FindFirstChildWhichIsA('BasePart') and Workspace.GameState:FindFirstChild("Night") then
-                        Tween(Player.Character.HumanoidRootPart,v:FindFirstChildWhichIsA('BasePart').CFrame,150)
-                    end
-                end
-            end)
-        end
-    end
-)
-end)
-
 
 if isnetworkowner then
 local Toggle1 = Section1:CreateToggle("Anchored Mob Aura", Settings.Anchored, function(State)
@@ -1297,58 +1260,7 @@ local Toggle1 = Section1:CreateToggle("Enable Esp", Settings.Esp, function(State
     
 end)
 if Workspace.map:FindFirstChild("Stuff") then
-local Toggle1 = Section1:CreateToggle("EarRing Esp", Settings.EarRing, function(State)
-Settings.EarRing = State
-ESP.EarRing = Settings.EarRing
-ESP:AddObjectListener(Workspace.map.Stuff, {
-    Color = Color3.new(0,0,255),
-    Type = "Model",
-    PrimaryPart = function(v)
-        local H = v.PrimaryPart
-        while not H do
-            wait()
-            H = v.PrimaryPart
-        end
-        return H
-    end,
-    Validator = function(v)
-    if v.Name == "Barrel" and not Workspace.GameState:FindFirstChild("Night") then
-        return not Players:GetPlayerFromCharacter(v) and v
-    end 
-    end,
-    CustomName = function(v)
-        return "EarRing"
-    end,
-    IsEnabled = "EarRing",
-})
 
-end)
-local Toggle1 = Section1:CreateToggle("Flute Esp", Settings.FluteEsps, function(State)
-Settings.FluteEsps = State
-ESP.Flute = Settings.FluteEsps
-ESP:AddObjectListener(Workspace.map.Stuff, {
-    Color = Color3.new(255,0,0),
-    Type = "Model",
-    PrimaryPart = function(v)
-        local H = v.PrimaryPart
-        while not H do
-            wait()
-            H = v.PrimaryPart
-        end
-        return H
-    end,
-    Validator = function(v)
-    if v.Name == "Barrel" and Workspace.GameState:FindFirstChild("Night") then
-        return not Players:GetPlayerFromCharacter(v) and v
-    end 
-    end,
-    CustomName = function(v)
-        return "Flute"
-    end,
-    IsEnabled = "Flute",
-})
-
-end)
 end 
 
 local Button1 = Section2:CreateButton("Press For Hentai", function()
