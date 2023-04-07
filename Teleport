@@ -340,6 +340,9 @@ local function teleport(cframe, tried) -- unoptimized
         end;
     else
         movement:move_to_position(player.Character.HumanoidRootPart, cframe, dependencies.variables.player_speed);
+        if getgenv().Break then
+            break 
+        end 
     end;
 
     task.wait(0.5);
