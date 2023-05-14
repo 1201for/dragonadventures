@@ -1,3 +1,4 @@
+getrenv().client = function() return end
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local StarterGui = game:GetService("StarterGui")
