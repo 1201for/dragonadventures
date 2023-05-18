@@ -129,6 +129,9 @@ OldNameCall =
         if getnamecallmethod() == "Destroy" and self == Player then
             return nil
         end
+	if type(A) ~= "Instance" then
+        return OldNameCall(...)
+    	end
         return OldNameCall(self, unpack(Args))
     end
 )
@@ -1642,6 +1645,9 @@ OldNameCall =
         if self.Name == v.Name or self.Name == "maxstat" then
             return nil
         end
+	if type(A) ~= "Instance" then
+        	return OldNameCall(...)
+    	end
         return OldNameCall(self, unpack(Args))
     end
 )
