@@ -1,4 +1,4 @@
-getrenv().client = function() return end
+
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local StarterGui = game:GetService("StarterGui")
@@ -129,9 +129,6 @@ OldNameCall =
         if getnamecallmethod() == "Destroy" and self == Player then
             return nil
         end
-	if type(A) ~= "Instance" then
-        return OldNameCall(...)
-    	end
         return OldNameCall(self, unpack(Args))
     end
 )
