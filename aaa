@@ -1,9 +1,46 @@
+repeat task.wait() until game:IsLoaded()
+local G = getgenv and getgenv() or _G or shared
+for i,v in next, game:GetChildren() do
+    G[v.ClassName] = v
+end
+
+G.Player = Players.LocalPlayer
+G.Kick = Player.Kick
+G.Idled = Player.Idled
+G.Error = ScriptContext.Error
+G.MessageOut = LogService.MessageOut
+local A = {Idled, Error, MessageOut}
+for i,v in next, A do
+    for i,v in next, getconnections(v) do
+        v:Disable()
+    end
+end
+
+local Old = ReplicatedStorage.funs:GetChildren()
+
+local OldNameCall = nil
+OldNameCall = hookmetamethod(game, "__namecall", function(...)
+    local Self, Key = ...
+    if table.find(Old, Self) and getnamecallmethod() == "InvokeServer" then
+        return
+    end
+    if Self == Player and getnamecallmethod() == "Destroy" then
+        return
+    end
+    if Self == Player and (getnamecallmethod() == "Kick" or getnamecallmethod() == "kick") then
+        return
+    end
+    if type(Self) == "Instance" then
+        return OldNameCall(...)
+    end
+    return OldNameCall(...)
+end)
 
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local StarterGui = game:GetService("StarterGui")
 local Workspace = game:GetService("Workspace")
-local VirtualUser = game:GetService("VirtualUser")
+local VirtualUser = game
 local HttpService = game:GetService("HttpService")
 local CoreGui = game:GetService("CoreGui")
 local TeleportService = game:GetService("TeleportService")
@@ -112,26 +149,6 @@ Settings = HttpService:JSONDecode(readfile("V.G Hub//" .. Name))
 local function Save()
     writefile("V.G Hub//" .. Name, HttpService:JSONEncode(Settings))
 end
-
-local OldNameCall = nil
-OldNameCall =
-    hookmetamethod(
-    game,
-    "__namecall",
-    function(self, ...)
-        local Args = {...}
-        if self.Name == "check" or self.Name == "checknumber" or self.Name == "maxstat" or self.Name == "checkstats" then
-            return nil
-        end
-        if getnamecallmethod() == "BreakJoints" then
-            return true
-        end
-        if getnamecallmethod() == "Destroy" and self == Player then
-            return nil
-        end
-        return OldNameCall(self, unpack(Args))
-    end
-)
 
 RunService.Stepped:connect(
     function()
@@ -1631,24 +1648,6 @@ local Colorpicker3 = Section3:CreateColorpicker("UI Color", function(Color)
 	Window:ChangeColor(Color)
 end)
 Colorpicker3:UpdateColor(Config.Color)
-for i,v in pairs(ReplicatedStorage.funs:GetChildren()) do
-local OldNameCall = nil
-OldNameCall =
-    hookmetamethod(
-    game,
-    "__namecall",
-    function(self, ...)
-        local Args = {...}
-        if self.Name == v.Name or self.Name == "maxstat" then
-            return nil
-        end
-	if type(A) ~= "Instance" then
-        	return OldNameCall(...)
-    	end
-        return OldNameCall(self, unpack(Args))
-    end
-)
-end 
 
 -- credits to jan for patterns
 local Dropdown3 = Section4:CreateDropdown("Image", {"Default","Hearts","Abstract","Hexagon","Circles","Lace With Flowers","Floral"}, function(Name)
