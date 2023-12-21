@@ -64,10 +64,10 @@ for i, v in next, getgc() do
     end
 end
 
-hookfunction(ReplicatedStorage.Modules.DataService.InvokeServer.i, function()
+hookfunction(require(ReplicatedStorage.Modules.DataService).InvokeServer.i, function()
     warn("Ban Attempt")
 end)
-hookfunction(ReplicatedStorage.Modules.DataService.FireServer.i, function()
+hookfunction(require(ReplicatedStorage.Modules.DataService).FireServer.i, function()
     warn("Ban Attempt")
 end)
 
