@@ -102,7 +102,7 @@ local Sorry = function(Part ,Position)
 end
 
 local function Tween(Model, CFrame, Speed)
-    for i=0, 1, 0.2 do wait(.1)
+    for i=0, 1, 0.2 do wait()
         Model.PrimaryPart.CFrame = Model.PrimaryPart.CFrame:Lerp(CFrame, i)
     end
 end
@@ -114,7 +114,7 @@ local function Pathfind(Model,Position)
     for i, v in next, path:GetWaypoints() do
         if path.Status == Enum.PathStatus.Success then
             Model.PrimaryPart.CFrame = CFrame.lookAt(Model.PrimaryPart.Position, v.Position + Vector3.new(0,2.5,0))
-            Tween(Model, CFrame.new(v.Position.X, v.Position.Y + 2.5, v.Position.Z, Sorry(Model.PrimaryPart, v.Position + Vector3.new(0,2.5,0))), 35)
+            Tween(Model, CFrame.new(v.Position), 35)
         end
     end
 end
@@ -176,6 +176,3 @@ spawn(function()
         end)
     end
 end)
-if Toggy.Toggled then
-    return SendNotification("Credits", "DekuDimz", "", 10)
-end
