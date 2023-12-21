@@ -130,7 +130,7 @@ end)
 
 spawn(function()
     while wait() and Toggy.Toggled do
-        pcall(function()
+   
             if Bruh < Toggy.BreakTime then
                 if Stats.Job.Value ~= "PizzaPlanetDelivery" then return require(JobHandler):GoToWork("PizzaPlanetDelivery") and require(JobHandler):StartShift("PizzaPlanetDelivery") end
                 if not Player.Character:FindFirstChild("Vehicle_Delivery Moped", true) then
@@ -139,7 +139,7 @@ spawn(function()
                     end
                     Player.Character.HumanoidRootPart.CFrame = Locations:FindFirstChild("PizzaPlanet", true):FindFirstChild("DeliveryMoped", true):GetModelCFrame() * CFrame.new(0,5,0)
                     Workspace.CurrentCamera.CFrame = CFrame.lookAt(Workspace.CurrentCamera.CFrame.Position + Vector3.new(0,5,0), Locations:FindFirstChild("PizzaPlanet", true):FindFirstChild("DeliveryMoped", true):GetModelCFrame().Position)
-                    FireConnection(Player.PlayerGui.MainGUI.InteractIndicator.Activated)
+                    User:SendKeyEvent(false, "E", false, game, 0)
                 end
                 local C = nil
                 if Player.Character:FindFirstChild("Vehicle_Delivery Moped", true) then
@@ -173,6 +173,6 @@ spawn(function()
                 end
                 Bruh = 0
             end
-        end)
+     
     end
 end)
