@@ -26,6 +26,9 @@ G.Kick = Player.Kick
 G.Idled = Player.Idled
 G.User = Instance.new("VirtualInputManager")
 
+for i,v in next, getconnections(ScriptContext.Error) do
+    v:Disable()
+end
 
 repeat wait() until game:IsLoaded()
 getgenv().Bruh = 0
