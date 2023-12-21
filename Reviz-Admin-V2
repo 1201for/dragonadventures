@@ -63,13 +63,14 @@ for i, v in next, getgc() do
         end
     end
 end
+local Network = require(ReplicatedStorage.Modules.DataService)
+hookfunction(getfenv(Network.FireServer).i, function()
+    print('Ban attempt lel');
+end);
+hookfunction(getfenv(Network.InvokeServer).i, function()
+    print('Ban attempt lel');
+end);
 
-hookfunction(require(ReplicatedStorage.Modules.DataService).InvokeServer.i, function()
-    warn("Ban Attempt")
-end)
-hookfunction(require(ReplicatedStorage.Modules.DataService).FireServer.i, function()
-    warn("Ban Attempt")
-end)
 
 local Table = {
     Fire = function(Self, RemoteKey)
