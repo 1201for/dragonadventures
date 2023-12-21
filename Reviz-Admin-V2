@@ -26,9 +26,6 @@ G.Kick = Player.Kick
 G.Idled = Player.Idled
 G.User = Instance.new("VirtualInputManager")
 
-for i,v in next, getconnections(ScriptContext.Error) do
-    v:Disable()
-end
 
 repeat wait() until game:IsLoaded()
 getgenv().Bruh = 0
@@ -105,7 +102,7 @@ local Sorry = function(Part ,Position)
 end
 
 local function Tween(Model, CFrame, Speed)
-    for i=0, 1, 0.2 do
+    for i=0, 1, 0.2 do wait(.1)
         Model.PrimaryPart.CFrame = Model.PrimaryPart.CFrame:Lerp(CFrame, i)
     end
 end
