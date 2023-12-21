@@ -114,7 +114,7 @@ local function Pathfind(Model,Position)
     for i, v in next, path:GetWaypoints() do
         if path.Status == Enum.PathStatus.Success then
             Model.PrimaryPart.CFrame = CFrame.lookAt(Model.PrimaryPart.Position, v.Position + Vector3.new(0,2.5,0))
-            Tween(Model, CFrame.new(v.Position), 35)
+            Tween(Model, CFrame.new(v.Position.X, v.Position.Y + 2.5, v.Position.Z, Sorry(Model.PrimaryPart, v.Position + Vector3.new(0,2.5,0))), 35)
         end
     end
 end
