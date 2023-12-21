@@ -1,0 +1,138 @@
+local G = getgenv and getgenv() or _G or shared
+
+for i,v in next, game.GetChildren(game) do
+    G[v.ClassName] = v
+end
+G.Player = Players.LocalPlayer
+G.wait = task.wait
+G.spawn = task.spawn
+G.Heartbeat = RunService.Heartbeat
+G.Stepped = RunService.Stepped
+G.RenderStepped = RunService.RenderStepped
+G.Error = ScriptContext.Error
+G.MessageOut = LogService.MessageOut
+G.Kick = Player.Kick
+G.Idled = Player.Idled
+G.User = Instance.new("VirtualInputManager")
+
+Idled:Connect(function()
+    User:SendKeyEvent(true, 228, false, game, 0)
+end)
+
+local Treds = {}
+for i,v in next, workspace.Worlds.Dojo.Map.Treadmills:GetChildren() do
+	if v:IsA("Model") and not table.find(Treds, v.Name) then
+		table.insert(Treds, v.Name)
+	end
+end
+local Eggs = {}
+for i,v in next, require(game:GetService("ReplicatedStorage").Shared.Config.Eggs) do
+    table.insert(Eggs, i)
+end
+local Fights = {"Noob", "Peasant", "Assassin", "Spy", "Ninja"}
+local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/1201for/V.G_Moblie/main/Files/Gui",true))()
+local Win = Lib:CreateWindow("V.G Hub",2,nil, nil)
+local Tab = Win:CreateTab("Tab ",function() warn(i) end)
+local Tab2 = Win:CreateTab("Tab 2",function() warn(i) end)
+Tab:CreateToggle("Auto Treadmills",false,function(t)
+Treid = t
+	spawn(function()
+		while wait() and Treid do
+			pcall(function()
+				game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.4.7"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("TreadmillService"):WaitForChild("RE"):WaitForChild("Join"):FireServer(Tred)
+			end)
+		end
+	end)
+end)
+
+Tab:CreateDropdown("Treadmills",Treds,false,function(c,f)
+    Tred = c
+end)
+Tab:CreateToggle("Auto Buy Eggs",false,function(t)
+	Eggd = t
+	spawn(function()
+		while Eggd and wait() do
+			pcall(function()
+				game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.4.7"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("EggService"):WaitForChild("RE"):WaitForChild("Purchase"):FireServer(Egg,1)
+			end)
+		end
+	end)
+end)
+
+
+Tab:CreateDropdown("Eggs",Eggs,false,function(c,f)
+    Egg = c
+end)
+Tab:CreateToggle("Auto Fight",false,function(t)
+	FightingNiggers = t
+	spawn(function()
+		while FightingNiggers and wait() do
+			pcall(function()
+				game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.4.7"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("FighterService"):WaitForChild("RE"):WaitForChild("Fight"):FireServer(Fighter)
+				game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.4.7"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("FighterService"):WaitForChild("RE"):WaitForChild("Clicked"):FireServer()
+			end)
+		end
+	end)
+end)
+Tab:CreateDropdown("Fights",Fights,false,function(c,f)
+    Fighter = c
+end)
+
+
+Tab:CreateToggle("Auto Rebirth",false,function(t)
+	rebirth = t
+	spawn(function()
+		while rebirth and wait() do
+			pcall(function()
+				game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.4.7"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("RebirthService"):WaitForChild("RE"):WaitForChild("Rebirth"):FireServer()
+			end)
+		end
+	end)
+end)
+
+
+Tab:CreateToggle("Player Loop WalkSpeed/JumpPower",false,function(t)
+    Toggle = t
+    Stepped:Connect(function()
+        pcall(function()
+            if Toggle then
+                Player.Character:FindFirstChildWhichIsA("Humanoid").WalkSpeed = WalkSpeed
+                Player.Character:FindFirstChildWhichIsA("Humanoid").JumpPower = JumpPower
+            end 
+        end)
+    end)
+end)
+
+Tab:CreateSlider("WalkSpeed ",16,500,16,function(v)
+    WalkSpeed = v
+end)
+Tab:CreateSlider("JumpPower ",16,500,16,function(v)
+    JumpPower = v
+end)
+
+Tab:CreateToggle("Infinite Jump",false,function(t)
+InfiniteJump = t
+    UserInputService.JumpRequest:connect(function()
+        if InfiniteJump then
+            Player.Character:FindFirstChildWhichIsA("Humanoid"):ChangeState("Jumping")
+        end
+    end)
+end)
+
+Tab:CreateButton("FPS Booster",function()
+    for i,v in pairs(game:GetDescendants()) do 
+        if v:IsA("Texture") then
+            v.Texture = ""
+        elseif v:IsA("BasePart") then
+            v.Material = Enum.Material.Wood
+        end 
+    end 
+end)
+
+Tab:CreateButton("ServerHop",function()
+    ServerHop()
+end)
+
+Tab:CreateButton("Rejoin",function()
+    Rejoin()
+end)
