@@ -1,14 +1,5 @@
-getgenv().Toggy = {
-    Toggled = true, -- Toggle Duh
-    ShiftAmount = 100000, -- amount of cash until game shutdown
-    BreakTime = 6, -- amount of times it devlivers pizzas until it takes a 120 second break
-    Status = false, -- Shows a small status of what it is doing
-    SecondsToWait = 120, -- Time To wait
-    AntiStink = true, -- Client Particles get disabled
-    LowRender = true, -- Lowers Fps Good for farmming overnight and to run in background recommended
-    KeySystem = false -- optional
-}
 
+repeat wait() until game:IsLoaded()
 local G = getgenv and getgenv() or _G or shared
 
 for i,v in next, game.GetChildren(game) do
@@ -26,10 +17,15 @@ G.Kick = Player.Kick
 G.Idled = Player.Idled
 G.User = Instance.new("VirtualInputManager")
 
+for i,v in next, getconnections(Error) do
+    v:Disable()
+end
+for i,v in next, getconnections(Idled) do
+    v:Disable()
+end
 
-repeat wait() until game:IsLoaded()
-getgenv().Bruh = 0
-if not Text then
+local Bruh = 0
+if not Text and Toggy.Status then
    getgenv().Text = Drawing.new("Text")
    Text.Color = Color3.new(0, 1, 1)
    Text.Font = 1
@@ -41,58 +37,56 @@ if not Text then
    Text.Visible = true
 end
 
-if Toggy.Toggled then
-    local X,Y= Text.TextBounds.X,Text.Position.Y
-    Text.Position = Vector2.new(Workspace.CurrentCamera.ViewportSize.X  / X , Y + 50)
-else
+if Toggy.Toggled and Toggy.Status then
+    local X,Y= Workspace.CurrentCamera.ViewportSize.Y, Text.Position.Y
+    Text.Position = Vector2.new(Workspace.CurrentCamera.ViewportSize.X / X + 50 , Y - 50)
+elseif not Toggy.Toggled and Toggy.Status then
     Text.Text = ""
-end
+end 
 
 local Locations = Workspace.Environment.Locations
 local JobHandler = Player.PlayerScripts.Modules.JobHandler
 local Stats = ReplicatedStorage.Stats[Player.Name]
 local Randomtime = tostring(math.random(1,3)) .. "h " .. tostring(math.random(1,47)) .. "m"
-for i, v in next, getgc() do
-    if type(v) == "function" then
-        if getfenv(v).script == ReplicatedStorage.Modules.DataService then
-            local C = getconstants(v)
-            if table.find(C, "RemoteFunction") and table.find(C, "RemoteEvent") then
-                Key = v
-                break
-            end
+local Data = require(game.ReplicatedStorage.Modules.DataService)
+hookfunction(getfenv(require(game.ReplicatedStorage.Modules.DataService).FireServer).i, function()
+    return;
+end);
+hookfunction(getfenv(require(game.ReplicatedStorage.Modules.DataService).InvokeServer).i, function()
+    return;
+end);
+warn("Stopping At " .. Randomtime)
+
+local Table = {
+    Invoke = require(game.ReplicatedStorage.Modules.DataService).net.InvokeServer,
+    Fire = require(game.ReplicatedStorage.Modules.DataService).net.FireServer
+}
+
+local Parts = function(Position)
+    if not Workspace:FindFirstChild("Parts") then
+        local Parts = Instance.new("Folder")
+        Parts.Parent = Workspace
+        Parts.Name = "Parts"
+    end
+    if Workspace.Parts then
+        local Cube = Instance.new("Part")
+        Cube.Name = "Cube"
+        Cube.Parent = Workspace.Parts
+        Cube.Transparency = 0
+        Cube.BrickColor = BrickColor.random()
+        Cube.Position = Position
+        Cube.Anchored = true
+        Cube.Size = Vector3.new(.1,.1,.1)
+        Cube.CanCollide = false
+    end
+end
+local DestroyParts = function()
+    for i,v in next, Workspace.Parts:GetChildren() do
+        if v:IsA("BasePart") then
+            v:Destroy()
         end
     end
 end
-local Network = require(ReplicatedStorage.Modules.DataService)
-hookfunction(getfenv(Network.FireServer).i, function()
-    print('Ban attempt lel');
-end);
-hookfunction(getfenv(Network.InvokeServer).i, function()
-    print('Ban attempt lel');
-end);
-
-
-local Table = {
-    Fire = function(Self, RemoteKey)
-        local Remote = Key(RemoteKey.Type)
-        if Remote then
-            RemoteKey.Type = nil
-            Remote:FireServer(RemoteKey)
-        else
-            return
-        end
-    end,
-    Invoke = function(Self, RemoteKey)
-        local Remote = Key(RemoteKey.Type, true)
-        if Remote then
-            RemoteKey.Type = nil
-            local result = Remote:InvokeServer(RemoteKey)
-            return result
-        else
-            return
-        end
-    end
-}
 local Sorry = function(Part ,Position)
     if Part then
         local CFrame = CFrame.new(Part.Position, Position)
@@ -101,33 +95,49 @@ local Sorry = function(Part ,Position)
     end
 end
 
-local function Tween(Model, CFrame, Speed)
-    for i=0, 1, 0.2 do wait()
+local Tween = function(Model, CFrame, Speed)
+    for i=0, 1, Speed do wait()
         Model.PrimaryPart.CFrame = Model.PrimaryPart.CFrame:Lerp(CFrame, i)
     end
 end
 
-local function Pathfind(Model,Position)
-    local S = {WaypointSpacing = 3, Costs = {Grass = 9e9,  Mental = math.huge, Brick = math.huge, Ice = math.huge, SmoothPlastic = 300,  Water = 400}}
+local Pathfind = function(Model,Position)
+    local S = {WaypointSpacing = 3, Costs = {Grass = 300,  Mental = math.huge, Brick = math.huge, Ice = math.huge, SmoothPlastic = 300,  Water = 400}}
     local path = PathfindingService:CreatePath(S)
     path:ComputeAsync(Model.PrimaryPart.Position, Position)
-    for i, v in next, path:GetWaypoints() do
+    local WayPoints = path:GetWaypoints()
+    for i,v in next, WayPoints do
+        Parts(v.Position + Vector3.new(0, 7, 0))
+    end
+    for i, v in next, WayPoints do
         if path.Status == Enum.PathStatus.Success then
-            Model.PrimaryPart.CFrame = CFrame.lookAt(Model.PrimaryPart.Position, v.Position + Vector3.new(0,2.5,0))
-            Tween(Model, CFrame.new(v.Position.X, v.Position.Y + 2.5, v.Position.Z, Sorry(Model.PrimaryPart, v.Position + Vector3.new(0,2.5,0))), 35)
+            Tween(Model, CFrame.new(v.Position.X, v.Position.Y + 2.5, v.Position.Z, Sorry(Model.PrimaryPart, v.Position + Vector3.new(0,2.5,0))), 0.25)
         end
     end
+    wait(1)
+    DestroyParts()
 end
-local function Mag(Pos,v)
+local Mag = function(Pos,v)
     local Nig = (v.Position - Pos.Position).Magnitude
     return Nig
 end
+UserInputService.WindowFocusReleased:Connect(function()
+    if Toggy.LowRender then
+        RunService:Set3dRenderingEnabled(false)
+    end
+end)
+UserInputService.WindowFocused:Connect(function()
+    if Toggy.LowRender then
+        RunService:Set3dRenderingEnabled(true)
+    end
+end)
+
 spawn(function()
     while wait() and Toggy.Toggled do
-
-            if Player.PlayerGui.MainGUI.Bar.CharMenu.WorkFrame.WorkFrame.TimeLabel.TextLabel.Text:find(Randomtime) then Kick(Player, "Kicked at " .. Randomtime) end
+        pcall(function()
+            if Player.PlayerGui.MainGUI.Bar.CharMenu.WorkFrame.WorkFrame.WorkInfoFrame.TimeLabel.TextLabel.Text:find(Randomtime) then Kick(Player, "Kicked at " .. Randomtime) end
             if Stats.Job.ShiftEarnings.Value >= Toggy.ShiftAmount then Kick("Kicked At" .. Toggy.ShiftAmount)  end
-     
+        end)
     end
 end)
 
@@ -150,8 +160,8 @@ spawn(function()
                         if Toggy.Status then
                             Text.Text = "Getting Pizza " .. Bruh 
                         end
-                        Pathfind(Player.Character:FindFirstChild("Vehicle_Delivery Moped", true), Vector3.new(1161.008544921875, 10.427573204040527, 275.8211364746094))
-                        if Mag(Player.Character:GetModelCFrame(), Locations:WaitForChild("PizzaPlanet"):WaitForChild("Conveyor"):WaitForChild("MovingBoxes"):FindFirstChildOfClass("UnionOperation")) < 25 and wait(5) then
+                        Pathfind(Player.Character:FindFirstChild("Vehicle_Delivery Moped", true), Vector3.new(1167, 14, 273))
+                        if Mag(Player.Character:GetModelCFrame(), Locations:WaitForChild("PizzaPlanet"):WaitForChild("Conveyor"):WaitForChild("MovingBoxes"):FindFirstChildOfClass("UnionOperation")) < 25 and wait(1) then
                             C = Table:Invoke({Type = "TakePizzaBox", Box = Locations:WaitForChild("PizzaPlanet"):WaitForChild("Conveyor"):WaitForChild("MovingBoxes"):FindFirstChildOfClass("UnionOperation")})
                         end
                         wait(1)
@@ -160,10 +170,11 @@ spawn(function()
                         if Toggy.Status then
                             Text.Text = "Getting Pizza to Customer"
                         end
-                        Pathfind(Player.Character:FindFirstChild("Vehicle_Delivery Moped", true), C.HumanoidRootPart.Position + Vector3.new(0,0,0))
-                        if Mag(C.HumanoidRootPart, Player.Character:GetModelCFrame()) < 5 and wait(5) then
+                        Pathfind(Player.Character:FindFirstChild("Vehicle_Delivery Moped", true), C.HumanoidRootPart.Position + Vector3.new(3,0,0))
+                        if Mag(C.HumanoidRootPart, Player.Character:GetModelCFrame()) < 5 and wait(1) then
                             Table:Fire({Type = "DeliverPizza", Customer = C})
                         end
+                        wait(1)
                     until not Player.Character:FindFirstChild("Pizza Box", true)
                     Bruh = Bruh + 1
                 end
