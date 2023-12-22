@@ -170,7 +170,7 @@ spawn(function()
                         if Toggy.Status then
                             Text.Text = "Getting Pizza to Customer"
                         end
-                        Pathfind(Player.Character:FindFirstChild("Vehicle_Delivery Moped", true), C.HumanoidRootPart.Position + Vector3.new(3,0,0))
+                        Pathfind(Player.Character:FindFirstChild("Vehicle_Delivery Moped", true), C.HumanoidRootPart.Position + Vector3.new(0,0,0))
                         if Mag(C.HumanoidRootPart, Player.Character:GetModelCFrame()) < 5 and wait(1) then
                             Table:Fire({Type = "DeliverPizza", Customer = C})
                         end
